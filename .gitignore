@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+
+# site build output
+site/dist/
+site/.astro/
+site/node_modules/
+site/.next/
+site/out/
+
+# editor
+.idea/
+.vscode/
+*.swp

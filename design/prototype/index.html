@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>llml Profile Catalog — prototype</title>
+  <link rel="stylesheet" href="../colors_and_type.css" />
+  <style>
+    body { margin: 0; }
+    [data-screen-label] { /* anchors */ }
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: var(--secondary); color: var(--paper);
+      padding: 10px 16px; border-radius: 8px;
+      font-family: var(--font-sans); font-size: 13px; font-weight: 500;
+      box-shadow: 0 12px 32px -8px rgba(17,19,24,.4);
+      z-index: 200;
+      animation: toastIn .22s var(--ease-enter) both;
+    }
+    @keyframes toastIn { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script src="data.js"></script>
+  <script type="text/babel" src="UI.jsx"></script>
+  <script type="text/babel" src="Nav.jsx"></script>
+  <script type="text/babel" src="Home.jsx"></script>
+  <script type="text/babel" src="Browse.jsx"></script>
+  <script type="text/babel" src="ProfileDetail.jsx"></script>
+  <script type="text/babel" src="Contribute.jsx"></script>
+  <script type="text/babel" src="Compare.jsx"></script>
+  <script type="text/babel" src="ImportModal.jsx"></script>
+  <script type="text/babel" src="Shortcuts.jsx"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // ---------- Tweakable defaults ----------
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "loadingState": "ready",
+      "showShortcutsHint": true,
+      "compactRows": false
+    }/*EDITMODE-END*/;
+
+    // ---------- URL hash routing ----------
+    // Format: #/route or #/profile/<id> or #/compare?ids=a,b
+    function parseHash() {
+      const h = (window.location.hash || "#/").replace(/^#/, "");
+      const [path, qs] = h.split("?");
+      const parts = path.split("/").filter(Boolean);
+      const params = new URLSearchParams(qs || "");
+      if (parts[0] === "profile" && parts[1]) return { route: "detail", profileId: parts[1] };
+      if (parts[0] === "compare") return { route: "compare", compareIds: (params.get("ids") || "").split(",").filter(Boolean) };
+      if (parts[0] === "browse") return { route: "browse" };
+      if (parts[0] === "contribute" || parts[0] === "how") return { route: parts[0] };
+      return { route: "home" };
+    }
+
+    function setHash(route, opts = {}) {
+      let h = "#/";
+      if (route === "detail" && opts.profileId) h = `#/profile/${opts.profileId}`;
+      else if (route === "compare") h = `#/compare${opts.ids?.length ? "?ids=" + opts.ids.join(",") : ""}`;
+      else if (route !== "home") h = `#/${route}`;
+      if (window.location.hash !== h) window.location.hash = h;
+    }
+
+    function App() {
+      const initial = parseHash();
+      const [route, setRoute] = useState(initial.route);
+      const [profileId, setProfileId] = useState(initial.profileId || null);
+
+      // Browse-page state — hoisted so it survives navigation between Browse and other screens.
+      const [filters, setFilters] = useState({
+        backend: new Set(),
+        hardware: new Set(),
+        os: new Set(),
+        useCase: new Set(),
+        source: new Set(),
+      });
+      const [search, setSearch] = useState("");
+      const [sort, setSort] = useState("Updated");
+      const [compareIds, setCompareIds] = useState(initial.compareIds || []);
+
+      // Import modal
+      const [importId, setImportId] = useState(null);
+
+      // Shortcuts overlay
+      const [showShortcuts, setShowShortcuts] = useState(false);
+
+      // Toast for keyboard nav feedback
+      const [toast, setToast] = useState(null);
+      const showToast = (msg) => {
+        setToast(msg);
+        setTimeout(() => setToast(null), 1400);
+      };
+
+      // Tweaks
+      const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+      // Sync route → hash
+      useEffect(() => {
+        if (route === "detail") setHash("detail", { profileId });
+        else if (route === "compare") setHash("compare", { ids: compareIds });
+        else setHash(route);
+      }, [route, profileId, compareIds]);
+
+      // Sync hash → route (back/forward)
+      useEffect(() => {
+        const onHashChange = () => {
+          const p = parseHash();
+          setRoute(p.route);
+          if (p.profileId) setProfileId(p.profileId);
+          if (p.compareIds) setCompareIds(p.compareIds);
+        };
+        window.addEventListener("hashchange", onHashChange);
+        return () => window.removeEventListener("hashchange", onHashChange);
+      }, []);
+
+      // Top-level keyboard shortcuts
+      useEffect(() => {
+        let pendingG = false;
+        let gTimeout = null;
+        const onKey = (e) => {
+          // Modal-aware Esc
+          if (e.key === "Escape") {
+            if (importId) { setImportId(null); return; }
+            if (showShortcuts) { setShowShortcuts(false); return; }
+          }
+          // Don't intercept while typing in inputs (except / and ? which we still want).
+          const inField = ["INPUT", "SELECT", "TEXTAREA"].includes(e.target.tagName);
+          if (e.metaKey || e.ctrlKey || e.altKey) return;
+
+          if (e.key === "?" && !inField) {
+            e.preventDefault();
+            setShowShortcuts((s) => !s);
+            return;
+          }
+          if (e.key === "/" && !inField) {
+            e.preventDefault();
+            // If we're on browse, focus its search; else navigate there first.
+            if (route !== "browse") setRoute("browse");
+            setTimeout(() => window.__focusSearch && window.__focusSearch(), 100);
+            return;
+          }
+          if (inField) return;
+
+          // g-prefix navigation (vim-style)
+          if (e.key === "g") {
+            pendingG = true;
+            clearTimeout(gTimeout);
+            gTimeout = setTimeout(() => { pendingG = false; }, 800);
+            return;
+          }
+          if (pendingG) {
+            pendingG = false;
+            clearTimeout(gTimeout);
+            const map = { h: "home", b: "browse", c: "compare", d: "contribute" };
+            if (map[e.key]) {
+              e.preventDefault();
+              setRoute(map[e.key]);
+              showToast(`→ ${map[e.key]}`);
+            }
+            return;
+          }
+          // Single-key shortcut: 'c' from anywhere opens compare if there are ids
+          if (e.key === "c" && !inField && compareIds.length > 0) {
+            e.preventDefault();
+            setRoute("compare");
+          }
+        };
+        window.addEventListener("keydown", onKey);
+        return () => { window.removeEventListener("keydown", onKey); clearTimeout(gTimeout); };
+      }, [route, importId, showShortcuts, compareIds]);
+
+      const openProfile = (id) => { setProfileId(id); setRoute("detail"); };
+      const importProfile = (id) => setImportId(id);
+      const openCompare = () => setRoute("compare");
+
+      let screenLabel = "01 Home";
+      if (route === "browse") screenLabel = "02 Browse";
+      else if (route === "detail") screenLabel = "03 Profile detail";
+      else if (route === "compare") screenLabel = "04 Compare";
+      else if (route === "contribute" || route === "how") screenLabel = "05 Contribute";
+
+      // Apply compact rows tweak as a CSS variable on the root.
+      useEffect(() => {
+        document.documentElement.style.setProperty("--row-pad", tweaks.compactRows ? "8px" : "14px");
+      }, [tweaks.compactRows]);
+
+      const importingProfile = importId ? PROFILES.find((p) => p.id === importId) : null;
+
+      return (
+        <div data-screen-label={screenLabel}>
+          <Nav route={route} setRoute={setRoute} />
+          {route === "home" && <Home setRoute={setRoute} openProfile={openProfile} />}
+          {route === "browse" && (
+            <Browse
+              openProfile={openProfile}
+              importProfile={importProfile}
+              openCompare={openCompare}
+              filters={filters}
+              setFilters={setFilters}
+              search={search}
+              setSearch={setSearch}
+              sort={sort}
+              setSort={setSort}
+              compareIds={compareIds}
+              setCompareIds={setCompareIds}
+              loading={tweaks.loadingState === "loading"}
+              error={tweaks.loadingState === "error"}
+            />
+          )}
+          {route === "detail" && (
+            <ProfileDetail
+              id={profileId || PROFILES[0].id}
+              openProfile={openProfile}
+              setRoute={setRoute}
+              importProfile={importProfile}
+            />
+          )}
+          {route === "compare" && (
+            <Compare
+              ids={compareIds}
+              openProfile={openProfile}
+              setRoute={setRoute}
+            />
+          )}
+          {(route === "contribute" || route === "how") && <Contribute />}
+
+          {/* Floating shortcuts hint */}
+          {tweaks.showShortcutsHint && !showShortcuts && !importingProfile && (
+            <button
+              onClick={() => setShowShortcuts(true)}
+              style={{
+                position: "fixed",
+                bottom: 16,
+                right: 16,
+                background: "var(--secondary)",
+                color: "var(--paper)",
+                border: 0,
+                borderRadius: 8,
+                padding: "8px 12px",
+                fontFamily: "var(--font-mono)",
+                fontSize: 12,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                boxShadow: "0 8px 24px -8px rgba(17,19,24,.4)",
+                zIndex: 50,
+              }}
+              title="Keyboard shortcuts"
+            >
+              <kbd style={{ fontFamily: "var(--font-mono)", fontSize: 11, padding: "1px 5px", border: "1px solid #2C323D", borderRadius: 3, background: "rgba(255,255,255,.08)" }}>?</kbd>
+              <span>shortcuts</span>
+            </button>
+          )}
+
+          <ImportModal profile={importingProfile} onClose={() => setImportId(null)} />
+          <ShortcutsOverlay open={showShortcuts} onClose={() => setShowShortcuts(false)} />
+
+          {toast && <div className="toast">{toast}</div>}
+
+          {/* Tweaks panel */}
+          <TweaksPanel>
+            <TweakSection title="State">
+              <TweakRadio
+                label="Catalog state"
+                value={tweaks.loadingState}
+                options={[
+                  { value: "ready", label: "Ready" },
+                  { value: "loading", label: "Loading" },
+                  { value: "error", label: "Error" },
+                ]}
+                onChange={(v) => setTweak("loadingState", v)}
+              />
+            </TweakSection>
+            <TweakSection title="Display">
+              <TweakToggle
+                label="Compact rows"
+                value={tweaks.compactRows}
+                onChange={(v) => setTweak("compactRows", v)}
+              />
+              <TweakToggle
+                label="Show shortcuts hint"
+                value={tweaks.showShortcutsHint}
+                onChange={(v) => setTweak("showShortcutsHint", v)}
+              />
+            </TweakSection>
+            <TweakSection title="Try the prototype">
+              <div style={{ fontSize: 12, lineHeight: 1.55, color: "#aab" }}>
+                Press <kbd style={{ fontFamily: "ui-monospace, monospace", padding: "1px 5px", border: "1px solid #2C323D", borderRadius: 3, background: "rgba(255,255,255,.06)", color: "#fff" }}>?</kbd> for keyboard shortcuts.
+                Try <kbd style={{ fontFamily: "ui-monospace, monospace", padding: "1px 5px", border: "1px solid #2C323D", borderRadius: 3, background: "rgba(255,255,255,.06)", color: "#fff" }}>g b</kbd> to jump to browse, then <kbd style={{ fontFamily: "ui-monospace, monospace", padding: "1px 5px", border: "1px solid #2C323D", borderRadius: 3, background: "rgba(255,255,255,.06)", color: "#fff" }}>/</kbd> to search, <kbd style={{ fontFamily: "ui-monospace, monospace", padding: "1px 5px", border: "1px solid #2C323D", borderRadius: 3, background: "rgba(255,255,255,.06)", color: "#fff" }}>j</kbd>/<kbd style={{ fontFamily: "ui-monospace, monospace", padding: "1px 5px", border: "1px solid #2C323D", borderRadius: 3, background: "rgba(255,255,255,.06)", color: "#fff" }}>k</kbd> to move, <kbd style={{ fontFamily: "ui-monospace, monospace", padding: "1px 5px", border: "1px solid #2C323D", borderRadius: 3, background: "rgba(255,255,255,.06)", color: "#fff" }}>x</kbd> to add to compare.
+              </div>
+            </TweakSection>
+          </TweaksPanel>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
