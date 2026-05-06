@@ -1,0 +1,66 @@
+---
+// ImportBlock.astro — copyable command block.
+export interface Props {
+  cmd: string;
+}
+const { cmd } = Astro.props;
+---
+
+<div class="import-block">
+  <div class="import-block-cmd">$ {cmd}</div>
+  <button class="import-block-btn" data-cmd={cmd}>Copy</button>
+</div>
+
+<style>
+  .import-block {
+    display: flex;
+    background: var(--secondary);
+    color: var(--paper);
+    border-radius: 8px;
+    overflow: hidden;
+    align-items: stretch;
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+  .import-block-cmd {
+    padding: 14px 16px;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .import-block-btn {
+    background: transparent;
+    color: var(--paper);
+    border: 0;
+    border-left: 1px solid #2C323D;
+    padding: 0 18px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    min-width: 90px;
+    transition: background var(--d-short) var(--ease-enter);
+  }
+  .import-block-btn.copied {
+    background: var(--success);
+    color: #0d2b1c;
+    border-left: 0;
+  }
+</style>
+
+<script>
+  document.addEventListener("click", (e) => {
+    const btn = e.target as HTMLElement;
+    if (!btn.classList.contains("import-block-btn")) return;
+    const cmd = btn.dataset.cmd;
+    if (!cmd) return;
+    navigator.clipboard?.writeText(cmd);
+    btn.textContent = "✓ Copied";
+    btn.classList.add("copied");
+    setTimeout(() => {
+      btn.textContent = "Copy";
+      btn.classList.remove("copied");
+    }, 1200);
+  });
+</script>

@@ -1,0 +1,124 @@
+---
+// contribute.astro — Contribute / how it works / docs page.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Button from "../components/Button.astro";
+import Badge from "../components/Badge.astro";
+
+const base = import.meta.env.BASE_URL.slice(0, -1);
+const tomlSample = `schema_version = 2
+
+[[profiles]]
+name = "balanced-q4"
+backend = "koboldcpp"
+model_hint = "Qwen3-14B-GGUF"
+args = [
+  "--gpulayers 80",
+  "--contextsize 16384",
+  "--threads 8",
+  "--flashattention",
+]
+
+use_case.primary = "completion"
+use_case.tags    = ["interactive", "coding"]
+
+hardware.class       = "gpu"
+hardware.gpu_count   = 1
+hardware.min_vram_gb = 24
+hardware.max_vram_gb = 24
+hardware.notes       = "Tested on RTX 3090, CUDA 12.4, Ubuntu 24.04."`;
+---
+
+<BaseLayout
+  title="Contribute"
+  description="A profile is a setup, not a model card. Share the args your machine and model converged on."
+>
+  <!-- Hero -->
+  <section style="border-bottom:1px solid var(--border);padding:48px 32px">
+    <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <span class="eyebrow">contribute</span>
+        <h1 style="font-size:48px;letter-spacing:-0.01em;margin:0">
+          A profile is a <em style="font-style:italic">setup, not a model card</em>.
+        </h1>
+        <p style="font-size:17px;line-height:1.55;max-width:55ch;margin:0">
+          The catalog is built from TOML files in a public GitHub repo. If you've gotten a model running well on your machine,
+          the args and env you used are exactly what someone with the same machine needs.
+        </p>
+        <div style="display:flex;gap:12px;margin-top:8px">
+          <Button variant="primary" href="https://github.com/flyingnobita/llml-profiles">Open a PR ↗</Button>
+          <Button variant="secondary" href="https://github.com/flyingnobita/llml/blob/main/docs/profile-format.md">Read the schema</Button>
+        </div>
+      </div>
+      <pre style="background:var(--secondary);color:var(--paper);padding:24px;border-radius:12px;font-size:12.5px;line-height:1.55;font-family:var(--font-mono);margin:0;overflow:auto;max-height:380px">{tomlSample}</pre>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <section style="padding:56px 32px">
+    <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:240px 1fr;gap:48px">
+      <aside>
+        <span class="eyebrow">Contents</span>
+        <ol style="margin:12px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans);font-size:14px">
+          {[
+            "What belongs in the catalog",
+            "What a strong profile includes",
+            "Validation expectations",
+            "PR flow",
+          ].map((t, i) => (
+            <li>
+              <a href="#" style={`color:${i === 0 ? "var(--ink)" : "var(--muted)"};border-bottom:${i === 0 ? "1px solid var(--ink)" : "none"};text-decoration:none`}>
+                {String(i + 1).padStart(2, "0")} · {t}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </aside>
+      <article style="display:flex;flex-direction:column;gap:32px">
+        <div>
+          <h2 style="font-size:30px;margin:0 0 12px">What belongs in the catalog</h2>
+          <p style="font-size:16px;line-height:1.6;max-width:62ch;margin:0">
+            Profiles for <code class="mono">llama.cpp</code>, <code class="mono">vLLM</code>, <code class="mono">Ollama</code>, and{" "}
+            <code class="mono">KoboldCpp</code>. One TOML file per profile, with a clear hardware target and a short
+            rationale. Model-location parameters (<code class="mono">--model</code>, <code class="mono">HF_HOME</code>, etc.) are
+            excluded — <code class="mono">llml</code> supplies them at launch.
+          </p>
+        </div>
+        <div>
+          <h2 style="font-size:30px;margin:0 0 12px">What a strong profile includes</h2>
+          <ul style="margin:0;padding-left:18px;font-size:16px;line-height:1.7;max-width:62ch">
+            <li>A <strong>name</strong> that reads as a setup, not a brand: <code class="mono">balanced-q4</code> beats <code class="mono">my-best-config</code>.</li>
+            <li>Explicit <code class="mono">backend</code>, <code class="mono">hardware.class</code>, and tested VRAM range.</li>
+            <li>A short <code class="mono">hardware.notes</code> line with the actual machine you tested on.</li>
+            <li>Args as panel-row strings: <code class="mono">"--ctx-size 4096"</code>, not pre-split tokens.</li>
+          </ul>
+        </div>
+        <div>
+          <h2 style="font-size:30px;margin:0 0 12px">Validation</h2>
+          <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden;font-family:var(--font-mono);font-size:13px">
+            {[
+              ["schema_version == 2", "required"],
+              ["backend ∈ {llama, vllm, ollama, koboldcpp}", "required"],
+              ["use_case.primary ∈ canonical set", "warn"],
+              ["model-location params absent from args", "required"],
+              ["hardware.min_vram_gb ≤ hardware.max_vram_gb", "warn"],
+            ].map(([rule, level], i) => (
+              <div style={`display:grid;grid-template-columns:1fr 100px;padding:10px 14px;border-top:${i ? "1px solid var(--border)" : "0"};align-items:center`}>
+                <span>{rule}</span>
+                <Badge tone={level === "required" ? "error" : "warning"}>{level}</Badge>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div>
+          <h2 style="font-size:30px;margin:0 0 12px">PR flow</h2>
+          <ol style="margin:0;padding-left:18px;font-size:16px;line-height:1.7;max-width:62ch">
+            <li>Fork <code class="mono">flyingnobita/llml-profiles</code></li>
+            <li>Add your TOML under <code class="mono">profiles/&lt;name&gt;.toml</code></li>
+            <li>Run <code class="mono">npm run validate</code> locally</li>
+            <li>Open a PR with one paragraph about your machine</li>
+          </ol>
+        </div>
+      </article>
+    </div>
+  </section>
+</BaseLayout>

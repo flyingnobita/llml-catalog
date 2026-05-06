@@ -1,0 +1,138 @@
+---
+// profile/[id].astro — Profile detail page.
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Badge from "../../components/Badge.astro";
+import Button from "../../components/Button.astro";
+import MetaCell from "../../components/MetaCell.astro";
+import ImportBlock from "../../components/ImportBlock.astro";
+import { PROFILES } from "../../data/profiles";
+
+export function getStaticPaths() {
+  return PROFILES.map((p) => ({ params: { id: p.id } }));
+}
+
+const { id } = Astro.params;
+const p = PROFILES.find((x) => x.id === id) || PROFILES[0];
+const base = import.meta.env.BASE_URL.slice(0, -1);
+---
+
+<BaseLayout
+  title={`${p.name}`}
+  description={p.fit}
+>
+  <!-- Hero section -->
+  <section style="border-bottom:1px solid var(--border);padding:40px 32px 32px">
+    <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 360px;gap:48px">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <a href={`${base}/browse`} style="font:inherit;background:transparent;border:0;padding:0;cursor:pointer;font-family:var(--font-mono);font-size:12px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;text-align:left;width:fit-content;text-decoration:none">← browse</a>
+        <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+          <h1 style="font-size:48px;letter-spacing:-0.01em;margin:0">{p.name}</h1>
+          {p.verified && <Badge tone="success">✓ Verified maintainer</Badge>}
+        </div>
+        <p style="font-size:18px;line-height:1.5;max-width:60ch;margin:0">{p.fit}</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+          <Badge tone="fill">{p.backend}</Badge>
+          <Badge tone="fill">{p.hardware}</Badge>
+          <Badge>{p.os}</Badge>
+          <Badge>{p.useCase}</Badge>
+          <Badge tone="info">Updated {p.updated}</Badge>
+        </div>
+      </div>
+      <aside style="display:flex;flex-direction:column;gap:14px;padding-top:32px">
+        <span class="eyebrow">Import</span>
+        <ImportBlock cmd={p.importCmd} />
+        <p style="font-size:13px;color:var(--muted);line-height:1.5;margin:0">
+          Runs <code class="mono">llml import</code> against the canonical TOML file. The profile attaches to your local model on next launch (press <code class="mono">p</code> in the TUI).
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Facts grid -->
+  <section style="border-bottom:1px solid var(--border);padding:32px">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px">
+        <MetaCell label="Model" value={p.name.split(" — ")[0].split(" Profile")[0]} />
+        <MetaCell label="Backend" value={p.backend} mono />
+        <MetaCell label="Hardware" value={p.hardware} />
+        <MetaCell label="Use case" value={p.useCase} />
+        <MetaCell label="Maintainer" value={p.maintainer} />
+        <MetaCell label="Last updated" value={p.updated} />
+      </div>
+    </div>
+  </section>
+
+  <!-- Content body -->
+  <section style="padding:48px 32px">
+    <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 360px;gap:64px">
+      <div style="display:flex;flex-direction:column;gap:32px">
+        <!-- Rationale -->
+        <div>
+          <h2 style="font-size:30px;letter-spacing:-0.01em;margin:0 0 12px">Why this profile exists</h2>
+          <p style="font-size:16px;line-height:1.6;max-width:60ch;margin:0">{p.rationale}</p>
+        </div>
+
+        <!-- Launch config -->
+        <div>
+          <h3 style="font-size:18px;margin:0 0 12px">Launch configuration</h3>
+          <div style="background:var(--paper-2);border:1px solid var(--border);border-radius:8px;padding:16px;font-family:var(--font-mono);font-size:13px">
+            <div style="color:var(--muted);margin-bottom:6px"># args</div>
+            {p.args.length > 0 ? p.args.map((a, i) => <div>{a}</div>) : <div style="color:var(--muted)">(none — backend defaults)</div>}
+            {p.env.length > 0 && (
+              <>
+                <div style="color:var(--muted);margin:12px 0 6px"># env</div>
+                {p.env.map((e) => <div>{e.key}=<span style="color:var(--primary)">{e.value}</span></div>)}
+              </>
+            )}
+          </div>
+        </div>
+
+        <!-- Hardware assumptions -->
+        <div>
+          <h3 style="font-size:18px;margin:0 0 12px">Hardware assumptions</h3>
+          <ul style="margin:0;padding-left:18px;font-size:15px;line-height:1.7">
+            <li>{p.hardware} — tested envelope</li>
+            <li>{p.os} — backend installed and on PATH</li>
+            <li>Backend: <code class="mono">{p.backend}</code> &gt;= current llml-supported version</li>
+            <li>Profile assumes the model file is already on disk; <code class="mono">llml</code> supplies the path at launch</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <aside style="display:flex;flex-direction:column;gap:24px">
+        <!-- Provenance -->
+        <div style="border:1px solid var(--border);border-radius:8px;padding:16px;background:#fff;display:flex;flex-direction:column;gap:10px">
+          <span class="eyebrow">Source provenance</span>
+          <div style="display:grid;grid-template-columns:100px 1fr;row-gap:6px;column-gap:12px;font-family:var(--font-mono);font-size:12px">
+            <span style="color:var(--muted)">repo</span><span>flyingnobita/llml-profiles</span>
+            <span style="color:var(--muted)">path</span><span>{p.repoPath}</span>
+            <span style="color:var(--muted)">commit</span><span>{p.commit}</span>
+            <span style="color:var(--muted)">maintainer</span><span>{p.maintainer}</span>
+          </div>
+          <a href="#" style="font-family:var(--font-sans);font-size:13px;color:var(--primary);border-bottom:1px solid var(--primary);width:fit-content;text-decoration:none">
+            View on GitHub ↗
+          </a>
+        </div>
+
+        <!-- Related profiles -->
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span class="eyebrow">Related profiles</span>
+          {p.related.length === 0 && <span style="color:var(--muted);font-size:13px">No nearby alternatives yet.</span>}
+          {p.related.map((rid: string) => {
+            const r = PROFILES.find((x) => x.id === rid);
+            if (!r) return null;
+            return (
+              <a href={`${base}/profile/${rid}`} style="font:inherit;text-align:left;background:transparent;border:1px solid var(--border);border-radius:8px;padding:12px;cursor:pointer;display:flex;flex-direction:column;gap:4px;text-decoration:none;color:inherit">
+                <span style="font-family:var(--font-sans);font-size:14px;font-weight:600">{r.name}</span>
+                <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">
+                  {r.backend} · {r.hardware}
+                </span>
+              </a>
+            );
+          })}
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>

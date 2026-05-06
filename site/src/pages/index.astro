@@ -1,0 +1,191 @@
+---
+// index.astro — Home / landing page.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Button from "../components/Button.astro";
+import Badge from "../components/Badge.astro";
+import ImportBlock from "../components/ImportBlock.astro";
+import { PROFILES } from "../data/profiles";
+
+const base = import.meta.env.BASE_URL.slice(0, -1);
+const p0 = PROFILES[0];
+const p1 = PROFILES[1];
+---
+
+<BaseLayout
+  title="llml profile catalog"
+  description="A registry of portable TOML parameter profiles for llama.cpp, vLLM, Ollama, and KoboldCpp. Filter by backend, hardware, and OS — then import into your local llml with one command."
+>
+  <!-- Hero -->
+  <section style="padding:64px 32px 48px">
+    <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <span class="eyebrow">v2 · portable parameter profiles</span>
+        <h1 style="font-size:64px;line-height:1.05;letter-spacing:-0.02em;max-width:16ch">
+          Find the profile that fits your <em style="font-style:italic;color:var(--secondary)">model</em> and your <em style="font-style:italic;color:var(--secondary)">machine</em>.
+        </h1>
+        <p style="font-size:18px;line-height:1.55;max-width:52ch;color:var(--ink)">
+          A registry of TOML parameter profiles for <code class="mono">llama.cpp</code>, <code class="mono">vLLM</code>,{" "}
+          <code class="mono">Ollama</code>, and <code class="mono">KoboldCpp</code>. Filter by backend, hardware,
+          and OS — then import into your local <code class="mono">llml</code> with one command.
+        </p>
+        <div style="display:flex;gap:12px;margin-top:8px">
+          <Button variant="primary" href={`${base}/browse`}>Browse profiles →</Button>
+          <Button variant="secondary" href={`${base}/how`}>Learn how profiles work</Button>
+        </div>
+      </div>
+      <!-- HeroArtifact -->
+      <div style="border:1px solid var(--border);border-radius:12px;background:#fff;overflow:hidden;box-shadow:0 1px 0 rgba(17,19,24,.04),0 24px 60px -32px rgba(17,19,24,.18)">
+        <div style="padding:16px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center">
+          <input
+            value="qwen3 14b coding"
+            disabled
+            style="font:inherit;flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--paper)"
+          />
+          <Badge tone="info" mono={false}>backend: koboldcpp</Badge>
+          <Badge tone="fill">24GB NVIDIA</Badge>
+        </div>
+        <div style="padding:16px;display:flex;flex-direction:column;gap:10px">
+          {[p0, p1].map((p) => (
+            <a href={`${base}/profile/${p.id}`} style="border:1px solid var(--border);border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:16px;text-decoration:none;color:inherit">
+              <div style="flex:1;min-width:0">
+                <div style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap">
+                  <strong style="font-family:var(--font-sans);font-size:15px;flex:1 1 auto;min-width:0">{p.name}</strong>
+                  {p.verified && <span style="font-family:var(--font-mono);font-size:11px;color:var(--success);flex:0 0 auto;white-space:nowrap">✓ Verified</span>}
+                </div>
+                <div style="font-size:13px;color:var(--ink);margin-top:2px">{p.fit}</div>
+                <div style="display:flex;gap:10px;font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-top:6px">
+                  <span>{p.backend}</span><span>·</span><span>{p.hardware}</span><span>·</span><span>{p.os}</span><span>·</span><span>{p.updated}</span>
+                </div>
+              </div>
+              <Button>Import</Button>
+            </a>
+          ))}
+        </div>
+        <div style="padding:16px;border-top:1px solid var(--border);background:var(--paper)">
+          <ImportBlock cmd="llml import qwen3-14b-coding.toml" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ProofStrip -->
+  <section style="border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--paper-2)">
+    <div style="max-width:1180px;margin:0 auto;padding:24px 32px;display:grid;grid-template-columns:repeat(3,1fr);gap:32px">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <span class="eyebrow">BACKENDS</span>
+        <span style="font-family:var(--font-sans);font-size:16px;font-weight:500">llama.cpp · vLLM · Ollama · KoboldCpp</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <span class="eyebrow">MATCH ON</span>
+        <span style="font-family:var(--font-sans);font-size:16px;font-weight:500">GPU class · VRAM · OS · use case</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <span class="eyebrow">SOURCE</span>
+        <span style="font-family:var(--font-sans);font-size:16px;font-weight:500">Every profile linked to a GitHub commit</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- HowItWorks -->
+  <section style="padding:72px 32px">
+    <div style="max-width:1180px;margin:0 auto">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:32px">
+        <h2 style="font-size:40px;letter-spacing:-0.01em">How it works</h2>
+        <span class="eyebrow">three steps</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+        {[
+          { n: "01", t: "Find a profile", d: "Filter by backend, hardware class, and OS. The fit summary tells you in one line whether it's worth your time." },
+          { n: "02", t: "Check machine fit", d: "Every profile declares VRAM, GPU count, and tested context. Compatibility shows up as a verdict, not a guess." },
+          { n: "03", t: "Import into llml", d: "Copy the import command. Profiles attach to your local model and appear under p in the TUI on next launch." },
+        ].map((s) => (
+          <div style="border-top:1px solid var(--ink);padding-top:20px;display:flex;flex-direction:column;gap:10px">
+            <span style="font-family:var(--font-mono);font-size:13px;color:var(--muted)">{s.n}</span>
+            <h3 style="font-size:22px">{s.t}</h3>
+            <p style="color:var(--ink);font-size:15px;line-height:1.55">{s.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- BrowsePreview -->
+  <section style="padding:32px 32px 72px;background:var(--paper-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <div style="max-width:1180px;margin:0 auto">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin:32px 0 20px">
+        <h2 style="font-size:40px;letter-spacing:-0.01em">Recently updated</h2>
+        <a href={`${base}/browse`} style="font:inherit;font-family:var(--font-sans);font-size:14px;cursor:pointer;color:var(--ink);border-bottom:1px solid var(--ink);text-decoration:none">
+          Browse all {PROFILES.length} profiles →
+        </a>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+        {PROFILES.slice(0, 6).map((p) => (
+          <a href={`${base}/profile/${p.id}`} style="font:inherit;text-align:left;background:var(--paper);border:1px solid var(--border);border-radius:8px;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;transition:transform var(--d-micro)">
+            <div style="display:flex;justify-content:space-between;align-items:baseline">
+              <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase">{p.backend}</span>
+              {p.verified ? (
+                <span style="font-family:var(--font-mono);font-size:11px;color:var(--success)">✓ verified</span>
+              ) : (
+                <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">community</span>
+              )}
+            </div>
+            <h4 style="font-size:16px;font-weight:600;margin:0">{p.name}</h4>
+            <p style="font-size:13px;color:var(--ink);line-height:1.5;margin:0">{p.fit}</p>
+            <div style="display:flex;gap:6px;margin-top:auto;padding-top:10px;flex-wrap:wrap">
+              <Badge tone="fill">{p.hardware}</Badge>
+              <Badge>{p.os}</Badge>
+              <Badge>{p.useCase}</Badge>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- WhyDifferent -->
+  <section style="padding:72px 32px">
+    <div style="max-width:1180px;margin:0 auto">
+      <h2 style="font-size:40px;letter-spacing:-0.01em;margin-bottom:32px;max-width:20ch">
+        Why this <em style="font-style:italic">isn't</em> another model gallery
+      </h2>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px">
+        {[
+          { t: "Fit over popularity", d: "Result rows lead with hardware match and update recency, not stars or downloads. The first question is whether the profile will run, not whether it trended." },
+          { t: "Portable, not platform-locked", d: "Profiles are TOML files with a documented schema. They live in GitHub, not a service. The catalog is a thin index over real source files." },
+          { t: "Reproducible imports", d: "An import is one shell command. The same TOML produces the same args and env on every machine — no hidden web of preferences." },
+        ].map((c) => (
+          <div style="display:flex;flex-direction:column;gap:8px;padding-right:16px">
+            <h3 style="font-size:20px;margin:0">{c.t}</h3>
+            <p style="font-size:15px;line-height:1.55;margin:0">{c.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ContributeCTA -->
+  <section style="padding:48px 32px;border-top:1px solid var(--border);background:var(--secondary);color:var(--paper)">
+    <div style="max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <h2 style="font-size:32px;color:var(--paper);margin:0">Got a profile that just works?</h2>
+        <p style="color:#B6B0A3;font-size:16px;margin:0">Share the args your machine and model converged on. PR-only. No accounts.</p>
+      </div>
+      <div style="display:flex;gap:12px">
+        <Button variant="primary" href={`${base}/contribute`} class="contribute-btn">Read the format</Button>
+        <Button variant="secondary" href={`${base}/contribute`} class="contribute-btn-ghost">Open a PR ↗</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contribute-btn {
+    background: var(--paper) !important;
+    color: var(--ink) !important;
+    border-color: var(--paper) !important;
+  }
+  .contribute-btn-ghost {
+    border-color: #2C323D !important;
+    color: var(--paper) !important;
+  }
+</style>

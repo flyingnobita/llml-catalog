@@ -1,0 +1,26 @@
+---
+// Button.astro — reusable button atom.
+export interface Props {
+  variant?: "primary" | "secondary" | "dark" | "ghost";
+  href?: string;
+  disabled?: boolean;
+  class?: string;
+}
+const { variant = "primary", href, disabled, class: className } = Astro.props;
+const v: Record<string, { bg: string; fg: string; bd: string }> = {
+  primary: { bg: "var(--primary)", fg: "#fff", bd: "var(--primary)" },
+  secondary: { bg: "transparent", fg: "var(--ink)", bd: "var(--border)" },
+  dark: { bg: "var(--secondary)", fg: "var(--paper)", bd: "var(--secondary)" },
+  ghost: { bg: "transparent", fg: "var(--ink)", bd: "transparent" },
+};
+const t = v[variant];
+const style = `font:inherit;font-family:var(--font-sans);font-size:14px;font-weight:500;background:${t.bg};color:${t.fg};border:1px solid ${t.bd};padding:8px 14px;border-radius:8px;cursor:${disabled ? "not-allowed" : "pointer"};opacity:${disabled ? "0.5" : "1"};transition:background var(--d-short) var(--ease-move),transform var(--d-micro);text-decoration:none;display:inline-block;`;
+const Tag = href ? "a" : "button";
+---
+
+
+{Tag === "a" ? (
+  <a href={href} class={className} style={style}><slot /></a>
+) : (
+  <button disabled={disabled} class={className} style={style}><slot /></button>
+)}

@@ -1,0 +1,241 @@
+---
+// browse.astro — filterable catalog browse page.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Button from "../components/Button.astro";
+import Badge from "../components/Badge.astro";
+import { PROFILES, FILTERS } from "../data/profiles";
+
+const base = import.meta.env.BASE_URL.slice(0, -1);
+// For initial static build, show all profiles. Filtering will be client-side JS.
+---
+
+<BaseLayout
+  title="Browse Profiles"
+  description="Filter by backend, hardware class, OS, and use case. Every profile is a portable TOML file from a public GitHub repo."
+>
+  <section style="border-bottom:1px solid var(--border);padding:32px">
+    <div style="max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:12px">
+      <span class="eyebrow">browse</span>
+      <h1 style="font-size:40px;letter-spacing:-0.01em">Profiles for local LLMs</h1>
+      <p style="color:var(--muted);font-size:15px">
+        Filter by backend, hardware class, OS, and use case. Every profile is a portable TOML file
+        from a public GitHub repo.
+      </p>
+    </div>
+  </section>
+
+  <div style="max-width:1280px;margin:0 auto;padding:24px 32px;display:grid;grid-template-columns:220px 1fr;gap:32px">
+    <!-- Filter sidebar -->
+    <aside id="filters" style="display:flex;flex-direction:column;gap:24px">
+      <div style="position:relative">
+        <input
+          id="search"
+          type="text"
+          placeholder="Search profiles…"
+          style="font:inherit;padding:8px 12px;padding-right:36px;border:1px solid var(--border);border-radius:8px;background:#fff;width:100%;box-sizing:border-box"
+        />
+        <kbd style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-family:var(--font-mono);font-size:11px;padding:2px 6px;border:1px solid var(--border);border-bottom-width:2px;border-radius:4px;background:var(--paper);color:var(--muted);pointer-events:none">/</kbd>
+      </div>
+      {[
+        { key: "backend", title: "Backend", options: FILTERS.backend },
+        { key: "hardware", title: "Hardware class", options: FILTERS.hardware },
+        { key: "os", title: "Operating system", options: FILTERS.os },
+        { key: "useCase", title: "Use case", options: FILTERS.useCase },
+        { key: "source", title: "Source", options: FILTERS.source },
+      ].map((g) => (
+        <div class="filter-group" data-key={g.key} style="display:flex;flex-direction:column;gap:6px">
+          <span class="eyebrow">{g.title}</span>
+          <div style="display:flex;flex-direction:column;gap:2px">
+            {g.options.map((o: string) => (
+              <button class="filter-opt" data-group={g.key} data-value={o} style="font:inherit;text-align:left;background:transparent;border:0;padding:4px 0;cursor:pointer;font-family:var(--font-sans);font-size:13px;color:var(--muted);font-weight:400;display:flex;gap:8px;align-items:center">
+                <span class="filter-dot" style="width:12px;height:12px;border-radius:2px;border:1px solid var(--border);background:transparent;display:inline-block;flex-shrink:0"></span>
+                {o}
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
+    </aside>
+
+    <!-- Result list -->
+    <main>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--ink)">
+        <span id="count" style="font-family:var(--font-mono);font-size:13px">
+          <strong>{PROFILES.length}</strong> <span style="color:var(--muted)">of {PROFILES.length} profiles</span>
+        </span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="eyebrow">sort</span>
+          <select id="sort" style="font:inherit;padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:#fff">
+            <option>Updated</option>
+            <option>Fit</option>
+            <option>Name</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Column headers -->
+      <div style="display:grid;grid-template-columns:20px 1fr 120px 130px 100px 100px 110px;gap:16px;padding:10px 0;border-bottom:1px solid var(--border);font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase">
+        <span></span><span>Profile</span><span>Backend</span><span>Hardware</span><span>OS</span><span>Updated</span><span></span>
+      </div>
+
+      <!-- Result rows -->
+      <div id="results">
+        {PROFILES.map((p) => (
+          <div class="result-row" data-backend={p.backend} data-hardware={p.hardware} data-os={p.os} data-usecase={p.useCase} data-verified={String(p.verified)} data-name={p.name} style="border-bottom:1px solid var(--border);padding:14px 0;display:grid;grid-template-columns:20px 1fr 120px 130px 100px 100px 110px;gap:16px;align-items:center">
+            <input type="checkbox" class="compare-check" data-id={p.id} style="accent-color:var(--primary);width:16px;height:16px" />
+            <a href={`${base}/profile/${p.id}`} style="font:inherit;background:transparent;border:0;text-align:left;cursor:pointer;padding:0;min-width:0;text-decoration:none;color:inherit">
+              <div style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap">
+                <strong style="font-family:var(--font-sans);font-size:15px;flex:1 1 auto;min-width:0">{p.name}</strong>
+                {p.verified && <span style="font-family:var(--font-mono);font-size:11px;color:var(--success);flex:0 0 auto;white-space:nowrap">✓</span>}
+              </div>
+              <div style="font-size:13px;color:var(--ink);margin-top:2px">{p.fit}</div>
+            </a>
+            <span style="font-family:var(--font-mono);font-size:12px">{p.backend}</span>
+            <span style="font-family:var(--font-mono);font-size:12px">{p.hardware}</span>
+            <span style="font-family:var(--font-mono);font-size:12px;color:var(--muted)">{p.os}</span>
+            <span style="font-family:var(--font-mono);font-size:12px;color:var(--muted)">{p.updated}</span>
+            <Button variant="primary" href={`${base}/profile/${p.id}`} class="import-btn">Import</Button>
+          </div>
+        ))}
+      </div>
+
+      <!-- No results (hidden by default) -->
+      <div id="no-results" style="display:none;padding:48px;text-align:center;color:var(--muted);font-family:var(--font-sans);font-size:14px">
+        No profiles match these filters. <a href={base + "/contribute"} style="color:var(--primary);text-decoration:underline">Open a PR for this combo →</a>
+      </div>
+    </main>
+  </div>
+
+  <!-- Compare tray (hidden by default) -->
+  <div id="compare-tray" style="display:none;position:sticky;bottom:16px;margin:0 32px 16px;background:rgba(243,241,234,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:8px;padding:12px 16px;align-items:center;gap:16px;box-shadow:var(--shadow-float);z-index:5">
+    <span class="eyebrow">Compare · <span id="compare-count">0</span></span>
+    <div id="compare-chips" style="display:flex;gap:8px;flex:1;min-width:0;overflow:hidden"></div>
+    <button id="compare-clear" style="font:inherit;background:transparent;border:0;cursor:pointer;font-family:var(--font-sans);font-size:13px;color:var(--muted)">Clear</button>
+    <Button variant="dark" href="#" class="compare-link">Compare →</Button>
+  </div>
+
+  <div id="empty-compare" style="display:none;text-align:center;padding:80px 32px;max-width:720px;margin:0 auto">
+    <span class="eyebrow">compare</span>
+    <h1 style="font-size:40px;letter-spacing:-0.01em;margin-top:8px">Nothing to compare yet</h1>
+    <p style="color:var(--muted);font-size:15px;line-height:1.6;margin-top:8px">
+      Check two or more profiles above to see them side-by-side.
+    </p>
+  </div>
+</BaseLayout>
+
+<script define:vars={{ profilesJson: JSON.stringify(PROFILES.map(p => ({ id:p.id, name:p.name, fit:p.fit, backend:p.backend, hardware:p.hardware, os:p.os, useCase:p.useCase, verified:p.verified, updated:p.updated, importCmd:p.importCmd }))) }}>
+  const PROFILES = JSON.parse(profilesJson);
+  const base = import.meta.env.BASE_URL.slice(0, -1);
+
+  // Client-side filter + search
+  const search = document.getElementById("search") as HTMLInputElement;
+  const sort = document.getElementById("sort") as HTMLSelectElement;
+  const rows = Array.from(document.querySelectorAll(".result-row")) as HTMLElement[];
+  const noResults = document.getElementById("no-results")!;
+  const countEl = document.getElementById("count")!;
+  const tray = document.getElementById("compare-tray")!;
+  const trayChips = document.getElementById("compare-chips")!;
+  const trayCount = document.getElementById("compare-count")!;
+  const trayClear = document.getElementById("compare-clear")!;
+  const trayLink = document.querySelector(".compare-link")!;
+  let compareIds: string[] = [];
+  let activeFilters: Record<string, Set<string>> = {
+    backend: new Set(),
+    hardware: new Set(),
+    os: new Set(),
+    useCase: new Set(),
+    source: new Set(),
+  };
+
+  function updateTray() {
+    const items = compareIds.map(id => PROFILES.find((p: any) => p.id === id)).filter(Boolean);
+    if (items.length === 0) {
+      tray.style.display = "none";
+    } else {
+      tray.style.display = "flex";
+      trayCount.textContent = String(items.length);
+      trayChips.innerHTML = items.map((p: any) => `<span style="border:1px solid var(--border);padding:3px 8px;border-radius:4px;background:var(--paper);font-family:var(--font-sans);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px">${p.name}</span>`).join("");
+      const ids = compareIds.join(",");
+      (trayLink as HTMLAnchorElement).href = base + "/compare?ids=" + encodeURIComponent(ids);
+    }
+  }
+
+  function applyFilters() {
+    const q = search.value.trim().toLowerCase();
+    const sortVal = sort.value;
+    let visible = rows.filter(row => {
+      if (activeFilters.backend.size && !activeFilters.backend.has(row.dataset.backend!)) return false;
+      if (activeFilters.hardware.size && !activeFilters.hardware.has(row.dataset.hardware!)) return false;
+      if (activeFilters.os.size && !activeFilters.os.has(row.dataset.os!)) return false;
+      if (activeFilters.useCase.size && !activeFilters.useCase.has(row.dataset.usecase!)) return false;
+      if (activeFilters.source.size) {
+        const tag = row.dataset.verified === "true" ? "Verified" : "Community";
+        if (!activeFilters.source.has(tag)) return false;
+      }
+      if (q) {
+        const blob = `${row.dataset.name} ${row.dataset.backend} ${row.dataset.hardware} ${row.dataset.os} ${row.dataset.usecase}`.toLowerCase();
+        if (!blob.includes(q)) return false;
+      }
+      return true;
+    });
+
+    if (sortVal === "Name") visible.sort((a, b) => (a.dataset.name || "").localeCompare(b.dataset.name || ""));
+    else if (sortVal === "Fit") visible.sort((a, b) => (Number(b.dataset.verified === "true") - Number(a.dataset.verified === "true")) || (a.dataset.name || "").localeCompare(b.dataset.name || ""));
+
+    rows.forEach(r => r.style.display = "none");
+    visible.forEach(r => r.style.display = "grid");
+    noResults.style.display = visible.length ? "none" : "block";
+    countEl.innerHTML = `<strong>${visible.length}</strong> <span style="color:var(--muted)">of ${PROFILES.length} profiles</span>${q ? `<span style="color:var(--muted);margin-left:8px">· matching "${q}"</span>` : ""}`;
+  }
+
+  // Filter toggle
+  document.querySelectorAll(".filter-opt").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const group = btn.dataset.group!;
+      const value = btn.dataset.value!;
+      const set = activeFilters[group];
+      if (set.has(value)) set.delete(value); else set.add(value);
+      const active = set.has(value);
+      (btn as HTMLElement).style.color = active ? "var(--ink)" : "var(--muted)";
+      (btn as HTMLElement).style.fontWeight = active ? "600" : "400";
+      (btn.querySelector(".filter-dot") as HTMLElement).style.background = active ? "var(--primary)" : "transparent";
+      applyFilters();
+    });
+  });
+
+  // Search
+  search.addEventListener("input", applyFilters);
+  sort.addEventListener("change", applyFilters);
+
+  // Compare checkboxes
+  document.querySelectorAll(".compare-check").forEach(cb => {
+    cb.addEventListener("change", () => {
+      const id = (cb as HTMLInputElement).dataset.id!;
+      if ((cb as HTMLInputElement).checked) {
+        compareIds.push(id);
+      } else {
+        compareIds = compareIds.filter(x => x !== id);
+      }
+      updateTray();
+    });
+  });
+
+  trayClear.addEventListener("click", () => {
+    compareIds = [];
+    document.querySelectorAll(".compare-check").forEach(c => (c as HTMLInputElement).checked = false);
+    updateTray();
+  });
+
+  // Keyboard: / to focus search
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "/" && !["INPUT","SELECT","TEXTAREA"].includes((e.target as HTMLElement).tagName)) {
+      e.preventDefault();
+      search.focus();
+    }
+  });
+
+  // CSS for import btn in row
+  const style = document.createElement("style");
+  style.textContent = `.import-btn { padding: 6px 12px !important; font-size: 13px !important; }`;
+  document.head.appendChild(style);
+</script>

@@ -1,0 +1,30 @@
+---
+// BaseLayout.astro — wraps every page with CSS tokens, fonts, Nav, and Footer.
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+
+export interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title} · llml profile catalog</title>
+  {description && <meta name="description" content={description} />}
+  <link rel="stylesheet" href={`${import.meta.env.BASE_URL}styles/colors_and_type.css`} />
+  <style is:global>
+    body { margin: 0; }
+  </style>
+</head>
+<body>
+  <Nav />
+  <slot />
+  <Footer />
+</body>
+</html>

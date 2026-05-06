@@ -1,0 +1,35 @@
+---
+// Badge.astro — reusable badge atom.
+export interface Props {
+  tone?: "neutral" | "fill" | "success" | "warning" | "error" | "info";
+  mono?: boolean;
+  class?: string;
+}
+const { tone = "neutral", mono = true, class: className } = Astro.props;
+const tones: Record<string, { bg: string; fg: string; bd: string }> = {
+  neutral: { bg: "var(--paper)", fg: "var(--ink)", bd: "var(--border)" },
+  fill: { bg: "var(--paper-2)", fg: "var(--ink)", bd: "var(--border)" },
+  success: { bg: "rgba(30,188,115,.12)", fg: "#136b41", bd: "rgba(30,188,115,.4)" },
+  warning: { bg: "rgba(201,133,18,.12)", fg: "#7a510b", bd: "rgba(201,133,18,.4)" },
+  error: { bg: "rgba(216,75,69,.12)", fg: "#8a2e2a", bd: "rgba(216,75,69,.4)" },
+  info: { bg: "rgba(47,107,255,.10)", fg: "#1d4cc2", bd: "rgba(47,107,255,.4)" },
+};
+const t = tones[tone];
+const font = mono ? "var(--font-mono)" : "var(--font-sans)";
+---
+
+<span
+  class={className}
+  style={{
+    fontFamily: font,
+    fontSize: "12px",
+    background: t.bg,
+    color: t.fg,
+    border: `1px solid ${t.bd}`,
+    padding: "3px 9px",
+    borderRadius: "4px",
+    whiteSpace: "nowrap",
+  }}
+>
+  <slot />
+</span>

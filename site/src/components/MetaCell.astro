@@ -1,0 +1,18 @@
+---
+// MetaCell.astro — label + value pair for the facts grid.
+export interface Props {
+  label: string;
+  value: string;
+  mono?: boolean;
+}
+const { label, value, mono } = Astro.props;
+---
+
+<div style="display:flex;flex-direction:column;gap:2px">
+  <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase">
+    {label}
+  </span>
+  <span style={`font-family:${mono ? "var(--font-mono)" : "var(--font-sans)"};font-size:14px;font-weight:600`}>
+    {value}
+  </span>
+</div>
