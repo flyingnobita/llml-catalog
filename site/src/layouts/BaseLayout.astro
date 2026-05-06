@@ -17,7 +17,7 @@ const { title, description } = Astro.props;
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title} · llml profile catalog</title>
   {description && <meta name="description" content={description} />}
-  <link rel="stylesheet" href={`${import.meta.env.BASE_URL}styles/colors_and_type.css`} />
+  <link rel="stylesheet" href={`${import.meta.env.BASE_URL}/styles/colors_and_type.css`} />
   <style is:global>
     body { margin: 0; }
   </style>

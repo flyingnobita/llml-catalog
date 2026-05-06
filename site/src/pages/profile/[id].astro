@@ -13,7 +13,7 @@ export function getStaticPaths() {
 
 const { id } = Astro.params;
 const p = PROFILES.find((x) => x.id === id) || PROFILES[0];
-const base = import.meta.env.BASE_URL.slice(0, -1);
+const base = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout

@@ -5,7 +5,7 @@ import Button from "../components/Button.astro";
 import Badge from "../components/Badge.astro";
 import { PROFILES, FILTERS } from "../data/profiles";
 
-const base = import.meta.env.BASE_URL.slice(0, -1);
+const base = import.meta.env.BASE_URL;
 // For initial static build, show all profiles. Filtering will be client-side JS.
 ---
 
@@ -125,7 +125,7 @@ const base = import.meta.env.BASE_URL.slice(0, -1);
 
 <script define:vars={{ profilesJson: JSON.stringify(PROFILES.map(p => ({ id:p.id, name:p.name, fit:p.fit, backend:p.backend, hardware:p.hardware, os:p.os, useCase:p.useCase, verified:p.verified, updated:p.updated, importCmd:p.importCmd }))) }}>
   const PROFILES = JSON.parse(profilesJson);
-  const base = import.meta.env.BASE_URL.slice(0, -1);
+  const base = import.meta.env.BASE_URL;
 
   // Client-side filter + search
   const search = document.getElementById("search") as HTMLInputElement;

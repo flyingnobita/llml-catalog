@@ -3,7 +3,7 @@
 import Button from "./Button.astro";
 
 const currentPath = Astro.url.pathname;
-const base = import.meta.env.BASE_URL.slice(0, -1);
+const base = import.meta.env.BASE_URL;
 
 function link(href: string, label: string) {
   const fullHref = base + href;
