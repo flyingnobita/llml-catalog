@@ -8,6 +8,9 @@ site/node_modules/
 site/.next/
 site/out/
 
+# mise local overrides (secrets, machine-specific)
+mise.local.toml
+
 # editor
 .idea/
 .vscode/
