@@ -16,3 +16,11 @@ mise.local.toml
 .vscode/
 *.swp
 .gstack/
+
+# Agents
+.claude/*
+.codex/
+.cursor/
+.gemini/
+.opencode/
+TODOS.md
