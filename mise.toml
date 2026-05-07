@@ -1,3 +1,9 @@
 [tools]
 node = "24"
 pnpm = "10.33"
+
+[tasks]
+sync = "git submodule sync --recursive && git submodule update --init --recursive"
+dev-docs-pull = "scripts/dev_docs_pull.sh"
+pull-latest = "git pull --rebase origin main && mise run dev-docs-pull"
+worktree-setup = "cd site && pnpm install && cd .. && git submodule update --init --recursive && LLML_AGENTS_SYNC=import ./scripts/sync_gitignore_agents.sh"
