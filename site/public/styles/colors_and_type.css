@@ -9,13 +9,18 @@
   /* ---------- Color ---------- */
   --primary: #2F6BFF;
   --primary-press: #234fc2;
-  --secondary: #1A1F27;
 
   --paper: #F3F1EA;            /* default page surface */
   --paper-2: #E7E1D4;           /* alt section fill, row hover */
   --border: #D8D2C4;
   --muted: #8A8375;             /* muted copy */
   --ink: #111318;               /* primary text */
+
+  --surface-raised:   #FFFFFF;  /* card / raised content on paper */
+  --surface-float:    rgba(243,241,234,0.92); /* floating tray / overlay */
+  --surface-inverse:  #1A1F27;  /* dark bg for emphasis blocks */
+  --surface-inverse-fg: #F3F1EA; /* text on inverse */
+  --accent-ink:       #1A1F27;  /* bold/decorative inline text */
 
   --success: #1EBC73;
   --warning: #C98512;
@@ -84,12 +89,19 @@
 
 /* Dark mode — preserves hierarchy, not inversion. */
 [data-theme="dark"] {
+  color-scheme: dark;
+
   --paper:   #111318;
   --paper-2: #181C24;
   --border:  #2C323D;
   --muted:   #B6B0A3;
   --ink:     #F3F1EA;
-  --secondary: #1A1F27;
+
+  --surface-raised:   #1A1F27;
+  --surface-float:    rgba(17,19,24,0.92);
+  --surface-inverse:  #1A1F27;
+  --surface-inverse-fg: #F3F1EA;
+  --accent-ink:       #F3F1EA;
 
   /* Accent saturation reduced ~10% */
   --primary:       #4D7DFF;
@@ -111,6 +123,7 @@
 html, body {
   background: var(--paper);
   color: var(--ink);
+  color-scheme: light dark;
   font-family: var(--font-sans);
   font-size: var(--text-md);
   line-height: var(--leading-body);

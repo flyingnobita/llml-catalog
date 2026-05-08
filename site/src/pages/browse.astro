@@ -32,7 +32,7 @@ const base = import.meta.env.BASE_URL;
           id="search"
           type="text"
           placeholder="Search profiles…"
-          style="font:inherit;padding:8px 12px;padding-right:36px;border:1px solid var(--border);border-radius:8px;background:#fff;width:100%;box-sizing:border-box"
+          style="font:inherit;padding:8px 12px;padding-right:36px;border:1px solid var(--border);border-radius:8px;background:var(--surface-raised);width:100%;box-sizing:border-box"
         />
         <kbd style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-family:var(--font-mono);font-size:11px;padding:2px 6px;border:1px solid var(--border);border-bottom-width:2px;border-radius:4px;background:var(--paper);color:var(--muted);pointer-events:none">/</kbd>
       </div>
@@ -65,7 +65,7 @@ const base = import.meta.env.BASE_URL;
         </span>
         <div style="display:flex;gap:8px;align-items:center">
           <span class="eyebrow">sort</span>
-          <select id="sort" style="font:inherit;padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:#fff">
+          <select id="sort" style="font:inherit;padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface-raised)">
             <option>Updated</option>
             <option>Fit</option>
             <option>Name</option>
@@ -107,7 +107,7 @@ const base = import.meta.env.BASE_URL;
   </div>
 
   <!-- Compare tray (hidden by default) -->
-  <div id="compare-tray" style="display:none;position:sticky;bottom:16px;margin:0 32px 16px;background:rgba(243,241,234,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:8px;padding:12px 16px;align-items:center;gap:16px;box-shadow:var(--shadow-float);z-index:5">
+  <div id="compare-tray" style="display:none;position:sticky;bottom:16px;margin:0 32px 16px;background:var(--surface-float);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:8px;padding:12px 16px;align-items:center;gap:16px;box-shadow:var(--shadow-float);z-index:5">
     <span class="eyebrow">Compare · <span id="compare-count">0</span></span>
     <div id="compare-chips" style="display:flex;gap:8px;flex:1;min-width:0;overflow:hidden"></div>
     <button id="compare-clear" style="font:inherit;background:transparent;border:0;cursor:pointer;font-family:var(--font-sans);font-size:13px;color:var(--muted)">Clear</button>

@@ -14,8 +14,8 @@ const { cmd } = Astro.props;
 <style>
   .import-block {
     display: flex;
-    background: var(--secondary);
-    color: var(--paper);
+    background: var(--surface-inverse);
+    color: var(--surface-inverse-fg);
     border-radius: 8px;
     overflow: hidden;
     align-items: stretch;
@@ -31,9 +31,9 @@ const { cmd } = Astro.props;
   }
   .import-block-btn {
     background: transparent;
-    color: var(--paper);
+    color: var(--surface-inverse-fg);
     border: 0;
-    border-left: 1px solid #2C323D;
+    border-left: 1px solid var(--border);
     padding: 0 18px;
     font-family: var(--font-sans);
     font-size: 13px;

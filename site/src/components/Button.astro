@@ -10,7 +10,7 @@ const { variant = "primary", href, disabled, class: className } = Astro.props;
 const v: Record<string, { bg: string; fg: string; bd: string }> = {
   primary: { bg: "var(--primary)", fg: "#fff", bd: "var(--primary)" },
   secondary: { bg: "transparent", fg: "var(--ink)", bd: "var(--border)" },
-  dark: { bg: "var(--secondary)", fg: "var(--paper)", bd: "var(--secondary)" },
+  dark: { bg: "var(--surface-inverse)", fg: "var(--surface-inverse-fg)", bd: "var(--surface-inverse)" },
   ghost: { bg: "transparent", fg: "var(--ink)", bd: "transparent" },
 };
 const t = v[variant];

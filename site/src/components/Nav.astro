@@ -34,7 +34,81 @@ function link(href: string, label: string) {
       <a href="https://github.com/flyingnobita/llml" style="font-family:var(--font-mono);font-size:12px;color:var(--muted);border-bottom:1px solid transparent;text-decoration:none">
         github.com/flyingnobita/llml ↗
       </a>
+
+      <!-- Theme toggle (hidden when JS disabled) -->
+      <button id="theme-toggle" class="no-js-hidden no-js-hidden--inline-flex" aria-label="Switch to dark mode"
+        style="font:inherit;background:transparent;border:1px solid var(--border);border-radius:8px;padding:6px 12px;cursor:pointer;align-items:center;gap:6px;font-family:var(--font-sans);font-size:13px;color:var(--muted);min-height:44px;min-width:44px;justify-content:center;white-space:nowrap"
+      >
+        <!-- Sun icon (shown in light mode) -->
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <!-- Moon icon (shown in dark mode) -->
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        <span>Light</span>
+      </button>
+
       <Button variant="secondary" href={`${base}/browse`}>Browse</Button>
     </div>
   </div>
 </header>
+
+<script>
+  (function () {
+    const html = document.documentElement;
+    const toggle = document.getElementById("theme-toggle");
+    if (!toggle) return;
+
+    const iconSun = toggle.querySelector(".icon-sun") as HTMLElement;
+    const iconMoon = toggle.querySelector(".icon-moon") as HTMLElement;
+    const label = toggle.querySelector("span") as HTMLElement;
+
+    function setUI(theme: string) {
+      if (theme === "dark") {
+        iconSun.style.display = "none";
+        iconMoon.style.display = "";
+        label.textContent = "Dark";
+        toggle.setAttribute("aria-label", "Switch to light mode");
+      } else {
+        iconSun.style.display = "";
+        iconMoon.style.display = "none";
+        label.textContent = "Light";
+        toggle.setAttribute("aria-label", "Switch to dark mode");
+      }
+    }
+
+    // Initial UI
+    setUI(html.getAttribute("data-theme") || "light");
+
+    // Listen for OS preference changes
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    mq.addEventListener("change", (e) => {
+      // Only follow OS preference if no explicit stored choice
+      try {
+        if (!localStorage.getItem("llml-theme")) {
+          const theme = e.matches ? "dark" : "light";
+          html.classList.add("theme-transition");
+          html.setAttribute("data-theme", theme);
+          setUI(theme);
+        }
+      } catch (_) { /* localStorage unavailable */ }
+    });
+
+    // Listen for cross-tab changes
+    window.addEventListener("storage", (e) => {
+      if (e.key === "llml-theme" && e.newValue) {
+        const theme = e.newValue === "dark" ? "dark" : "light";
+        html.classList.add("theme-transition");
+        html.setAttribute("data-theme", theme);
+        setUI(theme);
+      }
+    });
+
+    toggle.addEventListener("click", () => {
+      const current = html.getAttribute("data-theme");
+      const next = current === "dark" ? "light" : "dark";
+      html.classList.add("theme-transition");
+      html.setAttribute("data-theme", next);
+      setUI(next);
+      try { localStorage.setItem("llml-theme", next); } catch (_) {}
+    });
+  })();
+</script>

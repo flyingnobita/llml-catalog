@@ -11,18 +11,57 @@ const { title, description } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title} · llml profile catalog</title>
   {description && <meta name="description" content={description} />}
+
+  <!-- Blocking script: resolve theme before stylesheet to prevent flash of wrong theme -->
+  <script is:inline>
+    (function () {
+      const stored = (function () {
+        try { return localStorage.getItem("llml-theme"); } catch (_) { return null; }
+      })();
+      const osDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const theme = stored || (osDark ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+
   <link rel="stylesheet" href={`${import.meta.env.BASE_URL}/styles/colors_and_type.css`} />
   <style is:global>
     body { margin: 0; }
+
+    /* Transition for theme changes (only when user has no motion preference) */
+    @media (prefers-reduced-motion: no-preference) {
+      html.theme-transition,
+      html.theme-transition *,
+      html.theme-transition *::before,
+      html.theme-transition *::after {
+        transition: background-color 280ms var(--ease-move),
+                    color 280ms var(--ease-move),
+                    border-color 280ms var(--ease-move),
+                    box-shadow 280ms var(--ease-move),
+                    opacity 280ms var(--ease-move) !important;
+        transition-delay: 0s !important;
+      }
+    }
+
+    /* Hide toggle when JS is disabled —
+       toggle sets a class on html to override this */
+    .no-js-hidden { display: none; }
+    html.js .no-js-hidden { display: initial; }
+    html.js .no-js-hidden--flex { display: flex; }
+    html.js .no-js-hidden--inline-flex { display: inline-flex; }
   </style>
 </head>
 <body>
+  <script is:inline>
+    // Mark JS as available (re-hide fallback content, show JS-dependent UI)
+    document.documentElement.classList.add("js");
+  </script>
   <Nav />
   <slot />
   <Footer />
