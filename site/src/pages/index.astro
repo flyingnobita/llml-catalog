@@ -21,7 +21,7 @@ const p1 = PROFILES[1];
       <div style="display:flex;flex-direction:column;gap:20px">
         <span class="eyebrow">v2 · portable parameter profiles</span>
         <h1 style="font-size:64px;line-height:1.05;letter-spacing:-0.02em;max-width:16ch">
-          Find the profile that fits your <em style="font-style:italic;color:var(--secondary)">model</em> and your <em style="font-style:italic;color:var(--secondary)">machine</em>.
+          Find the profile that fits your <em style="font-style:italic;color:var(--accent-ink)">model</em> and your <em style="font-style:italic;color:var(--accent-ink)">machine</em>.
         </h1>
         <p style="font-size:18px;line-height:1.55;max-width:52ch;color:var(--ink)">
           A registry of TOML parameter profiles for <code class="mono">llama.cpp</code>, <code class="mono">vLLM</code>,{" "}
@@ -34,7 +34,7 @@ const p1 = PROFILES[1];
         </div>
       </div>
       <!-- HeroArtifact -->
-      <div style="border:1px solid var(--border);border-radius:12px;background:#fff;overflow:hidden;box-shadow:0 1px 0 rgba(17,19,24,.04),0 24px 60px -32px rgba(17,19,24,.18)">
+      <div style="border:1px solid var(--border);border-radius:12px;background:var(--surface-raised);overflow:hidden;box-shadow:var(--shadow-float)">
         <div style="padding:16px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center">
           <input
             value="qwen3 14b coding"
@@ -164,11 +164,11 @@ const p1 = PROFILES[1];
   </section>
 
   <!-- ContributeCTA -->
-  <section style="padding:48px 32px;border-top:1px solid var(--border);background:var(--secondary);color:var(--paper)">
+  <section style="padding:48px 32px;border-top:1px solid var(--border);background:var(--surface-inverse);color:var(--surface-inverse-fg)">
     <div style="max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap">
       <div style="display:flex;flex-direction:column;gap:6px">
-        <h2 style="font-size:32px;color:var(--paper);margin:0">Got a profile that just works?</h2>
-        <p style="color:#B6B0A3;font-size:16px;margin:0">Share the args your machine and model converged on. PR-only. No accounts.</p>
+        <h2 style="font-size:32px;color:var(--surface-inverse-fg);margin:0">Got a profile that just works?</h2>
+        <p style="color:var(--muted);font-size:16px;margin:0">Share the args your machine and model converged on. PR-only. No accounts.</p>
       </div>
       <div style="display:flex;gap:12px">
         <Button variant="primary" href={`${base}/contribute`} class="contribute-btn">Read the format</Button>
@@ -180,12 +180,12 @@ const p1 = PROFILES[1];
 
 <style>
   .contribute-btn {
-    background: var(--paper) !important;
-    color: var(--ink) !important;
-    border-color: var(--paper) !important;
+    background: var(--surface-inverse-fg) !important;
+    color: var(--surface-inverse) !important;
+    border-color: var(--surface-inverse-fg) !important;
   }
   .contribute-btn-ghost {
-    border-color: #2C323D !important;
-    color: var(--paper) !important;
+    border-color: var(--border) !important;
+    color: var(--surface-inverse-fg) !important;
   }
 </style>
