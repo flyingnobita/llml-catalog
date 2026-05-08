@@ -25,7 +25,7 @@ const { title, description } = Astro.props;
         try { return localStorage.getItem("llml-theme"); } catch (_) { return null; }
       })();
       const osDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      const theme = stored || (osDark ? "dark" : "light");
+      const theme = stored === "dark" || stored === "light" ? stored : (osDark ? "dark" : "light");
       document.documentElement.setAttribute("data-theme", theme);
     })();
   </script>
