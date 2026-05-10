@@ -1,0 +1,25 @@
+schema_version = 2
+
+[[profiles]]
+# REVIEW: fields inferred from prose — verify before importing
+name = "gemma-4-26B-A4B-thinking-enabled-Q4_K_XL"
+backend = "llama"
+model_hint = "gemma-4"
+args = [
+    "--temp 1.0",
+    "--top-p 0.95",
+    "--top-k 64",
+    "--alias unsloth/gemma-4-26B-A4B-it-GGUF",
+    "--port 8001",
+    "--chat-template-kwargs {\"enable_thinking\":true}",
+]
+
+[profiles.use_case]
+primary = "chat"
+tags = [
+    "server",
+]
+
+[profiles.hardware]
+class = "mixed"
+notes = "llama.cpp supports CPU and GPU inference"

@@ -1,6 +1,7 @@
 [tools]
 node = "24"
 pnpm = "10.33"
+uv = "latest"
 
 [tasks]
 sync = "git submodule sync --recursive && git submodule update --init --recursive"

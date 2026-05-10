@@ -1,0 +1,24 @@
+schema_version = 2
+
+[[profiles]]
+name = "Qwen3.6-35B-A3B-thinking-UD-Q4_K_XL"
+backend = "llama"
+model_hint = "qwen3.6"
+args = [
+    "--temp 1.0",
+    "--top-p 0.95",
+    "--top-k 20",
+    "--presence-penalty 1.5",
+    "--min-p 0.00",
+]
+
+[profiles.use_case]
+primary = "chat"
+tags = [
+    "thinking",
+]
+
+[profiles.hardware]
+class = "mixed"
+min_vram_gb = 23
+notes = "4-bit quant requires ~23 GB total memory"

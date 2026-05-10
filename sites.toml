@@ -1,0 +1,22 @@
+# Site configurations for the model card scraping pipeline.
+# Each [site.<id>] entry defines crawl scope and extraction hints.
+
+[site.unsloth]
+base_url = "https://unsloth.ai/docs/models/"
+url_pattern = "/docs/models/.+"
+max_depth = 1
+max_pages = 50
+extraction_hints = """Unsloth model card pages. Extract one profile per code block — do not skip or merge.
+Name profiles as: ModelVariant-mode[-quantization] using the section heading for the variant.
+  - Variant: from the page or section heading (e.g. "Qwen3.6-27B", "gemma-4-26B-A4B"). NEVER use backend names (llama.cpp, llama-server, llama-cli) as the variant.
+  - Mode: "thinking" or "non-thinking" (variants: "thinking-enabled", "thinking-disabled") inferred from the local section heading and flags like --chat-template-kwargs enable_thinking=true/false. Do not assume a fixed alternation pattern across sections.
+  - Quantization: append if named in the section or code block (e.g. "-Q4_K_XL", "-Q8_0").
+  - NEVER use generic names like "4-bit GPU" or "8-bit GPU".
+Different model pages have different section structures — infer mode and variant from the local section heading and code block content only.
+Hardware requirements are in tables or prose near the code blocks."""
+
+# [site.huggingface]
+# base_url = "https://huggingface.co/models"
+# url_pattern = "/models/.+"
+# max_depth = 2
+# extraction_hints = "Hugging Face model cards. Launch commands may be in README code blocks. Hardware requirements may be in model card metadata tables."

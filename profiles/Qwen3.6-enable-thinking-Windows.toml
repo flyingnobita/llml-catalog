@@ -1,0 +1,15 @@
+schema_version = 2
+
+[[profiles]]
+name = "Qwen3.6-enable-thinking-Windows"
+backend = "llama"
+model_hint = "qwen3.6"
+args = [
+    "--chat-template-kwargs \"{\\\"enable_thinking\\\":true}\"",
+]
+
+[profiles.use_case]
+primary = "chat"
+tags = [
+    "thinking",
+]

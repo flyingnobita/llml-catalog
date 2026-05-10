@@ -1,0 +1,15 @@
+schema_version = 2
+
+[[profiles]]
+name = "Qwen3.6-preserve-thinking"
+backend = "llama"
+model_hint = "qwen3.6"
+args = [
+    "--chat-template-kwargs {\"preserve_thinking\":true}",
+]
+
+[profiles.use_case]
+primary = "chat"
+tags = [
+    "thinking",
+]

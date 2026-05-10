@@ -26,3 +26,11 @@ mise.local.toml
 TODOS.md
 
 .gbrain-source
+
+# Python
+__pycache__/
+.venv/
+
+# Scraping pipeline outputs (review queue)
+profiles/.review/
+.firecrawl/
