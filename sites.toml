@@ -6,6 +6,8 @@ base_url = "https://unsloth.ai/docs/models/"
 url_pattern = "/docs/models/.+"
 max_depth = 1
 max_pages = 50
+profile_org = "unsloth"
+model_org = "unsloth"
 extraction_hints = """Unsloth "<Model> - How to Run Locally" pages. Page structure varies widely (flat headings vs numbered tutorial steps; single-variant vs multi-variant; thinking/non-thinking/neither). Anchor extraction on:
   - H1 supplies the ModelFamily.
   - The "Llama.cpp Guide" section (emoji prefix varies) and equivalent vLLM/Ollama sections contain the launch invocations.
@@ -13,8 +15,28 @@ extraction_hints = """Unsloth "<Model> - How to Run Locally" pages. Page structu
   - Hardware requirements appear in nearby tables or prose; if only a range is given, fill min_vram_gb and max_vram_gb.
   - Variant identifier may be in a section heading, a comparison table, the GGUF filename, or the --model path. Omit the variant segment entirely when the page documents only one variant."""
 
-# [site.huggingface]
-# base_url = "https://huggingface.co/models"
-# url_pattern = "/models/.+"
-# max_depth = 2
-# extraction_hints = "Hugging Face model cards. Launch commands may be in README code blocks. Hardware requirements may be in model card metadata tables."
+[site.ollama]
+base_url = "https://ollama.com/library"
+url_pattern = "/library/[^/]+$"
+max_depth = 1
+max_pages = 50
+profile_org = "ollama"
+extraction_hints = """Ollama model library pages.
+  - H1 supplies the ModelFamily.
+  - Code blocks showing `ollama run <model>` or `ollama run <model>:<tag>` are the primary launch invocations.
+  - The `model_hint` should be the model tag (e.g. `llama3` or `llama3:70b`).
+  - Backend is always `ollama`.
+  - The variant might be specified via tags on the page. Omit the variant segment entirely when the page documents only one variant.
+  - Ignore download-only instructions like `ollama pull`. Extract the `ollama run` blocks if they show launch parameters, but basic `ollama run` is also a valid zero-config profile."""
+
+[site.huggingface]
+base_url = "https://huggingface.co/models"
+url_pattern = "/models/.+"
+max_depth = 2
+max_pages = 50
+extraction_hints = """Hugging Face model cards.
+  - Launch commands may be in README code blocks.
+  - Hardware requirements may be in model card metadata tables or sections titled "Hardware" or "Compute".
+  - Look for `llama.cpp`, `vllm`, `ollama` or `koboldcpp` run instructions in the code blocks.
+  - Model family is typically the repo name (e.g. `Meta-Llama-3-8B-Instruct`).
+  - Ensure only code blocks invoking an inference backend are extracted."""

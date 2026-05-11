@@ -1,15 +1,12 @@
 schema_version = 2
 
 [[profiles]]
-# REVIEW: fields inferred from prose — verify before importing
 name = "gemma-4-26B-A4B-thinking-Q4_K_XL"
 backend = "llama"
 model_hint = "gemma-4"
-args = [
-    "--temp 1.0",
-    "--top-p 0.95",
-    "--top-k 64",
-]
+args = [ "--temp 1.0", "--top-p 0.95", "--top-k 64" ]
+model_org = "unsloth"
+profile_org = "unsloth"
 
 [profiles.use_case]
 primary = "chat"

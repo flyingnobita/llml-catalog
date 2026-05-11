@@ -4,22 +4,13 @@ schema_version = 2
 name = "Qwen3-Coder-Next-UD-Q4_K_XL"
 backend = "llama"
 model_hint = "Qwen3-Coder-Next"
-args = [
-    "--ctx-size 16384",
-    "--temp 1.0",
-    "--top-p 0.95",
-    "--min-p 0.01",
-    "--top-k 40",
-]
+args = [ "--ctx-size 16384", "--temp 1.0", "--top-p 0.95", "--min-p 0.01", "--top-k 40" ]
+model_org = "unsloth"
+profile_org = "unsloth"
 
 [profiles.use_case]
 primary = "tool-calling"
-tags = [
-    "coding",
-    "agentic",
-    "non-thinking",
-    "moe",
-]
+tags = [ "coding", "agentic", "non-thinking", "moe" ]
 
 [profiles.hardware]
 class = "mixed"
@@ -30,22 +21,13 @@ notes = "80B MoE (3B active); UD-Q4_K_XL ~46GB RAM/VRAM/unified memory; 3-bit qu
 name = "Qwen3-Coder-Next-UD-Q4_K_XL"
 backend = "llama"
 model_hint = "Qwen3-Coder-Next"
-args = [
-    "--seed 3407",
-    "--temp 1.0",
-    "--top-p 0.95",
-    "--min-p 0.01",
-    "--top-k 40",
-]
+args = [ "--seed 3407", "--temp 1.0", "--top-p 0.95", "--min-p 0.01", "--top-k 40" ]
+model_org = "unsloth"
+profile_org = "unsloth"
 
 [profiles.use_case]
 primary = "tool-calling"
-tags = [
-    "coding",
-    "agentic",
-    "non-thinking",
-    "moe",
-]
+tags = [ "coding", "agentic", "non-thinking", "moe" ]
 
 [profiles.hardware]
 class = "mixed"
@@ -56,24 +38,13 @@ notes = "80B MoE (3B active); UD-Q4_K_XL ~46GB RAM/VRAM/unified memory; context 
 name = "Qwen3-Coder-Next-UD-Q4_K_XL"
 backend = "llama"
 model_hint = "Qwen3-Coder-Next"
-args = [
-    "--seed 3407",
-    "--temp 1.0",
-    "--top-p 0.95",
-    "--min-p 0.01",
-    "--top-k 40",
-    "--port 8001",
-]
+args = [ "--seed 3407", "--temp 1.0", "--top-p 0.95", "--min-p 0.01", "--top-k 40", "--port 8001" ]
+model_org = "unsloth"
+profile_org = "unsloth"
 
 [profiles.use_case]
 primary = "tool-calling"
-tags = [
-    "coding",
-    "agentic",
-    "non-thinking",
-    "moe",
-    "server",
-]
+tags = [ "coding", "agentic", "non-thinking", "moe", "server" ]
 
 [profiles.hardware]
 class = "mixed"

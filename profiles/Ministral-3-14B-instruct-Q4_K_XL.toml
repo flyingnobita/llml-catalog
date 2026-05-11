@@ -4,20 +4,13 @@ schema_version = 2
 name = "Ministral-3-14B-instruct-Q4_K_XL"
 backend = "llama"
 model_hint = "Ministral-3-14B-Instruct-2512"
-args = [
-    "--jinja",
-    "-ngl 99",
-    "--ctx-size 32684",
-    "--temp 0.15",
-]
+args = [ "--jinja", "-ngl 99", "--ctx-size 32684", "--temp 0.15" ]
+model_org = "unsloth"
+profile_org = "unsloth"
 
 [profiles.use_case]
 primary = "chat"
-tags = [
-    "instruct",
-    "multimodal",
-    "tool-calling",
-]
+tags = [ "instruct", "multimodal", "tool-calling" ]
 
 [profiles.hardware]
 class = "mixed"

@@ -4,21 +4,13 @@ schema_version = 2
 name = "Ministral-3-14B-reasoning-Q4_K_XL"
 backend = "llama"
 model_hint = "Ministral-3-14B-Reasoning-2512"
-args = [
-    "--jinja",
-    "-ngl 99",
-    "--ctx-size 32684",
-    "--temp 0.6",
-    "--top-p 0.95",
-]
+args = [ "--jinja", "-ngl 99", "--ctx-size 32684", "--temp 0.6", "--top-p 0.95" ]
+model_org = "unsloth"
+profile_org = "unsloth"
 
 [profiles.use_case]
 primary = "chat"
-tags = [
-    "thinking",
-    "reasoning",
-    "multimodal",
-]
+tags = [ "thinking", "reasoning", "multimodal" ]
 
 [profiles.hardware]
 class = "mixed"

@@ -4,23 +4,13 @@ schema_version = 2
 name = "GPT-OSS-20B-F16"
 backend = "llama"
 model_hint = "gpt-oss-20b"
-args = [
-    "--jinja",
-    "-ngl 99",
-    "--ctx-size 16384",
-    "--temp 1.0",
-    "--top-p 1.0",
-    "--top-k 0",
-]
+args = [ "--jinja", "-ngl 99", "--ctx-size 16384", "--temp 1.0", "--top-p 1.0", "--top-k 0" ]
+model_org = "unsloth"
+profile_org = "unsloth"
 
 [profiles.use_case]
 primary = "tool-calling"
-tags = [
-    "reasoning",
-    "thinking",
-    "agentic",
-    "chat-template-jinja",
-]
+tags = [ "reasoning", "thinking", "agentic", "chat-template-jinja" ]
 
 [profiles.hardware]
 class = "gpu"

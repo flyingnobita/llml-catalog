@@ -121,7 +121,7 @@ async def crawl_single(url: str, site_hints: str = "") -> list[ProfileDocument]:
         instruction = f"CONTEXT: {site_hints}\n\n{instruction}"
 
     config = CrawlerRunConfig(
-        cache_mode=CacheMode.BYPASS,
+        cache_mode=CacheMode.ENABLED,
         word_count_threshold=1,
         page_timeout=60000,
         extraction_strategy=LLMExtractionStrategy(
@@ -194,7 +194,7 @@ async def crawl_site(url: str, site_config: dict | None = None) -> list[ProfileD
             instruction=instruction,
             extra_args={"temperature": 0, "max_tokens": 16000},
         ),
-        cache_mode=CacheMode.BYPASS,
+        cache_mode=CacheMode.ENABLED,
         word_count_threshold=1,
         page_timeout=60000,
         verbose=True,
@@ -302,6 +302,16 @@ def main():
     all_profiles = []
     for doc in docs:
         all_profiles.extend(doc.profiles)
+
+    # Stamp profiles with org metadata from site config
+    if site_config:
+        model_org = site_config.get("model_org", "")
+        profile_org = site_config.get("profile_org", "")
+        for p in all_profiles:
+            if model_org and not p.model_org:
+                p.model_org = model_org
+            if profile_org and not p.profile_org:
+                p.profile_org = profile_org
 
     all_profiles = filter_profiles(all_profiles)
 

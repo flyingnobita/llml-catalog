@@ -1,145 +1,210 @@
-// Sample profile data — mirrors design/prototype/data.js and design/ui_kits/profile-catalog/data.js
-// Will be replaced by a build-time data loader that reads profiles/*.toml
+// Build-time data loader: reads profiles/*.toml and transforms into the JS shape
+// expected by browse, compare, index, and profile/[id] pages.
+import { readFileSync, readdirSync } from "fs";
+import { execSync } from "child_process";
+import { parse } from "smol-toml";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
 
-export const PROFILES = [
-  {
-    id: "qwen3-14b-coding-cuda",
-    name: "Qwen3 14B Coding Profile",
-    fit: "Optimized for 24GB NVIDIA cards with KoboldCpp and longer context.",
-    backend: "koboldcpp",
-    hardware: "24GB NVIDIA",
-    os: "Linux",
-    useCase: "Coding",
-    verified: true,
-    updated: "3 days ago",
-    maintainer: "@flyingnobita",
-    repoPath: "profiles/qwen3-14b-coding.toml",
-    commit: "8a4f1c2",
-    importCmd: "llml import qwen3-14b-coding.toml",
-    rationale:
-      "Built around the Qwen3 14B Instruct GGUF (Q4_K_M). The defaults balance long context for repo-wide reasoning against the 24GB VRAM ceiling, leaving headroom for KV cache without offloading layers to CPU.",
-    args: [
-      "--gpulayers 80",
-      "--contextsize 16384",
-      "--threads 8",
-      "--flashattention",
-    ],
-    env: [{ key: "CUDA_VISIBLE_DEVICES", value: "0" }],
-    related: ["llama-33-70b-2x24gb", "qwen3-14b-cpu-fallback"],
-  },
-  {
-    id: "llama-33-70b-2x24gb",
-    name: "Llama 3.3 70B — 2× 24GB CUDA",
-    fit: "Two-card NVIDIA box, vLLM tensor-parallel, balanced throughput + interactive.",
-    backend: "vllm",
-    hardware: "2× 24GB NVIDIA",
-    os: "Linux",
-    useCase: "Chat",
-    verified: true,
-    updated: "1 week ago",
-    maintainer: "@bench-lab",
-    repoPath: "profiles/llama-33-70b-2x24gb.toml",
-    commit: "f1c8e0a",
-    importCmd: "llml import llama-33-70b-2x24gb.toml",
-    rationale:
-      "Tensor-parallel across 2× 24GB cards (3090 / 4090 class). AWQ quantization keeps the model resident with room for 32k context.",
-    args: [
-      "--tensor-parallel-size 2",
-      "--gpu-memory-utilization 0.92",
-      "--max-model-len 32768",
-    ],
-    env: [],
-    related: ["qwen3-14b-coding-cuda"],
-  },
-  {
-    id: "gemma-3-12b-mac",
-    name: "Gemma 3 12B — Apple Silicon Balanced",
-    fit: "Built for Apple Silicon laptop use with tighter memory constraints.",
-    backend: "llama.cpp",
-    hardware: "Apple Silicon · 32GB",
-    os: "macOS",
-    useCase: "Chat",
-    verified: false,
-    updated: "2 weeks ago",
-    maintainer: "@morrowind",
-    repoPath: "profiles/gemma-3-12b-mac.toml",
-    commit: "2b0d743",
-    importCmd: "llml import gemma-3-12b-mac.toml",
-    rationale:
-      "M2/M3/M4 Pro with 32GB unified memory. Metal backend, conservative KV cache so the laptop stays usable while the model is hot.",
-    args: ["--n-gpu-layers 99", "--ctx-size 8192", "--threads 6"],
-    env: [],
-    related: ["qwen3-14b-coding-cuda"],
-  },
-  {
-    id: "phi-4-cpu-low-mem",
-    name: "Phi-4 14B — CPU only, low memory",
-    fit: "Workstation without a discrete GPU. Slower but fits in 16GB RAM.",
-    backend: "llama.cpp",
-    hardware: "CPU only",
-    os: "Linux",
-    useCase: "Completion",
-    verified: false,
-    updated: "1 month ago",
-    maintainer: "@cpu-warrior",
-    repoPath: "profiles/phi-4-cpu-low-mem.toml",
-    commit: "55a91b3",
-    importCmd: "llml import phi-4-cpu-low-mem.toml",
-    rationale:
-      "Q4_K_M, 4 threads, no GPU offload. Intended for office laptops and CI runners where a dGPU isn't available.",
-    args: ["--n-gpu-layers 0", "--ctx-size 4096", "--threads 4"],
-    env: [],
-    related: [],
-  },
-  {
-    id: "ollama-llama32-default",
-    name: "Llama 3.2 3B — Ollama default",
-    fit: "Drop-in for the shared Ollama daemon. Keep-alive on, all layers on GPU.",
-    backend: "ollama",
-    hardware: "GPU · any",
-    os: "Cross-platform",
-    useCase: "Chat",
-    verified: true,
-    updated: "5 days ago",
-    maintainer: "@ollama-friends",
-    repoPath: "profiles/ollama-llama32-default.toml",
-    commit: "a90b1c4",
-    importCmd: "llml import ollama-llama32-default.toml",
-    rationale:
-      "Sets OLLAMA_NUM_GPU=999 and OLLAMA_NUM_CTX=8192. Works against a shared Ollama host without a per-model port.",
-    args: [],
-    env: [
-      { key: "OLLAMA_NUM_GPU", value: "999" },
-      { key: "OLLAMA_NUM_CTX", value: "8192" },
-    ],
-    related: [],
-  },
-  {
-    id: "kobold-vulkan-amd",
-    name: "Llama 3 8B — KoboldCpp Vulkan (AMD)",
-    fit: "AMD GPU with Vulkan backend; CUDA not required.",
-    backend: "koboldcpp",
-    hardware: "AMD GPU",
-    os: "Linux · Windows",
-    useCase: "Chat",
-    verified: false,
-    updated: "3 weeks ago",
-    maintainer: "@radeon-rider",
-    repoPath: "profiles/kobold-vulkan-amd.toml",
-    commit: "7df2901",
-    importCmd: "llml import kobold-vulkan-amd.toml",
-    rationale:
-      "Vulkan path for AMD/Radeon hardware. 4k context, all layers on GPU.",
-    args: ["--gpulayers 80", "--contextsize 4096", "--usevulkan"],
-    env: [],
-    related: [],
-  },
-];
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const REPO_ROOT = resolve(__dirname, "../../..");
+const PROFILES_DIR = resolve(REPO_ROOT, "profiles");
 
-export const FILTERS = {
-  backend: ["llama.cpp", "vllm", "ollama", "koboldcpp"],
-  hardware: ["24GB NVIDIA", "2× 24GB NVIDIA", "Apple Silicon", "AMD GPU", "CPU only"],
-  os: ["Linux", "macOS", "Windows", "Cross-platform"],
-  useCase: ["Chat", "Coding", "Completion", "Tool calling", "Embedding", "Batch"],
-  source: ["Verified", "Community"],
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+function slugify(name) {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function titleCase(s) {
+  if (!s) return "Chat";
+  return s
+    .split(/[-\s]+/)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
+const BACKEND_ALIASES = {
+  llama: "llama.cpp",
+  vllm: "vllm",
+  ollama: "ollama",
+  koboldcpp: "koboldcpp",
 };
+
+function normalizeBackend(raw) {
+  return BACKEND_ALIASES[raw] || raw;
+}
+
+function detectOS(args) {
+  const str = (args || []).join(" ");
+  if (/windows/i.test(str)) return "Windows";
+  if (/cuda|nvidia|CUDA_VISIBLE_DEVICES/i.test(str)) return "Linux";
+  if (/vulkan/i.test(str)) return "Linux · Windows";
+  if (/metal/i.test(str)) return "macOS";
+  return "Cross-platform";
+}
+
+function hardwareClass(hw) {
+  if (!hw || !hw.class) return "Unspecified";
+  if (hw.gpu_count && hw.gpu_count > 1) return "Multi-GPU";
+  const map = { gpu: "GPU", cpu: "CPU", mixed: "Mixed" };
+  return map[hw.class] || "Unspecified";
+}
+
+function generateFit(useCase, hwDisplay, notes) {
+  if (notes) {
+    const firstSentence = notes.split(/[.;]/)[0].trim();
+    if (firstSentence.length <= 110) return firstSentence + ".";
+    return firstSentence.slice(0, 107) + "…";
+  }
+  return `${useCase} on ${hwDisplay}.`;
+}
+
+// ---------------------------------------------------------------------------
+// Git info — build a map of filename → { commit, updated, maintainer }
+// ---------------------------------------------------------------------------
+
+function buildGitInfo() {
+  const map = {};
+  try {
+    const out = execSync(
+      `for f in profiles/*.toml; do echo "$(basename "$f")|$(git log -1 --format='%h|%ar|%an' -- "$f" 2>/dev/null || echo '?|unknown|unknown')"; done`,
+      { cwd: REPO_ROOT, encoding: "utf-8", timeout: 5000 }
+    );
+    for (const line of out.trim().split("\n")) {
+      const [filename, commit, ...rest] = line.split("|");
+      if (!filename) continue;
+      // The updated field may contain "|" if not quoted, so rejoin
+      const restStr = rest.join("|");
+      const parts = restStr.split("|");
+      const updated = parts[0] || "unknown";
+      const author = parts[1] || "unknown";
+      map[filename] = {
+        commit: commit || "?",
+        updated,
+        maintainer: author === "unknown" ? "@unknown" : `@${author}`,
+      };
+    }
+  } catch {
+    // Git not available — return empty map; callers fall back to placeholders
+  }
+  return map;
+}
+
+// ---------------------------------------------------------------------------
+// Parse all TOML profiles
+// ---------------------------------------------------------------------------
+
+function loadProfiles() {
+  const gitInfo = buildGitInfo();
+  const rawProfiles = [];
+
+  let files;
+  try {
+    files = readdirSync(PROFILES_DIR).filter(
+      (f) => f.endsWith(".toml") && !f.includes("deepseekapi")
+    );
+  } catch {
+    console.warn("profiles directory not found at", PROFILES_DIR);
+    return { profiles: [], filters: {} };
+  }
+
+  for (const filename of files) {
+    const filePath = resolve(PROFILES_DIR, filename);
+    let doc;
+    try {
+      doc = parse(readFileSync(filePath, "utf-8"));
+    } catch (e) {
+      console.warn(`Skipping unparseable TOML: ${filename}`, e.message);
+      continue;
+    }
+
+    if (!doc.profiles || doc.profiles.length === 0) continue;
+
+    for (const p of doc.profiles) {
+      if (!p.name) continue;
+
+      const gi = gitInfo[filename] || {
+        commit: "?",
+        updated: "unknown",
+        maintainer: "@unknown",
+      };
+      const hw = p.hardware || {};
+      const uc = p.use_case || {};
+      const hwClass = hardwareClass(hw);
+      const useCase = titleCase(uc.primary || "chat");
+      const notes = hw.notes || "";
+
+      rawProfiles.push({
+        id: slugify(p.name),
+        name: p.name,
+        fit: generateFit(useCase, hwClass, notes),
+        backend: normalizeBackend(p.backend || "llama"),
+        hardware: hwClass,
+        os: detectOS(p.args),
+        useCase,
+        verified: false,
+        updated: gi.updated,
+        maintainer: gi.maintainer,
+        repoPath: `profiles/${filename}`,
+        commit: gi.commit,
+        importCmd: `llml import ${filename}`,
+        rationale: notes,
+        args: p.args || [],
+        env: (p.env || []).map((e) => ({
+          key: e.key || e.name || "",
+          value: e.value || "",
+        })),
+        modelHint: p.model_hint || "",
+        modelOrg: p.model_org || "",
+        profileOrg: p.profile_org || "",
+      });
+    }
+  }
+
+  // Compute related profiles (same model_hint, different quant/name)
+  for (const p of rawProfiles) {
+    if (!p.modelHint) {
+      p.related = [];
+      continue;
+    }
+    p.related = rawProfiles
+      .filter(
+        (other) =>
+          other.modelHint === p.modelHint &&
+          other.id !== p.id
+      )
+      .slice(0, 4)
+      .map((o) => o.id);
+  }
+
+  // Derive filter options from actual data
+  const filters = {
+    backend: [...new Set(rawProfiles.map((p) => p.backend))].sort(),
+    hardware: [...new Set(rawProfiles.map((p) => p.hardware))].sort(),
+    os: [...new Set(rawProfiles.map((p) => p.os))].sort(),
+    useCase: [...new Set(rawProfiles.map((p) => p.useCase))].sort(),
+    modelOrg: [...new Set(rawProfiles.map((p) => p.modelOrg).filter(Boolean))].sort(),
+    profileOrg: [...new Set(rawProfiles.map((p) => p.profileOrg).filter(Boolean))].sort(),
+    source: ["Verified", "Community"],
+  };
+
+  // Sort: verified first, then by name
+  rawProfiles.sort((a, b) => {
+    if (a.verified !== b.verified) return b.verified - a.verified;
+    return a.name.localeCompare(b.name);
+  });
+
+  return { profiles: rawProfiles, filters };
+}
+
+const { profiles, filters } = loadProfiles();
+
+export const PROFILES = profiles;
+export const FILTERS = filters;

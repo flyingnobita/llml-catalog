@@ -4,23 +4,13 @@ schema_version = 2
 name = "IBM-Granite-4-H-Small-UD-Q4_K_XL"
 backend = "llama"
 model_hint = "IBM Granite 4.0"
-args = [
-    "--jinja",
-    "--ctx-size 16384",
-    "--n-gpu-layers 99",
-    "--seed 3407",
-    "--prio 2",
-    "--temp 0.0",
-    "--top-k 0",
-    "--top-p 1.0",
-]
+args = [ "--jinja", "--ctx-size 16384", "--n-gpu-layers 99", "--seed 3407", "--prio 2", "--temp 0.0", "--top-k 0", "--top-p 1.0" ]
+model_org = "unsloth"
+profile_org = "unsloth"
 
 [profiles.use_case]
 primary = "chat"
-tags = [
-    "moe",
-    "mamba",
-]
+tags = [ "moe", "mamba" ]
 
 [profiles.hardware]
 class = "mixed"

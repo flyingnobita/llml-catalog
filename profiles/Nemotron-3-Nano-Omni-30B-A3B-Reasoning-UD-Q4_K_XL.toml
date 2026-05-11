@@ -4,18 +4,13 @@ schema_version = 2
 name = "Nemotron-3-Nano-Omni-30B-A3B-Reasoning-UD-Q4_K_XL"
 backend = "llama"
 model_hint = "NVIDIA Nemotron 3 Nano Omni"
-args = [
-    "--temp 1.0",
-    "--top-p 1.0",
-    "--min-p 0.01",
-]
+args = [ "--temp 1.0", "--top-p 1.0", "--min-p 0.01" ]
+model_org = "unsloth"
+profile_org = "unsloth"
 
 [profiles.use_case]
 primary = "chat"
-tags = [
-    "vision",
-    "multimodal",
-]
+tags = [ "vision", "multimodal" ]
 
 [profiles.hardware]
 class = "mixed"
@@ -26,21 +21,13 @@ notes = "4-bit quant requires ~25GB total memory (VRAM+RAM); supports audio/vide
 name = "Nemotron-3-Nano-Omni-30B-A3B-Reasoning-UD-Q4_K_XL"
 backend = "llama"
 model_hint = "NVIDIA Nemotron 3 Nano Omni"
-args = [
-    "--alias unsloth/NVIDIA-Nemotron-3-Nano-Omni-30B-A3B-Reasoning",
-    "--prio 3",
-    "--temp 1.0",
-    "--top-p 1.0",
-    "--port 8001",
-]
+args = [ "--alias unsloth/NVIDIA-Nemotron-3-Nano-Omni-30B-A3B-Reasoning", "--prio 3", "--temp 1.0", "--top-p 1.0", "--port 8001" ]
+model_org = "unsloth"
+profile_org = "unsloth"
 
 [profiles.use_case]
 primary = "chat"
-tags = [
-    "server",
-    "vision",
-    "multimodal",
-]
+tags = [ "server", "vision", "multimodal" ]
 
 [profiles.hardware]
 class = "mixed"

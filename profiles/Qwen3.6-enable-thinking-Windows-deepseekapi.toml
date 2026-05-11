@@ -4,12 +4,10 @@ schema_version = 2
 name = "Qwen3.6-enable-thinking-Windows"
 backend = "llama"
 model_hint = "qwen3.6"
-args = [
-    "--chat-template-kwargs \"{\\\"enable_thinking\\\":true}\"",
-]
+args = [ "--chat-template-kwargs \"{\\\"enable_thinking\\\":true}\"" ]
+model_org = "unsloth"
+profile_org = "unsloth"
 
 [profiles.use_case]
 primary = "chat"
-tags = [
-    "thinking",
-]
+tags = [ "thinking" ]

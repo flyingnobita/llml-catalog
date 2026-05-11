@@ -4,18 +4,13 @@ schema_version = 2
 name = "Nemotron-3-Nano-30B-A3B-UD-Q4_K_XL"
 backend = "llama"
 model_hint = "NVIDIA Nemotron 3 Nano 30B-A3B"
-args = [
-    "--ctx-size 32768",
-    "--temp 1.0",
-    "--top-p 1.0",
-]
+args = [ "--ctx-size 32768", "--temp 1.0", "--top-p 1.0" ]
+model_org = "unsloth"
+profile_org = "unsloth"
 
 [profiles.use_case]
 primary = "chat"
-tags = [
-    "moe",
-    "reasoning",
-]
+tags = [ "moe", "reasoning" ]
 
 [profiles.hardware]
 class = "mixed"
@@ -26,18 +21,13 @@ notes = "UD-Q4_K_XL quant requires ~24GB RAM; 1M-token context window (default c
 name = "Nemotron-3-Nano-30B-A3B-UD-Q4_K_XL"
 backend = "llama"
 model_hint = "NVIDIA Nemotron 3 Nano 30B-A3B"
-args = [
-    "--ctx-size 32768",
-    "--temp 0.6",
-    "--top-p 0.95",
-]
+args = [ "--ctx-size 32768", "--temp 0.6", "--top-p 0.95" ]
+model_org = "unsloth"
+profile_org = "unsloth"
 
 [profiles.use_case]
 primary = "tool-calling"
-tags = [
-    "moe",
-    "reasoning",
-]
+tags = [ "moe", "reasoning" ]
 
 [profiles.hardware]
 class = "mixed"
@@ -48,20 +38,13 @@ notes = "UD-Q4_K_XL quant requires ~24GB RAM; tool-calling settings per NVIDIA r
 name = "Nemotron-3-Nano-30B-A3B-UD-Q4_K_XL"
 backend = "llama"
 model_hint = "NVIDIA Nemotron 3 Nano 30B-A3B"
-args = [
-    "--ctx-size 16384",
-    "--seed 3407",
-    "--prio 2",
-    "--temp 0.6",
-    "--top-p 0.95",
-]
+args = [ "--ctx-size 16384", "--seed 3407", "--prio 2", "--temp 0.6", "--top-p 0.95" ]
+model_org = "unsloth"
+profile_org = "unsloth"
 
 [profiles.use_case]
 primary = "chat"
-tags = [
-    "moe",
-    "reasoning",
-]
+tags = [ "moe", "reasoning" ]
 
 [profiles.hardware]
 class = "mixed"
@@ -72,22 +55,13 @@ notes = "UD-Q4_K_XL quant requires ~24GB RAM; local model conversation mode with
 name = "Nemotron-3-Nano-30B-A3B-UD-Q4_K_XL"
 backend = "llama"
 model_hint = "NVIDIA Nemotron 3 Nano 30B-A3B"
-args = [
-    "--prio 3",
-    "--min-p 0.01",
-    "--temp 0.6",
-    "--top-p 0.95",
-    "--ctx-size 16384",
-    "--port 8001",
-]
+args = [ "--prio 3", "--min-p 0.01", "--temp 0.6", "--top-p 0.95", "--ctx-size 16384", "--port 8001" ]
+model_org = "unsloth"
+profile_org = "unsloth"
 
 [profiles.use_case]
 primary = "chat"
-tags = [
-    "server",
-    "moe",
-    "reasoning",
-]
+tags = [ "server", "moe", "reasoning" ]
 
 [profiles.hardware]
 class = "mixed"

@@ -4,17 +4,13 @@ schema_version = 2
 name = "Kimi-K2.6-non-thinking-UD-Q2_K_XL"
 backend = "llama"
 model_hint = "Kimi K2.6"
-args = [
-    "--temp 0.6",
-    "--top-p 0.95",
-    "--chat-template-kwargs {\"enable_thinking\":false}",
-]
+args = [ "--temp 0.6", "--top-p 0.95", "--chat-template-kwargs {\"enable_thinking\":false}" ]
+model_org = "unsloth"
+profile_org = "unsloth"
 
 [profiles.use_case]
 primary = "chat"
-tags = [
-    "non-thinking",
-]
+tags = [ "non-thinking" ]
 
 [profiles.hardware]
 class = "mixed"

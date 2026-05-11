@@ -4,25 +4,13 @@ schema_version = 2
 name = "GPT-OSS-120B-F16"
 backend = "llama"
 model_hint = "gpt-oss-120b"
-args = [
-    "--ctx-size 16384",
-    "--n-gpu-layers 99",
-    "-ot \".ffn_.*_exps.=CPU\"",
-    "--temp 1.0",
-    "--min-p 0.0",
-    "--top-p 1.0",
-    "--top-k 0",
-]
+args = [ "--ctx-size 16384", "--n-gpu-layers 99", "-ot \".ffn_.*_exps.=CPU\"", "--temp 1.0", "--min-p 0.0", "--top-p 1.0", "--top-k 0" ]
+model_org = "unsloth"
+profile_org = "unsloth"
 
 [profiles.use_case]
 primary = "tool-calling"
-tags = [
-    "reasoning",
-    "thinking",
-    "agentic",
-    "moe",
-    "cpu-offload",
-]
+tags = [ "reasoning", "thinking", "agentic", "moe", "cpu-offload" ]
 
 [profiles.hardware]
 class = "mixed"

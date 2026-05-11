@@ -4,18 +4,13 @@ schema_version = 2
 name = "Qwen3.5-35B-A3B-thinking-UD-Q4_K_XL"
 backend = "llama"
 model_hint = "Qwen3.5-35B-A3B"
-args = [
-    "--temp 1.0",
-    "--top-p 0.95",
-    "--top-k 20",
-    "--min-p 0.00",
-]
+args = [ "--temp 1.0", "--top-p 0.95", "--top-k 20", "--min-p 0.00" ]
+model_org = "unsloth"
+profile_org = "unsloth"
 
 [profiles.use_case]
 primary = "chat"
-tags = [
-    "thinking",
-]
+tags = [ "thinking" ]
 
 [profiles.hardware]
 class = "mixed"

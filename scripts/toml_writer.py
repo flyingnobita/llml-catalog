@@ -32,6 +32,10 @@ def _profile_to_dict(profile: PortableProfile, include_confidence: bool = False)
     }
     if profile.model_hint:
         d["model_hint"] = profile.model_hint
+    if profile.model_org:
+        d["model_org"] = profile.model_org
+    if profile.profile_org:
+        d["profile_org"] = profile.profile_org
     if profile.args:
         # Store as panel-row strings (flag+value in one string) per format spec
         d["args"] = _to_panel_rows(profile.args)
@@ -64,6 +68,9 @@ def _profile_to_dict(profile: PortableProfile, include_confidence: bool = False)
 
     if include_confidence:
         d["confidence"] = profile.confidence
+        
+    if profile.provenance:
+        d["provenance"] = profile.provenance
 
     return d
 
@@ -101,23 +108,30 @@ def _dedup_key(profile: PortableProfile) -> str:
 
 
 def _load_existing_keys() -> dict[str, str]:
-    """Scan profiles/*.toml and return {dedup_key: filepath}."""
+    """Scan profiles/*.toml and profiles/.review/*.toml and return {dedup_key: filepath}."""
     existing: dict[str, str] = {}
-    if not PROFILES_DIR.exists():
-        return existing
-    for f in PROFILES_DIR.glob("*.toml"):
-        try:
-            import tomllib
-        except ImportError:
-            import tomli as tomllib
-        try:
-            with open(f, "rb") as fh:
-                data = tomllib.load(fh)
-            for p in data.get("profiles", []):
-                key = f"{p.get('name', '')}::{p.get('backend', '')}"
-                existing[key] = str(f)
-        except Exception:
+    
+    # Scan both PROFILES_DIR and REVIEW_DIR
+    dirs_to_scan = [PROFILES_DIR]
+    if REVIEW_DIR.exists():
+        dirs_to_scan.append(REVIEW_DIR)
+
+    for d in dirs_to_scan:
+        if not d.exists():
             continue
+        for f in d.glob("*.toml"):
+            try:
+                import tomllib
+            except ImportError:
+                import tomli as tomllib
+            try:
+                with open(f, "rb") as fh:
+                    data = tomllib.load(fh)
+                for p in data.get("profiles", []):
+                    key = f"{p.get('name', '')}::{p.get('backend', '')}"
+                    existing[key] = str(f)
+            except Exception:
+                continue
     return existing
 
 
@@ -185,12 +199,20 @@ def write_profiles(
         if key in existing_keys:
             existing_path = Path(existing_keys[key])
             if existing_path.exists():
-                # Name collision with different content — suffix all profiles in group
-                new_name = f"{group[0].name}-alt"
-                for p in group:
-                    p.name = new_name
-                fname = f"{new_name}.toml"
-                _log("write_collision", group[0].name, source_url, f"suffixed to {new_name}")
+                if existing_path.parent == REVIEW_DIR:
+                    # Overwrite or upgrade from .review
+                    _log("write_upgrade", group[0].name, source_url, "upgrading/overwriting from .review")
+                    try:
+                        existing_path.unlink()
+                    except Exception:
+                        pass
+                else:
+                    # Name collision with different content — suffix all profiles in group
+                    new_name = f"{group[0].name}-alt"
+                    for p in group:
+                        p.name = new_name
+                    fname = f"{new_name}.toml"
+                    _log("write_collision", group[0].name, source_url, f"suffixed to {new_name}")
 
         # Confidence gating
         if confidence == "low":
