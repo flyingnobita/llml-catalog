@@ -11,6 +11,7 @@
 - CI workflow (`.github/workflows/scrape-catalog.yml`) — weekly scheduled scrape, opens PR with new profiles
 - CI deploy workflow (`.github/workflows/deploy.yml`) — Astro build + GitHub Pages deploy on push to main
 - GitHub Pages configured with Actions-based deployment at `https://flyingnobita.github.io/llml-catalog/`
+- CI validation workflow (`.github/workflows/validate-profiles.yml`) — TOML syntax + schema validation on PRs touching `profiles/*.toml`
 
 ### Changed
 - Scraping pipeline now uses incremental crawl (`CacheMode.ENABLED`) instead of full re-fetch per run
