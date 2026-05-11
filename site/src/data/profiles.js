@@ -140,6 +140,7 @@ function loadProfiles() {
       const hwClass = hardwareClass(hw);
       const useCase = titleCase(uc.primary || "chat");
       const notes = hw.notes || "";
+      const tags = (uc.tags || []).map((t) => t.toLowerCase());
 
       rawProfiles.push({
         id: slugify(p.name),
@@ -149,6 +150,7 @@ function loadProfiles() {
         hardware: hwClass,
         os: detectOS(p.args),
         useCase,
+        tags,
         verified: false,
         updated: gi.updated,
         maintainer: gi.maintainer,
@@ -192,6 +194,7 @@ function loadProfiles() {
     useCase: [...new Set(rawProfiles.map((p) => p.useCase))].sort(),
     modelOrg: [...new Set(rawProfiles.map((p) => p.modelOrg).filter(Boolean))].sort(),
     profileOrg: [...new Set(rawProfiles.map((p) => p.profileOrg).filter(Boolean))].sort(),
+    tags: [...new Set(rawProfiles.flatMap((p) => p.tags || []))].sort(),
     source: ["Verified", "Community"],
   };
 

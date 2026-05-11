@@ -191,12 +191,13 @@ function Browse({
     if (filters.hardware.size && !filters.hardware.has(p.hardware)) return false;
     if (filters.os.size && !filters.os.has(p.os)) return false;
     if (filters.useCase.size && !filters.useCase.has(p.useCase)) return false;
+    if (filters.tags && filters.tags.size && !(p.tags || []).some((t) => filters.tags.has(t))) return false;
     if (filters.source.size) {
       const tag = p.verified ? "Verified" : "Community";
       if (!filters.source.has(tag)) return false;
     }
     if (q) {
-      const blob = `${p.name} ${p.fit} ${p.backend} ${p.hardware} ${p.os} ${p.useCase} ${p.maintainer}`.toLowerCase();
+      const blob = `${p.name} ${p.fit} ${p.backend} ${p.hardware} ${p.os} ${p.useCase} ${(p.tags||[]).join(" ")} ${p.maintainer}`.toLowerCase();
       if (!blob.includes(q)) return false;
     }
     return true;
@@ -320,6 +321,7 @@ function Browse({
           <FilterGroup title="Hardware class" options={FILTERS.hardware} selected={filters.hardware} onToggle={toggle("hardware")} />
           <FilterGroup title="Operating system" options={FILTERS.os} selected={filters.os} onToggle={toggle("os")} />
           <FilterGroup title="Use case" options={FILTERS.useCase} selected={filters.useCase} onToggle={toggle("useCase")} />
+          <FilterGroup title="Capabilities" options={FILTERS.tags} selected={filters.tags} onToggle={toggle("tags")} />
           <FilterGroup title="Source" options={FILTERS.source} selected={filters.source} onToggle={toggle("source")} />
         </aside>
         <main>

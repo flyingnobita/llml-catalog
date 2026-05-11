@@ -41,6 +41,7 @@ const base = import.meta.env.BASE_URL;
         { key: "hardware", title: "Hardware class", options: FILTERS.hardware },
         { key: "os", title: "Operating system", options: FILTERS.os },
         { key: "useCase", title: "Use case", options: FILTERS.useCase },
+        { key: "tags", title: "Capabilities", options: FILTERS.tags },
         { key: "modelOrg", title: "Model org", options: FILTERS.modelOrg },
         { key: "profileOrg", title: "Profile org", options: FILTERS.profileOrg },
         { key: "source", title: "Source", options: FILTERS.source },
@@ -83,7 +84,7 @@ const base = import.meta.env.BASE_URL;
       <!-- Result rows -->
       <div id="results">
         {PROFILES.map((p) => (
-          <div class="result-row" data-backend={p.backend} data-hardware={p.hardware} data-os={p.os} data-usecase={p.useCase} data-model-org={p.modelOrg} data-profile-org={p.profileOrg} data-verified={String(p.verified)} data-name={p.name} style="border-bottom:1px solid var(--border);padding:14px 0;display:grid;grid-template-columns:20px 1fr 120px 130px 100px 100px 110px;gap:16px;align-items:center">
+          <div class="result-row" data-backend={p.backend} data-hardware={p.hardware} data-os={p.os} data-usecase={p.useCase} data-tags={(p.tags || []).join(",")} data-model-org={p.modelOrg} data-profile-org={p.profileOrg} data-verified={String(p.verified)} data-name={p.name} style="border-bottom:1px solid var(--border);padding:14px 0;display:grid;grid-template-columns:20px 1fr 120px 130px 100px 100px 110px;gap:16px;align-items:center">
             <input type="checkbox" class="compare-check" data-id={p.id} style="accent-color:var(--primary);width:16px;height:16px" />
             <a href={`${base}/profile/${p.id}`} style="font:inherit;background:transparent;border:0;text-align:left;cursor:pointer;padding:0;min-width:0;text-decoration:none;color:inherit">
               <div style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap">
@@ -126,7 +127,7 @@ const base = import.meta.env.BASE_URL;
 </BaseLayout>
 
 <script define:vars={{ 
-  profilesJson: JSON.stringify(PROFILES.map(p => ({ id:p.id, name:p.name, fit:p.fit, backend:p.backend, hardware:p.hardware, os:p.os, useCase:p.useCase, modelOrg:p.modelOrg, profileOrg:p.profileOrg, verified:p.verified, updated:p.updated, importCmd:p.importCmd }))),
+  profilesJson: JSON.stringify(PROFILES.map(p => ({ id:p.id, name:p.name, fit:p.fit, backend:p.backend, hardware:p.hardware, os:p.os, useCase:p.useCase, tags:p.tags || [], modelOrg:p.modelOrg, profileOrg:p.profileOrg, verified:p.verified, updated:p.updated, importCmd:p.importCmd }))),
   base: import.meta.env.BASE_URL
 }}>
   const PROFILES = JSON.parse(profilesJson);
@@ -150,8 +151,54 @@ const base = import.meta.env.BASE_URL;
     useCase: new Set(),
     modelOrg: new Set(),
     profileOrg: new Set(),
+    tags: new Set(),
     source: new Set(),
   };
+
+  var STORAGE_KEY = "browse-state";
+
+  function saveState() {
+    var state = { filters: {}, sort: sort.value, search: search.value };
+    Object.keys(activeFilters).forEach(function(k) {
+      state.filters[k] = Array.from(activeFilters[k]);
+    });
+    try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+  }
+
+  function restoreState() {
+    try {
+      var raw = sessionStorage.getItem(STORAGE_KEY);
+      if (!raw) return false;
+      var state = JSON.parse(raw);
+      if (state.filters) {
+        Object.keys(state.filters).forEach(function(k) {
+          if (activeFilters[k]) {
+            activeFilters[k] = new Set(state.filters[k]);
+          }
+        });
+      }
+      if (state.sort) sort.value = state.sort;
+      if (state.search) search.value = state.search;
+      return true;
+    } catch(e) { return false; }
+  }
+
+  function applyFilterButtonStyles() {
+    document.querySelectorAll(".filter-opt").forEach(function(btn) {
+      var group = btn.dataset.group;
+      var value = btn.dataset.value;
+      var active = activeFilters[group] && activeFilters[group].has(value);
+      btn.style.color = active ? "var(--ink)" : "var(--muted)";
+      btn.style.fontWeight = active ? "600" : "400";
+      btn.querySelector(".filter-dot").style.background = active ? "var(--primary)" : "transparent";
+    });
+  }
+
+  var didRestore = restoreState();
+  if (didRestore) {
+    applyFilterButtonStyles();
+    applyFilters();
+  }
 
   function updateTray() {
     const items = compareIds.map(function(id) { return PROFILES.find(function(p) { return p.id === id; }); }).filter(Boolean);
@@ -176,6 +223,10 @@ const base = import.meta.env.BASE_URL;
       if (activeFilters.hardware.size && !activeFilters.hardware.has(row.dataset.hardware)) return false;
       if (activeFilters.os.size && !activeFilters.os.has(row.dataset.os)) return false;
       if (activeFilters.useCase.size && !activeFilters.useCase.has(row.dataset.usecase)) return false;
+      if (activeFilters.tags.size) {
+        var rowTags = (row.dataset.tags || "").split(",").filter(Boolean);
+        if (!rowTags.some(function(t) { return activeFilters.tags.has(t); })) return false;
+      }
       if (activeFilters.modelOrg.size && !activeFilters.modelOrg.has(row.dataset.modelOrg)) return false;
       if (activeFilters.profileOrg.size && !activeFilters.profileOrg.has(row.dataset.profileOrg)) return false;
       if (activeFilters.source.size) {
@@ -183,7 +234,7 @@ const base = import.meta.env.BASE_URL;
         if (!activeFilters.source.has(tag)) return false;
       }
       if (terms.length) {
-        var blob = (row.dataset.name + " " + row.dataset.backend + " " + row.dataset.hardware + " " + row.dataset.os + " " + (row.dataset.usecase || "") + " " + (row.dataset.modelOrg || "") + " " + (row.dataset.profileOrg || "")).toLowerCase();
+        var blob = (row.dataset.name + " " + row.dataset.backend + " " + row.dataset.hardware + " " + row.dataset.os + " " + (row.dataset.usecase || "") + " " + (row.dataset.tags || "") + " " + (row.dataset.modelOrg || "") + " " + (row.dataset.profileOrg || "")).toLowerCase();
         for (var i = 0; i < terms.length; i++) {
           if (blob.indexOf(terms[i]) === -1) return false;
         }
@@ -220,12 +271,13 @@ const base = import.meta.env.BASE_URL;
       btn.style.color = active ? "var(--ink)" : "var(--muted)";
       btn.style.fontWeight = active ? "600" : "400";
       btn.querySelector(".filter-dot").style.background = active ? "var(--primary)" : "transparent";
+      saveState();
       applyFilters();
     });
   });
 
-  search.addEventListener("input", applyFilters);
-  sort.addEventListener("change", applyFilters);
+  search.addEventListener("input", function() { saveState(); applyFilters(); });
+  sort.addEventListener("change", function() { saveState(); applyFilters(); });
 
   document.querySelectorAll(".compare-check").forEach(function(cb) {
     cb.addEventListener("change", function() {

@@ -12,6 +12,8 @@
 - CI deploy workflow (`.github/workflows/deploy.yml`) — Astro build + GitHub Pages deploy on push to main
 - GitHub Pages configured with Actions-based deployment at `https://flyingnobita.github.io/llml-catalog/`
 - CI validation workflow (`.github/workflows/validate-profiles.yml`) — TOML syntax + schema validation on PRs touching `profiles/*.toml`
+- Capabilities filter on browse page — filter by `use_case.tags` (thinking, reasoning, instruct, non-thinking, vision, coding, etc.)
+- Browse filter state persistence via `sessionStorage` — filters, search, and sort survive back/forward navigation
 
 ### Changed
 - Scraping pipeline now uses incremental crawl (`CacheMode.ENABLED`) instead of full re-fetch per run
