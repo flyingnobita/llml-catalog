@@ -1,0 +1,30 @@
+schema_version = 2
+
+[[profiles]]
+name = "GPT-OSS-120B-F16"
+backend = "llama"
+model_hint = "gpt-oss-120b"
+args = [
+    "--ctx-size 16384",
+    "--n-gpu-layers 99",
+    "-ot \".ffn_.*_exps.=CPU\"",
+    "--temp 1.0",
+    "--min-p 0.0",
+    "--top-p 1.0",
+    "--top-k 0",
+]
+
+[profiles.use_case]
+primary = "tool-calling"
+tags = [
+    "reasoning",
+    "thinking",
+    "agentic",
+    "moe",
+    "cpu-offload",
+]
+
+[profiles.hardware]
+class = "mixed"
+min_vram_gb = 66
+notes = "120B MoE model; F16 quant ~66GB unified memory for 6+ tokens/s with 1-bit quant; -ot regex offloads all MoE expert layers to CPU, fitting non-MoE layers on a single GPU; adjust regex for partial offload; recommended ctx minimum 16384, max 131072"

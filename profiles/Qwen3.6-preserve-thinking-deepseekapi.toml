@@ -1,11 +1,11 @@
 schema_version = 2
 
 [[profiles]]
-name = "Qwen3.6-enable-thinking"
+name = "Qwen3.6-preserve-thinking"
 backend = "llama"
-model_hint = "Qwen3.6"
+model_hint = "qwen3.6"
 args = [
-    "--chat-template-kwargs {\"enable_thinking\":true}",
+    "--chat-template-kwargs {\"preserve_thinking\":true}",
 ]
 
 [profiles.use_case]

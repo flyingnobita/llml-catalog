@@ -1,13 +1,14 @@
 schema_version = 2
 
 [[profiles]]
-name = "gemma-4-26B-A4B-thinking-Q4_K_XL"
+name = "Qwen3.5-122B-A10B-thinking-UD-Q4_K_XL"
 backend = "llama"
-model_hint = "gemma-4"
+model_hint = "Qwen3.5-122B-A10B"
 args = [
     "--temp 1.0",
     "--top-p 0.95",
-    "--top-k 64",
+    "--top-k 20",
+    "--min-p 0.00",
 ]
 
 [profiles.use_case]
@@ -18,5 +19,5 @@ tags = [
 
 [profiles.hardware]
 class = "mixed"
-min_vram_gb = 16
-notes = "16-18 GB total memory (RAM + VRAM) for 4-bit; llama.cpp supports CPU and GPU inference"
+min_vram_gb = 70
+notes = "4-bit UD-Q4_K_XL; ~70 GB total memory"

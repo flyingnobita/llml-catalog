@@ -1,0 +1,25 @@
+schema_version = 2
+
+[[profiles]]
+name = "Ministral-3-14B-instruct-Q4_K_XL"
+backend = "llama"
+model_hint = "Ministral-3-14B-Instruct-2512"
+args = [
+    "--jinja",
+    "-ngl 99",
+    "--ctx-size 32684",
+    "--temp 0.15",
+]
+
+[profiles.use_case]
+primary = "chat"
+tags = [
+    "instruct",
+    "multimodal",
+    "tool-calling",
+]
+
+[profiles.hardware]
+class = "mixed"
+min_vram_gb = 8
+notes = "4-bit Q4_K_XL; full BF16 14B fits in ~24 GB; supports 256K context, native function calling, JSON output"

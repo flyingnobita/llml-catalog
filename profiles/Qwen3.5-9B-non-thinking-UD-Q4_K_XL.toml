@@ -1,0 +1,23 @@
+schema_version = 2
+
+[[profiles]]
+name = "Qwen3.5-9B-non-thinking-UD-Q4_K_XL"
+backend = "llama"
+model_hint = "Qwen3.5-9B"
+args = [
+    "--temp 0.7",
+    "--top-p 0.8",
+    "--top-k 20",
+    "--min-p 0.00",
+]
+
+[profiles.use_case]
+primary = "chat"
+tags = [
+    "non-thinking",
+]
+
+[profiles.hardware]
+class = "mixed"
+min_vram_gb = 7
+notes = "4-bit UD-Q4_K_XL; ~6.5 GB total memory; non-thinking is on by default for Small series"

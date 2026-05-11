@@ -1,0 +1,27 @@
+schema_version = 2
+
+[[profiles]]
+name = "Qwen3.5-9B-thinking-server-UD-Q4_K_XL"
+backend = "llama"
+model_hint = "Qwen3.5-9B"
+args = [
+    "--temp 1.0",
+    "--top-p 0.95",
+    "--top-k 20",
+    "--min-p 0.00",
+    "--alias unsloth/Qwen3.5-9B-GGUF",
+    "--port 8001",
+    "--chat-template-kwargs {\"enable_thinking\":true}",
+]
+
+[profiles.use_case]
+primary = "chat"
+tags = [
+    "thinking",
+    "server",
+]
+
+[profiles.hardware]
+class = "mixed"
+min_vram_gb = 7
+notes = "4-bit UD-Q4_K_XL; ~6.5 GB total memory; thinking disabled by default on Small models, must enable explicitly"

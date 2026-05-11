@@ -3,7 +3,7 @@ schema_version = 2
 [[profiles]]
 name = "Qwen3.6-disable-thinking"
 backend = "llama"
-model_hint = "qwen3.6"
+model_hint = "Qwen3.6"
 args = [
     "--chat-template-kwargs {\"enable_thinking\":false}",
 ]
@@ -11,5 +11,5 @@ args = [
 [profiles.use_case]
 primary = "chat"
 tags = [
-    "thinking",
+    "non-thinking",
 ]

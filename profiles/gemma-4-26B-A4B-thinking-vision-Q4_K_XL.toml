@@ -1,7 +1,6 @@
 schema_version = 2
 
 [[profiles]]
-# REVIEW: fields inferred from prose — verify before importing
 name = "gemma-4-26B-A4B-thinking-vision-Q4_K_XL"
 backend = "llama"
 model_hint = "gemma-4"
@@ -14,9 +13,37 @@ args = [
 [profiles.use_case]
 primary = "chat"
 tags = [
+    "thinking",
     "vision",
 ]
 
 [profiles.hardware]
 class = "mixed"
-notes = "llama.cpp supports CPU and GPU inference"
+min_vram_gb = 16
+notes = "16-18 GB total memory (RAM + VRAM) for 4-bit; requires mmproj BF16 file for vision; llama.cpp supports CPU and GPU inference"
+
+[[profiles]]
+name = "gemma-4-26B-A4B-thinking-vision-Q4_K_XL"
+backend = "llama"
+model_hint = "gemma-4"
+args = [
+    "--temp 1.0",
+    "--top-p 0.95",
+    "--top-k 64",
+    "--alias unsloth/gemma-4-26B-A4B-it-GGUF",
+    "--port 8001",
+    "--chat-template-kwargs {\"enable_thinking\":true}",
+]
+
+[profiles.use_case]
+primary = "chat"
+tags = [
+    "thinking",
+    "vision",
+    "server",
+]
+
+[profiles.hardware]
+class = "mixed"
+min_vram_gb = 16
+notes = "16-18 GB total memory (RAM + VRAM) for 4-bit; requires mmproj BF16 file for vision; llama-server OpenAI-compatible endpoint on port 8001"

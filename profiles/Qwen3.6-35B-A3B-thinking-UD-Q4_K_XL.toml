@@ -3,7 +3,7 @@ schema_version = 2
 [[profiles]]
 name = "Qwen3.6-35B-A3B-thinking-UD-Q4_K_XL"
 backend = "llama"
-model_hint = "qwen3.6"
+model_hint = "Qwen3.6-35B-A3B"
 args = [
     "--temp 1.0",
     "--top-p 0.95",
@@ -21,4 +21,5 @@ tags = [
 [profiles.hardware]
 class = "mixed"
 min_vram_gb = 23
-notes = "4-bit quant requires ~23 GB total memory"
+notes = "4-bit quant requires ~23 GB total memory (VRAM + RAM). For precise coding tasks use temp=0.6 and presence-penalty=0.0."
+

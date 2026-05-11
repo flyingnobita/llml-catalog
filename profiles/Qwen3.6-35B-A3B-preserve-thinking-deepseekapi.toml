@@ -3,8 +3,9 @@ schema_version = 2
 [[profiles]]
 name = "Qwen3.6-35B-A3B-preserve-thinking"
 backend = "llama"
-model_hint = "Qwen3.6-35B-A3B"
+model_hint = "qwen3.6"
 args = [
+    "./llama.cpp/llama-server",
     "--alias unsloth/Qwen3.6-35B-A3B-GGUF",
     "--temp 0.6",
     "--top-p 0.95",
@@ -18,9 +19,4 @@ args = [
 primary = "chat"
 tags = [
     "thinking",
-    "server",
 ]
-
-[profiles.hardware]
-class = "mixed"
-notes = "Preserve thinking leaves the thinking trace from prior turns in context. Uses BF16 model in the example. Serves OpenAI-compatible API on port 8001."

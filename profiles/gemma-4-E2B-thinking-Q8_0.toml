@@ -1,7 +1,6 @@
 schema_version = 2
 
 [[profiles]]
-# REVIEW: fields inferred from prose — verify before importing
 name = "gemma-4-E2B-thinking-Q8_0"
 backend = "llama"
 model_hint = "gemma-4"
@@ -13,7 +12,12 @@ args = [
 
 [profiles.use_case]
 primary = "chat"
+tags = [
+    "thinking",
+    "vision",
+]
 
 [profiles.hardware]
 class = "mixed"
-notes = "llama.cpp supports CPU and GPU inference"
+min_vram_gb = 4
+notes = "4 GB total memory for 4-bit; 5-8 GB for 8-bit; designed for phone/edge inference; supports text, image, and audio; llama.cpp supports CPU and GPU inference"

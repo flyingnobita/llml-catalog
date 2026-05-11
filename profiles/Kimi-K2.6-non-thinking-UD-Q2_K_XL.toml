@@ -1,0 +1,22 @@
+schema_version = 2
+
+[[profiles]]
+name = "Kimi-K2.6-non-thinking-UD-Q2_K_XL"
+backend = "llama"
+model_hint = "Kimi K2.6"
+args = [
+    "--temp 0.6",
+    "--top-p 0.95",
+    "--chat-template-kwargs {\"enable_thinking\":false}",
+]
+
+[profiles.use_case]
+primary = "chat"
+tags = [
+    "non-thinking",
+]
+
+[profiles.hardware]
+class = "mixed"
+min_vram_gb = 350
+notes = "Dynamic 2-bit quant; 350GB+ total memory (RAM+VRAM); Instant/non-thinking mode"

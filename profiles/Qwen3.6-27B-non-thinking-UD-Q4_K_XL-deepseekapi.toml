@@ -1,9 +1,9 @@
 schema_version = 2
 
 [[profiles]]
-name = "Qwen3.6-35B-A3B-non-thinking-UD-Q4_K_XL"
+name = "Qwen3.6-27B-non-thinking-UD-Q4_K_XL"
 backend = "llama"
-model_hint = "Qwen3.6-35B-A3B"
+model_hint = "qwen3.6"
 args = [
     "--temp 0.7",
     "--top-p 0.8",
@@ -17,10 +17,8 @@ args = [
 primary = "chat"
 tags = [
     "non-thinking",
-    "server",
 ]
 
 [profiles.hardware]
 class = "mixed"
-min_vram_gb = 23
-notes = "4-bit quant requires ~23 GB total memory (VRAM + RAM). For reasoning tasks use temp=1.0 and top-p=0.95."
+min_vram_gb = 18

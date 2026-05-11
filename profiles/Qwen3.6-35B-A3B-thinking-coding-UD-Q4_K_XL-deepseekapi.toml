@@ -3,7 +3,7 @@ schema_version = 2
 [[profiles]]
 name = "Qwen3.6-35B-A3B-thinking-coding-UD-Q4_K_XL"
 backend = "llama"
-model_hint = "Qwen3.6-35B-A3B"
+model_hint = "qwen3.6"
 args = [
     "--alias unsloth/Qwen3.6-35B-A3B",
     "--temp 0.6",
@@ -25,4 +25,3 @@ tags = [
 [profiles.hardware]
 class = "mixed"
 min_vram_gb = 23
-notes = "Production server deployment with OpenAI-compatible API on port 8001. Requires locally downloaded model and mmproj files."

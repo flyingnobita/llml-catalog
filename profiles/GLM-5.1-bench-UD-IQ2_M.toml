@@ -1,0 +1,21 @@
+schema_version = 2
+
+[[profiles]]
+name = "GLM-5.1-bench-UD-IQ2_M"
+backend = "llama"
+model_hint = "GLM-5.1"
+args = [
+    "--ctx-size 16384",
+    "--temp 0.7",
+    "--top-p 1.0",
+]
+
+[profiles.use_case]
+primary = "eval"
+tags = [
+    "terminal-bench",
+]
+
+[profiles.hardware]
+class = "mixed"
+notes = "Dynamic 2-bit quant; ~236GB total memory (VRAM+RAM); terminal bench settings"

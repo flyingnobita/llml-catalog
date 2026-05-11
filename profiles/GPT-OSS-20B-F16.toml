@@ -1,0 +1,28 @@
+schema_version = 2
+
+[[profiles]]
+name = "GPT-OSS-20B-F16"
+backend = "llama"
+model_hint = "gpt-oss-20b"
+args = [
+    "--jinja",
+    "-ngl 99",
+    "--ctx-size 16384",
+    "--temp 1.0",
+    "--top-p 1.0",
+    "--top-k 0",
+]
+
+[profiles.use_case]
+primary = "tool-calling"
+tags = [
+    "reasoning",
+    "thinking",
+    "agentic",
+    "chat-template-jinja",
+]
+
+[profiles.hardware]
+class = "gpu"
+min_vram_gb = 14
+notes = "20B dense model; F16 quant ~14GB unified memory for 6+ tokens/s; runs on less with SSD offloading but slower; recommended ctx minimum 16384, max 131072; use --jinja for Harmony-compatible chat template"

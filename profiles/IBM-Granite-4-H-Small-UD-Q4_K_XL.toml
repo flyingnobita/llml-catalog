@@ -1,0 +1,27 @@
+schema_version = 2
+
+[[profiles]]
+name = "IBM-Granite-4-H-Small-UD-Q4_K_XL"
+backend = "llama"
+model_hint = "IBM Granite 4.0"
+args = [
+    "--jinja",
+    "--ctx-size 16384",
+    "--n-gpu-layers 99",
+    "--seed 3407",
+    "--prio 2",
+    "--temp 0.0",
+    "--top-k 0",
+    "--top-p 1.0",
+]
+
+[profiles.use_case]
+primary = "chat"
+tags = [
+    "moe",
+    "mamba",
+]
+
+[profiles.hardware]
+class = "mixed"
+notes = "32B total / 9B active MoE; 4-bit UD-Q4_K_XL quant; IBM recommends entry GPUs like L40S; supports 128K context"
