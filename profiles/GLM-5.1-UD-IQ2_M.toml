@@ -14,19 +14,3 @@ primary = "chat"
 [profiles.hardware]
 class = "mixed"
 notes = "Dynamic 2-bit quant; ~236GB total memory (VRAM+RAM); fits on 256GB unified memory Mac"
-
-[[profiles]]
-name = "GLM-5.1-UD-IQ2_M"
-backend = "llama"
-model_hint = "GLM-5.1"
-args = [ "--alias unsloth/GLM-5.1", "--prio 3", "--ctx-size 16384", "--temp 1.0", "--top-p 0.95", "--port 8001" ]
-model_org = "unsloth"
-profile_org = "unsloth"
-
-[profiles.use_case]
-primary = "chat"
-tags = [ "server" ]
-
-[profiles.hardware]
-class = "mixed"
-notes = "Dynamic 2-bit quant; ~236GB total memory (VRAM+RAM); llama-server deployment"

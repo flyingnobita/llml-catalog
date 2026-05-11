@@ -1,18 +1,18 @@
 schema_version = 2
 
 [[profiles]]
-name = "Nemotron-3-Nano-4B-Q8_0"
+name = "Nemotron-3-Nano-4B-Q8_0-tool-calling"
 backend = "llama"
 model_hint = "NVIDIA Nemotron 3 Nano 4B"
-args = [ "--ctx-size 16384", "--temp 1.0", "--top-p 1.0" ]
+args = [ "--ctx-size 32768", "--temp 0.6", "--top-p 0.95" ]
 model_org = "unsloth"
 profile_org = "unsloth"
 
 [profiles.use_case]
-primary = "chat"
+primary = "tool-calling"
 tags = [ "moe", "reasoning" ]
 
 [profiles.hardware]
 class = "mixed"
 min_vram_gb = 5
-notes = "Q8_0 quant requires ~5GB RAM/VRAM; 1M-token context window (default ctx 16K); general chat/instruction settings"
+notes = "Q8_0 quant requires ~5GB RAM/VRAM; tool-calling settings per NVIDIA recommendation"

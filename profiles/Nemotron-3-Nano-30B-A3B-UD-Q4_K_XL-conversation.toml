@@ -1,10 +1,10 @@
 schema_version = 2
 
 [[profiles]]
-name = "Nemotron-3-Nano-30B-A3B-UD-Q4_K_XL"
+name = "Nemotron-3-Nano-30B-A3B-UD-Q4_K_XL-conversation"
 backend = "llama"
 model_hint = "NVIDIA Nemotron 3 Nano 30B-A3B"
-args = [ "--ctx-size 32768", "--temp 1.0", "--top-p 1.0" ]
+args = [ "--ctx-size 16384", "--seed 3407", "--prio 2", "--temp 0.6", "--top-p 0.95" ]
 model_org = "unsloth"
 profile_org = "unsloth"
 
@@ -15,4 +15,4 @@ tags = [ "moe", "reasoning" ]
 [profiles.hardware]
 class = "mixed"
 min_vram_gb = 24
-notes = "UD-Q4_K_XL quant requires ~24GB RAM; 1M-token context window (default ctx 32K); general chat/instruction settings"
+notes = "UD-Q4_K_XL quant requires ~24GB RAM; local model conversation mode with seed and thread priority"

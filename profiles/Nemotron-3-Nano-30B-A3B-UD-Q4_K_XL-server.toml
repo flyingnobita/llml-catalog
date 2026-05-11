@@ -1,0 +1,18 @@
+schema_version = 2
+
+[[profiles]]
+name = "Nemotron-3-Nano-30B-A3B-UD-Q4_K_XL-server"
+backend = "llama"
+model_hint = "NVIDIA Nemotron 3 Nano 30B-A3B"
+args = [ "--prio 3", "--min-p 0.01", "--temp 0.6", "--top-p 0.95", "--ctx-size 16384", "--port 8001" ]
+model_org = "unsloth"
+profile_org = "unsloth"
+
+[profiles.use_case]
+primary = "chat"
+tags = [ "server", "moe", "reasoning" ]
+
+[profiles.hardware]
+class = "mixed"
+min_vram_gb = 24
+notes = "UD-Q4_K_XL quant requires ~24GB RAM; llama-server production deployment with OpenAI-compatible API"
