@@ -1,0 +1,52 @@
+name: Validate Profiles
+
+on:
+  pull_request:
+    paths:
+      - "profiles/*.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install pydantic
+
+      - name: Get changed profiles
+        id: changed
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            FILES=$(git diff --name-only --diff-filter=ACMRT \
+              "${{ github.event.pull_request.base.sha }}" \
+              "${{ github.event.pull_request.head.sha }}" -- 'profiles/*.toml')
+          else
+            FILES=$(ls profiles/*.toml 2>/dev/null)
+          fi
+          {
+            echo "files<<EOF"
+            echo "$FILES"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Validate profiles
+        run: |
+          FILES="${{ steps.changed.outputs.files }}"
+          if [ -z "$FILES" ]; then
+            echo "No changed profile files."
+            exit 0
+          fi
+          echo "Changed profile files:"
+          echo "$FILES"
+          python scripts/validate_profiles.py $FILES
