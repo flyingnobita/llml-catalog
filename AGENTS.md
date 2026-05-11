@@ -5,6 +5,16 @@ This catalog repo builds a static profile-catalog site.
 Before making visual or UI decisions, always read `design/README.md` and
 `design/colors_and_type.css`.
 
+## Agent coordination
+
+Before starting work, read `dev-docs/BOARD.md` to see what tasks are already claimed
+by other agents. Claim a task by moving it from "Up next" → "In progress" with your
+agent ID. Move it to "Recently completed" when done.
+
+The board is shared across `llml` and `llml-catalog` via the dev-docs submodule.
+
+---
+
 ## Skill routing
 
 When the user's request matches an available skill, invoke it via the Skill tool. When in doubt, invoke the skill.
