@@ -6,14 +6,12 @@ base_url = "https://unsloth.ai/docs/models/"
 url_pattern = "/docs/models/.+"
 max_depth = 1
 max_pages = 50
-extraction_hints = """Unsloth model card pages. Extract one profile per code block — do not skip or merge.
-Name profiles as: ModelVariant-mode[-quantization] using the section heading for the variant.
-  - Variant: from the page or section heading (e.g. "Qwen3.6-27B", "gemma-4-26B-A4B"). NEVER use backend names (llama.cpp, llama-server, llama-cli) as the variant.
-  - Mode: "thinking" or "non-thinking" (variants: "thinking-enabled", "thinking-disabled") inferred from the local section heading and flags like --chat-template-kwargs enable_thinking=true/false. Do not assume a fixed alternation pattern across sections.
-  - Quantization: append if named in the section or code block (e.g. "-Q4_K_XL", "-Q8_0").
-  - NEVER use generic names like "4-bit GPU" or "8-bit GPU".
-Different model pages have different section structures — infer mode and variant from the local section heading and code block content only.
-Hardware requirements are in tables or prose near the code blocks."""
+extraction_hints = """Unsloth "<Model> - How to Run Locally" pages. Page structure varies widely (flat headings vs numbered tutorial steps; single-variant vs multi-variant; thinking/non-thinking/neither). Anchor extraction on:
+  - H1 supplies the ModelFamily.
+  - The "Llama.cpp Guide" section (emoji prefix varies) and equivalent vLLM/Ollama sections contain the launch invocations.
+  - Many code blocks are install/build/chat-template/multi-turn examples — only extract those that actually launch a backend with sampling flags (--temp, --top-p, --top-k, --min-p, --ctx-size, etc.).
+  - Hardware requirements appear in nearby tables or prose; if only a range is given, fill min_vram_gb and max_vram_gb.
+  - Variant identifier may be in a section heading, a comparison table, the GGUF filename, or the --model path. Omit the variant segment entirely when the page documents only one variant."""
 
 # [site.huggingface]
 # base_url = "https://huggingface.co/models"

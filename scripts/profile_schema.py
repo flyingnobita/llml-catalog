@@ -32,9 +32,9 @@ class ProfileEnv(BaseModel):
 
 
 class PortableProfile(BaseModel):
-    name: str = Field(..., description="Profile name, e.g. '4-bit-gpu', 'cpu-only'")
+    name: str = Field(..., description="Profile identifier built from model family/variant/mode/quantization. See instruction rules — never generic descriptors like '4-bit-gpu'.")
     backend: str = Field(..., description="llama, vllm, ollama, or koboldcpp")
-    model_hint: str = ""
+    model_hint: str = Field("", description="Original model name as printed on the page heading, e.g. 'Qwen3.6-27B-Instruct'.")
     args: list[str] = Field(default_factory=list)
     env: list[ProfileEnv] = Field(default_factory=list)
     use_case: ProfileUseCase = Field(default_factory=ProfileUseCase)

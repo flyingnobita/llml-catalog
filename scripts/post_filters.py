@@ -132,6 +132,25 @@ def strip_model_location_params(profile: PortableProfile) -> PortableProfile:
     return profile
 
 
+def _args_key(profile: PortableProfile) -> tuple:
+    """Stable dedup key: (backend, sorted normalized args)."""
+    return (profile.backend, tuple(sorted(profile.args)))
+
+
+def _metadata_score(profile: PortableProfile) -> int:
+    """Higher score = richer metadata; used to pick the best duplicate."""
+    score = 0
+    if profile.hardware.min_vram_gb is not None:
+        score += 2
+    if profile.hardware.notes:
+        score += 1
+    if profile.use_case.tags:
+        score += len(profile.use_case.tags)
+    if profile.model_hint:
+        score += 1
+    return score
+
+
 def filter_profiles(profiles: list[PortableProfile]) -> list[PortableProfile]:
     """Apply all post-extraction filters to a list of profiles."""
     cleaned = []
@@ -141,4 +160,18 @@ def filter_profiles(profiles: list[PortableProfile]) -> list[PortableProfile]:
         if not p.args:
             continue
         cleaned.append(p)
-    return cleaned
+
+    # Deduplicate profiles with identical (backend, args) — keep the one with
+    # the richest metadata, falling back to the first seen.
+    seen: dict[tuple, int] = {}  # key -> index in deduped
+    deduped: list[PortableProfile] = []
+    for p in cleaned:
+        key = _args_key(p)
+        if key in seen:
+            existing_idx = seen[key]
+            if _metadata_score(p) > _metadata_score(deduped[existing_idx]):
+                deduped[existing_idx] = p
+        else:
+            seen[key] = len(deduped)
+            deduped.append(p)
+    return deduped

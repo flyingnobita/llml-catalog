@@ -41,14 +41,20 @@ SITES_CONFIG = _REPO_ROOT / "sites.toml"
 
 EXTRACTION_INSTRUCTION = """Extract one profile per distinct code block or table row containing launch parameters.
 RULES:
-1. ONLY parameters shown in code blocks/tables. No invented defaults.
+1. ONLY extract from code blocks that invoke an inference backend (llama-cli, llama-server, vllm serve, ollama run, koboldcpp). SKIP install commands (curl|sh, apt, pip, brew), build commands (cmake, make, git clone), chat-template/prompt-format examples (showing only system prompts, turn tokens, or multi-turn dialogue with no launch flags), and download commands (huggingface-cli, wget). No invented defaults.
 2. Backend mapping: llama.cpp->llama, vLLM->vllm, Ollama->ollama, KoboldCpp->koboldcpp
 3. model_hint: model name from page heading
 4. EXCLUDE model-location params: --model, -m, --hf-repo, etc.
 5. use_case.primary: chat|completion|tool-calling|embedding|eval|batch
 6. hardware.class: cpu|gpu|mixed
-7. Name each profile as ModelVariant-mode[-quantization]. ModelVariant comes from the page or section heading (e.g. "gemma-4-26B-A4B", "Qwen3.6-27B"). NEVER use backend tool names (llama-cli, llama-server, llama.cpp) as the variant or as a name prefix. Mode is thinking/non-thinking (or thinking-enabled/thinking-disabled) when the page distinguishes them.
-8. confidence: high (all from code/tables), medium (some inferred), low (key fields missing)"""
+7. Name profiles as ModelFamily[-Variant][-mode][-quantization]:
+   - ModelFamily: from H1 (e.g. "Qwen3.6", "gemma-4", "Kimi-K2.6", "GLM-5.1", "Nemotron-3-Nano-Omni").
+   - Variant: SIZE/MoE designator (e.g. "27B", "26B-A4B", "E2B") OR named sub-model (e.g. "Reasoning"). OMIT if the page documents only one variant. Infer from GGUF filename or --model path if no heading carries it.
+   - mode: include ONLY when the page distinguishes modes (thinking/non-thinking from headings or --chat-template-kwargs enable_thinking). Omit if only one mode exists or none.
+   - quantization: append when named (e.g. "Q4_K_XL", "Q8_0", "UD-Q4_K_XL").
+   - NEVER use backend tool names (llama-cli, llama-server, llama.cpp, vllm) anywhere in the name. NEVER use generic descriptors like "4-bit-gpu" or "cpu-only".
+8. confidence: high (all from code/tables), medium (some inferred), low (key fields missing)
+9. If a code block has no launch flags beyond --model/-m, it is not a profile — skip it."""
 
 
 def load_site_config(identifier: str) -> dict | None:
