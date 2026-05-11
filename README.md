@@ -2,6 +2,8 @@
 
 Community-contributed parameter profiles for [llml](https://github.com/flyingnobita/llm-launcher) — the terminal UI for discovering and launching local LLMs.
 
+**[Browse the catalog →](https://flyingnobita.github.io/llml-catalog/)**
+
 A **profile** is a named set of launch arguments and environment variables for a specific model, backend, and hardware configuration. You create one in `llml` once, export it here so others with the same setup can import it instead of reconstructing the command from scratch.
 
 ## Repository layout

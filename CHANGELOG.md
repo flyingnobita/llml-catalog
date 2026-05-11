@@ -9,6 +9,8 @@
 - `model_org` and `profile_org` metadata on all profiles with filter columns on browse
 - `sites.toml` with unsloth.ai, ollama.com/library, and huggingface.co/models crawl configs
 - CI workflow (`.github/workflows/scrape-catalog.yml`) — weekly scheduled scrape, opens PR with new profiles
+- CI deploy workflow (`.github/workflows/deploy.yml`) — Astro build + GitHub Pages deploy on push to main
+- GitHub Pages configured with Actions-based deployment at `https://flyingnobita.github.io/llml-catalog/`
 
 ### Changed
 - Scraping pipeline now uses incremental crawl (`CacheMode.ENABLED`) instead of full re-fetch per run
