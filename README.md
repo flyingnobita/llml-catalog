@@ -115,7 +115,7 @@ Hardcoded in `scrape_catalog.py`. Adjust in-code if needed:
 | `max_tokens` | `6000` | Max tokens in LLM response |
 | `page_timeout` | `60000` ms | Page load timeout |
 | `word_count_threshold` | `1` | Skip pages with ≤1 word |
-| `cache_mode` | `BYPASS` | No caching between runs |
+| `cache_mode` | `ENABLED` | Incremental crawl — skips unchanged pages |
 
 ### sites.toml
 

@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.2.0] - 2026-05-11
+
+### Added
+- Model card scraping pipeline (`scripts/scrape_catalog.py`) — crawls unsloth.ai, extracts LLM profiles via LLM, writes portable TOML
+- 63 profiles across 20 model families (Qwen3.5, Qwen3.6, Gemma-4, Kimi-K2.6, GLM-5.1, Nemotron-3, Ministral-3, GPT-OSS, Granite-4, Qwen3-Coder-Next)
+- Live TOML data loader — browse page reads `profiles/*.toml` at build time instead of hardcoded stubs
+- `model_org` and `profile_org` metadata on all profiles with filter columns on browse
+- `sites.toml` with unsloth.ai, ollama.com/library, and huggingface.co/models crawl configs
+- CI workflow (`.github/workflows/scrape-catalog.yml`) — weekly scheduled scrape, opens PR with new profiles
+
+### Changed
+- Scraping pipeline now uses incremental crawl (`CacheMode.ENABLED`) instead of full re-fetch per run
+- TOML writer handles `.review/` dedup and upgrades (low-confidence → main)
+
 ## [0.0.1.0] - 2026-05-08
 
 ### Added

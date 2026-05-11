@@ -142,3 +142,27 @@ The DeepSeek API (`deepseek/deepseek-v4-pro` via `LLML_EXTRACT_PROVIDER`) worked
 ### Current state
 
 All profiles committed. `dev-docs` submodule and `CONTINUATION.md` remain unstaged.
+
+---
+
+## Session 3 — 2026-05-11: Site data loader, org metadata, docs sync
+
+### What shipped
+
+- **Live TOML data loader** — `site/src/data/profiles.js` now reads `profiles/*.toml` at
+  build time via `import.meta.glob`. All 6 hardcoded sample stubs removed.
+- **Org metadata** — `model_org` and `profile_org` fields added to all 63 profiles.
+  Browse page gained two new filter columns (Model org, Profile org).
+- **Pipeline improvements:**
+  - `CacheMode.BYPASS` → `CacheMode.ENABLED` for incremental crawls
+  - `scrape_catalog.py` stamps `model_org`/`profile_org` from site config onto extracted profiles
+  - `toml_writer.py` writes `provenance`, scans `.review/` for dedup, handles review-to-main upgrades
+  - `sites.toml` — added ollama.com/library and huggingface.co/models site configs
+- **Docs synced** — CHANGELOG bumped to 0.0.2.0, BACKLOG.md and site plan checked off,
+  README cache_mode fixed, stale continuation state resolved
+- **dev-docs submodule** — plan items marked done, open design questions resolved
+
+### Commits
+
+- `ad0c1bc` feat: add live profile data loader, org metadata, and new site configs
+- `bd2eb06` chore: update dev-docs submodule (mark scrape-catalog plan items done)
