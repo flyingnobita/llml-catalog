@@ -10,6 +10,14 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(__dirname, "../../..");
 const PROFILES_DIR = resolve(REPO_ROOT, "profiles");
 
+const CATALOG_BASE = "https://flyingnobita.github.io/llml-catalog";
+
+export const INSTALL_COMMANDS = {
+  mac: "brew install flyingnobita/tap/llml",
+  linux: "brew install flyingnobita/tap/llml",
+  windows: "scoop install llml",
+};
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -156,7 +164,8 @@ function loadProfiles() {
         maintainer: gi.maintainer,
         repoPath: `profiles/${filename}`,
         commit: gi.commit,
-        importCmd: `llml import ${filename}`,
+        downloadUrl: `${CATALOG_BASE}/profiles/${filename}`,
+        importCmd: `llml import ${CATALOG_BASE}/profiles/${filename} --activate`,
         rationale: notes,
         args: p.args || [],
         env: (p.env || []).map((e) => ({

@@ -4,7 +4,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import Badge from "../../components/Badge.astro";
 import Button from "../../components/Button.astro";
 import MetaCell from "../../components/MetaCell.astro";
-import ImportBlock from "../../components/ImportBlock.astro";
+import InstallBlock from "../../components/InstallBlock.astro";
 import { PROFILES } from "../../data/profiles";
 
 export function getStaticPaths() {
@@ -40,9 +40,9 @@ const base = import.meta.env.BASE_URL;
       </div>
       <aside style="display:flex;flex-direction:column;gap:14px;padding-top:32px">
         <span class="eyebrow">Import</span>
-        <ImportBlock cmd={p.importCmd} />
+        <InstallBlock profile={p} />
         <p style="font-size:13px;color:var(--muted);line-height:1.5;margin:0">
-          Runs <code class="mono">llml import</code> against the canonical TOML file. The profile attaches to your local model on next launch (press <code class="mono">p</code> in the TUI).
+          Copy the Run command, paste it in your terminal, and pick a local model. The profile attaches immediately — press <code class="mono">p</code> in the TUI to confirm.
         </p>
       </aside>
     </div>

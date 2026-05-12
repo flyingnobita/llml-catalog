@@ -34,3 +34,6 @@ __pycache__/
 # Scraping pipeline outputs (review queue)
 profiles/.review/
 .firecrawl/
+
+# Build artifacts (copied by Vite plugin at build time)
+site/public/profiles/
