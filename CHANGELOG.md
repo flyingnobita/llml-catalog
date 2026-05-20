@@ -1,5 +1,6 @@
 # Changelog
 
+- May-20, 2026 - 04:38 PM +08:00 - Add a copy title button (14px icon + padding) with a "Copied!" tooltip confirmation (including file:// protocol fallback) to task cards on the active board in dashboard.html
 - May-20, 2026 - 04:36 PM +08:00 - Remove obsolete untracked task 'Interactive profile configuration' from dashboard.html
 - May-20, 2026 - 04:23 PM +08:00 - Fix leading indentation bug in task scope modal caused by template literal formatting and pre-wrap CSS
 - May-20, 2026 - 04:19 PM +08:00 - Integrate interactive roadmap and architecture view into dashboard.html from dev-docs/PROJECT-STATUS.md

@@ -23,6 +23,7 @@ mise.local.toml
 .cursor/
 .gemini/
 .opencode/
+.antigravitycli/
 TODOS.md
 
 .gbrain-source

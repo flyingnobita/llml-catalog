@@ -511,6 +511,61 @@
             margin-top: var(--s-xs);
         }
 
+        .copy-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .copy-task-btn {
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: var(--r-sm);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--d-short) var(--ease-move);
+        }
+
+        .copy-task-btn:hover {
+            color: var(--ink);
+            background: var(--paper-2);
+        }
+
+        .copy-task-btn svg {
+            width: 14px;
+            height: 14px;
+            display: block;
+        }
+
+        .copy-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translate(-50%, -4px) scale(0.95);
+            background: var(--ink);
+            color: var(--paper);
+            font-size: 10px;
+            font-family: var(--font-sans);
+            font-weight: 600;
+            padding: 3px 6px;
+            border-radius: var(--r-sm);
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all var(--d-short) var(--ease-move);
+            box-shadow: var(--shadow-float);
+            z-index: 10;
+        }
+
+        .copy-tooltip.show {
+            opacity: 1;
+            transform: translate(-50%, -4px) scale(1);
+        }
+
         .theme-toggle {
             cursor: pointer;
             padding: 8px;
@@ -830,7 +885,15 @@
                                                 <div class="task-card" onclick="openModal('${t.id}')">
                                                     <div class="task-header">
                                                         <span class="task-id">#${t.id}</span>
-                                                        <span class="priority-badge ${t.priority.toLowerCase()}">${t.priority}</span>
+                                                        <div style="display: flex; align-items: center; gap: var(--s-2xs);">
+                                                            <div class="copy-wrapper">
+                                                                <button class="copy-task-btn" onclick="copyTaskTitle(event, '${t.id}')" title="Copy task title">
+                                                                    <i data-lucide="copy"></i>
+                                                                </button>
+                                                                <span class="copy-tooltip">Copied!</span>
+                                                            </div>
+                                                            <span class="priority-badge ${t.priority.toLowerCase()}">${t.priority}</span>
+                                                        </div>
                                                     </div>
                                                     <div class="task-title">${t.title}</div>
                                                 </div>
@@ -884,6 +947,44 @@
                     </div>
                 </div>
             `).join('');
+        }
+
+        function copyTaskTitle(event, taskId) {
+            event.stopPropagation();
+            const task = tasks.find(t => t.id == taskId);
+            if (task) {
+                const titleText = task.title;
+                const btn = event.currentTarget;
+                const tooltip = btn.nextElementSibling;
+                
+                const showSuccess = () => {
+                    if (tooltip) {
+                        tooltip.classList.add('show');
+                        setTimeout(() => {
+                            tooltip.classList.remove('show');
+                        }, 1200);
+                    }
+                };
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(titleText).then(showSuccess);
+                } else {
+                    // Fallback for non-secure / file:// protocols
+                    const textArea = document.createElement('textarea');
+                    textArea.value = titleText;
+                    textArea.style.position = 'fixed'; // Avoid scrolling to bottom
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        showSuccess();
+                    } catch (err) {
+                        console.error('Fallback copy failed', err);
+                    }
+                    document.body.removeChild(textArea);
+                }
+            }
         }
 
         function openModal(id) {
