@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>llml Project Roadmap — Split View</title>
+    <title>llml Project Roadmap — Dashboard</title>
     <link rel="stylesheet" href="design/colors_and_type.css">
     <style>
         body {
@@ -19,12 +19,50 @@
             border-bottom: 1px solid var(--border);
             padding-bottom: var(--s-md);
             margin-bottom: var(--s-lg);
+            flex-wrap: wrap;
+            gap: var(--s-md);
         }
 
         .header-title-area {
             display: flex;
             flex-direction: column;
             gap: var(--s-2xs);
+        }
+
+        /* View Selector tabs */
+        .view-selector {
+            background: var(--paper-2);
+            padding: 4px;
+            border-radius: var(--r-md);
+            display: inline-flex;
+            border: 1px solid var(--border);
+            gap: 4px;
+        }
+
+        .view-tab {
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            padding: 8px 16px;
+            border-radius: calc(var(--r-md) - 2px);
+            font-family: var(--font-sans);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: var(--s-2xs);
+            transition: all var(--d-short) var(--ease-move);
+        }
+
+        .view-tab:hover {
+            color: var(--ink);
+        }
+
+        .view-tab.active {
+            background: var(--surface-raised);
+            color: var(--primary);
+            box-shadow: var(--shadow-card);
         }
 
         .controls {
@@ -256,12 +294,159 @@
         .p2 { background: var(--warning); color: var(--ink); }
         .p3 { background: var(--primary); color: white; }
         .done { background: var(--success); color: white; }
+        .in-progress-badge { background: var(--warning); color: var(--ink); }
+        .planned-badge { background: var(--paper-2); border: 1px solid var(--border); color: var(--muted); }
 
         .task-title {
             font-weight: 600;
             font-size: var(--text-sm);
             color: var(--ink);
             line-height: var(--leading-snug);
+        }
+
+        /* Roadmap Layout Styles */
+        .roadmap-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--s-lg);
+        }
+
+        @media (min-width: 900px) {
+            .roadmap-layout {
+                grid-template-columns: 1.2fr 1.8fr;
+                gap: var(--s-xl);
+            }
+        }
+
+        /* Vertical Timeline styling */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: var(--s-md);
+            position: relative;
+            padding-left: var(--s-lg);
+            margin-top: var(--s-xs);
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 7px;
+            top: 10px;
+            bottom: 10px;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .timeline-item {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: var(--s-2xs);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -21px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--paper);
+            border: 2px solid var(--muted);
+        }
+
+        .timeline-item.completed .timeline-dot {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .timeline-item.in-progress .timeline-dot {
+            background: var(--warning);
+            border-color: var(--warning);
+            box-shadow: 0 0 0 4px rgba(201, 133, 18, 0.15);
+        }
+
+        .timeline-item.planned .timeline-dot {
+            background: var(--paper-2);
+            border-color: var(--border);
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            font-size: var(--text-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--s-xs);
+            color: var(--ink);
+        }
+
+        .timeline-details {
+            font-size: var(--text-xs);
+            color: var(--muted);
+            line-height: var(--leading-body);
+        }
+
+        /* Component Health Card Grid */
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: var(--s-md);
+            margin-top: var(--s-xs);
+        }
+
+        .component-card {
+            background: var(--surface-raised);
+            border: 1px solid var(--border);
+            border-radius: var(--r-md);
+            padding: var(--s-md);
+            display: flex;
+            flex-direction: column;
+            gap: var(--s-2xs);
+            box-shadow: var(--shadow-card);
+        }
+
+        .component-name {
+            font-family: var(--font-sans);
+            font-weight: 700;
+            font-size: var(--text-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--ink);
+        }
+
+        .component-details {
+            font-size: var(--text-xs);
+            color: var(--muted);
+            line-height: var(--leading-body);
+        }
+
+        .component-status-bar {
+            height: 4px;
+            background: var(--paper-2);
+            border-radius: var(--r-full);
+            overflow: hidden;
+            margin-top: var(--s-xs);
+        }
+
+        .component-status-fill {
+            height: 100%;
+        }
+
+        .component-status-fill.completed {
+            width: 100%;
+            background: var(--success);
+        }
+
+        .component-status-fill.in-progress {
+            width: 60%;
+            background: var(--warning);
+        }
+
+        .component-status-fill.planned {
+            width: 10%;
+            background: var(--border);
         }
 
         /* Modal Styles */
@@ -355,65 +540,109 @@
             <div class="eyebrow">Project Status Dashboard</div>
             <h1>llml Roadmap</h1>
         </div>
-        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-            <i data-lucide="sun" id="theme-icon-light" style="display:none;"></i>
-            <i data-lucide="moon" id="theme-icon-dark"></i>
-        </button>
+        <div style="display: flex; align-items: center; gap: var(--s-md);">
+            <!-- View Selector Tabs -->
+            <div class="view-selector">
+                <button class="view-tab active" onclick="switchView('board')">
+                    <i data-lucide="kanban-square" class="icon-inline"></i> Active Board
+                </button>
+                <button class="view-tab" onclick="switchView('roadmap')">
+                    <i data-lucide="map" class="icon-inline"></i> Roadmap & Architecture
+                </button>
+            </div>
+            <!-- Theme Toggle -->
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                <i data-lucide="sun" id="theme-icon-light" style="display:none;"></i>
+                <i data-lucide="moon" id="theme-icon-dark"></i>
+            </button>
+        </div>
     </header>
 
-    <div class="controls">
-        <div class="search-wrapper">
-            <i data-lucide="search" class="search-icon" style="width: 18px; height: 18px;"></i>
-            <input type="text" id="search" placeholder="Search tasks..." oninput="renderTasks()">
+    <!-- VIEW 1: ACTIVE BOARD -->
+    <div id="view-board" class="view-container">
+        <div class="controls">
+            <div class="search-wrapper">
+                <i data-lucide="search" class="search-icon" style="width: 18px; height: 18px;"></i>
+                <input type="text" id="search" placeholder="Search tasks..." oninput="renderTasks()">
+            </div>
+            
+            <div class="filter-controls">
+                <!-- Status Dropdown Filter -->
+                <select id="filter-status" onchange="renderTasks()">
+                    <option value="all">All Statuses</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="up-next">Up Next</option>
+                    <option value="completed">Completed</option>
+                </select>
+            </div>
         </div>
-        
-        <div class="filter-controls">
-            <!-- Status Dropdown Filter -->
-            <select id="filter-status" onchange="renderTasks()">
-                <option value="all">All Statuses</option>
-                <option value="in-progress">In Progress</option>
-                <option value="up-next">Up Next</option>
-                <option value="completed">Completed</option>
-            </select>
-        </div>
+
+        <!-- Dual Column Split Layout -->
+        <main class="board-split">
+            <!-- Column 1: llml launcher -->
+            <section class="project-board-column" id="board-llml">
+                <div class="project-board-header">
+                    <div class="project-title">
+                        <i data-lucide="terminal" style="color: var(--primary);"></i>
+                        <h2>llml</h2>
+                    </div>
+                    <div class="project-mini-stats" id="stats-llml">
+                        <!-- Mini stats injected here -->
+                    </div>
+                </div>
+                <div class="swimlanes-container" id="swimlanes-llml">
+                    <!-- Status swimlanes injected here -->
+                </div>
+            </section>
+
+            <!-- Column 2: llml-catalog site -->
+            <section class="project-board-column" id="board-catalog">
+                <div class="project-board-header">
+                    <div class="project-title">
+                        <i data-lucide="book-open" style="color: var(--primary);"></i>
+                        <h2>llml-catalog</h2>
+                    </div>
+                    <div class="project-mini-stats" id="stats-catalog">
+                        <!-- Mini stats injected here -->
+                    </div>
+                </div>
+                <div class="swimlanes-container" id="swimlanes-catalog">
+                    <!-- Status swimlanes injected here -->
+                </div>
+            </section>
+        </main>
     </div>
 
-    <!-- Dual Column Split Layout -->
-    <main class="board-split">
-        
-        <!-- Column 1: llml launcher -->
-        <section class="project-board-column" id="board-llml">
-            <div class="project-board-header">
-                <div class="project-title">
-                    <i data-lucide="terminal" style="color: var(--primary);"></i>
-                    <h2>llml</h2>
+    <!-- VIEW 2: ROADMAP & ARCHITECTURE -->
+    <div id="view-roadmap" class="view-container" style="display: none;">
+        <main class="roadmap-layout">
+            <!-- Left panel: Suggested Build Order -->
+            <section class="project-board-column" style="background: var(--surface-raised);">
+                <div class="project-board-header">
+                    <div class="project-title">
+                        <i data-lucide="compass" style="color: var(--primary);"></i>
+                        <h2>Suggested Build Order</h2>
+                    </div>
                 </div>
-                <div class="project-mini-stats" id="stats-llml">
-                    <!-- Mini stats injected here -->
+                <div class="timeline" id="timeline-container">
+                    <!-- Timeline items injected here -->
                 </div>
-            </div>
-            <div class="swimlanes-container" id="swimlanes-llml">
-                <!-- Status swimlanes injected here -->
-            </div>
-        </section>
-
-        <!-- Column 2: llml-catalog site -->
-        <section class="project-board-column" id="board-catalog">
-            <div class="project-board-header">
-                <div class="project-title">
-                    <i data-lucide="book-open" style="color: var(--primary);"></i>
-                    <h2>llml-catalog</h2>
+            </section>
+            
+            <!-- Right panel: Component Health -->
+            <section class="project-board-column" style="background: var(--surface-raised);">
+                <div class="project-board-header">
+                    <div class="project-title">
+                        <i data-lucide="layers" style="color: var(--primary);"></i>
+                        <h2>Architecture & Component Health</h2>
+                    </div>
                 </div>
-                <div class="project-mini-stats" id="stats-catalog">
-                    <!-- Mini stats injected here -->
+                <div class="components-grid" id="components-container">
+                    <!-- Components injected here -->
                 </div>
-            </div>
-            <div class="swimlanes-container" id="swimlanes-catalog">
-                <!-- Status swimlanes injected here -->
-            </div>
-        </section>
-
-    </main>
+            </section>
+        </main>
+    </div>
 
     <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
         <div class="modal" id="modal" onclick="event.stopPropagation()">
@@ -427,6 +656,7 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@0.439.0/dist/umd/lucide.min.js"></script>
     <script>
+        // Tasks from BOARD.md
         const tasks = [
             // In Progress
             { id: 4, repo: 'llml', title: 'Interactive profile configuration', priority: 'P2', status: 'in-progress', scope: 'Prompt for missing configuration elements during startup rather than using defaults' },
@@ -461,6 +691,48 @@
             { id: 'C12', repo: 'llml', title: 'v0.5.0 release', priority: 'Done', status: 'completed', scope: 'Completed on 2026-05-13' },
             { id: 'C13', repo: 'llml-catalog', title: 'InstallBlock component', priority: 'Done', status: 'completed', scope: 'Completed on 2026-05-14' }
         ];
+
+        // Roadmap Suggested Build Order from PROJECT-STATUS.md
+        const buildSteps = [
+            { step: 1, title: 'Catalog site polish', status: 'in-progress', details: '/how page, ImportModal 3-step flow, mobile breakpoints, keyboard shortcuts, loading states' },
+            { step: 2, title: 'Launcher quality & robustness', status: 'planned', details: 'golangci-lint integration, missing-runtime and missing-model warnings' },
+            { step: 3, title: 'SHA-256 verification', status: 'planned', details: '--expect-sha=<hex> to llml import for secure checksum pinning' },
+            { step: 4, title: 'In-TUI catalog browser', status: 'planned', details: 'Search, preview, and import profiles natively in the terminal' },
+            { step: 5, title: 'Profile-level runtime overrides', status: 'planned', details: 'Allow custom parameter overrides mapped to runtime targets' },
+            { step: 6, title: 'Debug and introspection surface', status: 'planned', details: 'Expand LLML_DEBUG for clear model discovery diagnostics' },
+            { step: 7, title: 'CLI for running profiles', status: 'planned', details: 'Execution framework to launch profile servers directly from shell' },
+            { step: 8, title: 'MLX / mlx-lm integration', status: 'planned', details: 'Apple Silicon Apple-native LLM backends' },
+            { step: 9, title: 'Windows WSL support', status: 'planned', details: 'Full cross-platform compatibility mapping' },
+            { step: 10, title: 'LM Studio integration', status: 'planned', details: 'Ecosystem endpoint alignment' },
+            { step: 11, title: 'LocalAI integration', status: 'planned', details: 'Local API endpoint backend coverage' }
+        ];
+
+        // Component Architecture states from PROJECT-STATUS.md
+        const components = [
+            { name: 'TUI launcher', status: 'completed', details: 'Discovered models, settings edit, launch preview, split log stream' },
+            { name: 'Models & discovery', status: 'completed', details: 'Filesystem + Ollama scan, safetensors, GGUF profile mapping' },
+            { name: 'Runtime integration', status: 'in-progress', details: 'llama.cpp, vLLM, Ollama, KoboldCpp. Warnings & new backends in progress' },
+            { name: 'Config & user data', status: 'completed', details: 'config.toml persistence, environment variables, atomic backups' },
+            { name: 'Parameter Profiles', status: 'completed', details: 'Named config profiles, cloning, CLI export/import framework' },
+            { name: 'CLI & non-TUI workflows', status: 'in-progress', details: 'Import/export CLI complete; direct execution pathways planned' },
+            { name: 'Agent-facing tooling', status: 'in-progress', details: 'Canonical import skills + sync scripts' },
+            { name: 'Docs & packaging', status: 'completed', details: 'Homebrew, Scoop, Winget, GitHub Releases, TOML schemas' },
+            { name: 'Shared profile catalog', status: 'completed', details: '59 profiles seeding, static Astro app, validation CI' }
+        ];
+
+        function switchView(viewName) {
+            document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.view-container').forEach(c => c.style.display = 'none');
+            
+            if (viewName === 'board') {
+                document.querySelector('.view-tab[onclick*="board"]').classList.add('active');
+                document.getElementById('view-board').style.display = 'block';
+            } else {
+                document.querySelector('.view-tab[onclick*="roadmap"]').classList.add('active');
+                document.getElementById('view-roadmap').style.display = 'block';
+                renderRoadmap();
+            }
+        }
 
         function toggleTheme() {
             const html = document.documentElement;
@@ -582,6 +854,38 @@
             if (window.lucide) {
                 lucide.createIcons();
             }
+        }
+
+        function renderRoadmap() {
+            const timelineContainer = document.getElementById('timeline-container');
+            timelineContainer.innerHTML = buildSteps.map(step => `
+                <div class="timeline-item ${step.status}">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-title">
+                        <span>${step.step}. ${step.title}</span>
+                        <span class="priority-badge ${step.status === 'in-progress' ? 'in-progress-badge' : 'planned-badge'}">
+                            ${step.status.replace('-', ' ')}
+                        </span>
+                    </div>
+                    <div class="timeline-details">${step.details}</div>
+                </div>
+            `).join('');
+
+            const componentsContainer = document.getElementById('components-container');
+            componentsContainer.innerHTML = components.map(c => `
+                <div class="component-card">
+                    <div class="component-name">
+                        <span>${c.name}</span>
+                        <span class="priority-badge ${c.status === 'completed' ? 'done' : 'in-progress-badge'}">
+                            ${c.status}
+                        </span>
+                    </div>
+                    <div class="component-details">${c.details}</div>
+                    <div class="component-status-bar">
+                        <div class="component-status-fill ${c.status}"></div>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function openModal(id) {

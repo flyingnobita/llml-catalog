@@ -1,5 +1,6 @@
 # Changelog
 
+- May-20, 2026 - 04:19 PM +08:00 - Integrate interactive roadmap and architecture view into dashboard.html from dev-docs/PROJECT-STATUS.md
 - May-20, 2026 - 04:16 PM +08:00 - Separate llml and llml-catalog tasks in project status dashboard using a split-column layout
 
 ## [0.0.2.0] - 2026-05-11
