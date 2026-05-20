@@ -1,5 +1,6 @@
 # Changelog
 
+- May-20, 2026 - 04:36 PM +08:00 - Remove obsolete untracked task 'Interactive profile configuration' from dashboard.html
 - May-20, 2026 - 04:23 PM +08:00 - Fix leading indentation bug in task scope modal caused by template literal formatting and pre-wrap CSS
 - May-20, 2026 - 04:19 PM +08:00 - Integrate interactive roadmap and architecture view into dashboard.html from dev-docs/PROJECT-STATUS.md
 - May-20, 2026 - 04:16 PM +08:00 - Separate llml and llml-catalog tasks in project status dashboard using a split-column layout
