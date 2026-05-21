@@ -1,5 +1,6 @@
 # Changelog
 
+- May-21, 2026 - 10:18 PM +08:00 - Update GitHub Actions to Node 24-native action versions and remove the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24 workaround
 - May-21, 2026 - 10:10 PM +08:00 - Upgrade the site toolchain to pnpm 11 and Astro 6, preserving allowed native builds and fixing profile loading during static prerender
 - May-20, 2026 - 04:38 PM +08:00 - Add a copy title button (14px icon + padding) with a "Copied!" tooltip confirmation (including file:// protocol fallback) to task cards on the active board in dashboard.html
 - May-20, 2026 - 04:36 PM +08:00 - Remove obsolete untracked task 'Interactive profile configuration' from dashboard.html
