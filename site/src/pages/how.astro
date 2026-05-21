@@ -1,0 +1,139 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Button from "../components/Button.astro";
+import ImportBlock from "../components/ImportBlock.astro";
+import { tomlSample } from "../data/toml-examples";
+
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout
+  title="How It Works"
+  description="A profile is a solved instance, not a description. Learn how llml profiles encode runtime configurations you can import with one command."
+>
+  <!-- Hero -->
+  <section style="border-bottom:1px solid var(--border);padding:48px 32px">
+    <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
+      <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+        <span class="eyebrow">how it works</span>
+        <h1 style="font-size:48px;letter-spacing:-0.01em;margin:0">
+          You've run the model.<br />
+          Your args work.<br />
+          Someone else needs them.
+        </h1>
+        <p style="font-size:17px;line-height:1.55;max-width:52ch;margin:0">
+          A profile is a solved instance, not a description.
+        </p>
+        <div style="margin-top:8px">
+          <Button variant="primary" href={`${base}/browse`}>Browse the catalog →</Button>
+        </div>
+      </div>
+      <pre style="background:var(--surface-inverse);color:var(--surface-inverse-fg);padding:24px;border-radius:12px;font-size:12.5px;line-height:1.55;font-family:var(--font-mono);margin:0;overflow-x:auto;min-width:0">{tomlSample}</pre>
+    </div>
+  </section>
+
+  <!-- Section 1: Every run is a rediscovery -->
+  <section id="every-run-is-a-rediscovery" style="padding:72px 32px;background:var(--paper-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <div style="max-width:1180px;margin:0 auto">
+      <h2 style="font-size:40px;letter-spacing:-0.01em;margin:0 0 20px">Every run is a rediscovery</h2>
+      <p style="font-size:16px;line-height:1.6;max-width:62ch;margin:0 0 16px">
+        Running a model well is not a model problem — it's a configuration problem. You set context size,
+        GPU layers, thread count, flash attention. You test. You tune. You land on args that work for your
+        machine and your workload. Then the next person, with the same GPU and the same model, starts from
+        scratch.
+      </p>
+      <p style="font-size:16px;line-height:1.6;max-width:62ch;margin:0">
+        Configuration has solved instances. A profile captures one.
+      </p>
+    </div>
+  </section>
+
+  <!-- Section 2: What the profile encodes -->
+  <section id="what-the-profile-encodes" style="padding:72px 32px">
+    <div style="max-width:1180px;margin:0 auto">
+      <h2 style="font-size:40px;letter-spacing:-0.01em;margin:0 0 20px">What the profile encodes</h2>
+      <p style="font-size:16px;line-height:1.6;max-width:62ch;margin:0 0 24px">
+        Each field has a job. <code class="mono">backend</code> declares the runtime.{" "}
+        <code class="mono">hardware.min_vram_gb</code> and <code class="mono">hardware.max_vram_gb</code>{" "}
+        state the VRAM range. <code class="mono">hardware.notes</code> names the actual machine it was tested
+        on. <code class="mono">use_case.tags</code> describe the workload. The fields answer the one question
+        the catalog exists to answer: will this run well on your machine?
+      </p>
+    </div>
+  </section>
+
+  <!-- Section 3: How you know it matches your machine -->
+  <section id="how-you-know-it-matches-your-machine" style="padding:72px 32px;background:var(--paper-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <div style="max-width:1180px;margin:0 auto">
+      <h2 style="font-size:40px;letter-spacing:-0.01em;margin:0 0 20px">How you know it matches your machine</h2>
+      <p style="font-size:16px;line-height:1.6;max-width:62ch;margin:0 0 28px">
+        Every profile carries four fields designed to answer this.
+      </p>
+      <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden;max-width:680px">
+        <div style="display:grid;grid-template-columns:200px 1fr;padding:10px 14px;align-items:center">
+          <span style="font-family:var(--font-mono);font-size:13px;color:var(--muted)">backend</span>
+          <span style="font-family:var(--font-sans);font-size:14px;color:var(--ink)">llama.cpp · vLLM · Ollama · KoboldCpp</span>
+        </div>
+        <div style="display:grid;grid-template-columns:200px 1fr;padding:10px 14px;align-items:center;border-top:1px solid var(--border)">
+          <span style="font-family:var(--font-mono);font-size:13px;color:var(--muted)">hardware.min/max_vram_gb</span>
+          <span style="font-family:var(--font-sans);font-size:14px;color:var(--ink)">VRAM range stated (e.g. 24–24 GB)</span>
+        </div>
+        <div style="display:grid;grid-template-columns:200px 1fr;padding:10px 14px;align-items:center;border-top:1px solid var(--border)">
+          <span style="font-family:var(--font-mono);font-size:13px;color:var(--muted)">hardware.notes</span>
+          <span style="font-family:var(--font-sans);font-size:14px;color:var(--ink)">"Tested on RTX 3090, CUDA 12.4, Ubuntu 24.04."</span>
+        </div>
+        <div style="display:grid;grid-template-columns:200px 1fr;padding:10px 14px;align-items:center;border-top:1px solid var(--border)">
+          <span style="font-family:var(--font-mono);font-size:13px;color:var(--muted)">GitHub provenance</span>
+          <span style="font-family:var(--font-sans);font-size:14px;color:var(--ink)">every profile links to a commit</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: Find, import, run -->
+  <section id="find-import-run" style="padding:72px 32px">
+    <div style="max-width:1180px;margin:0 auto">
+      <h2 style="font-size:40px;letter-spacing:-0.01em;margin:0 0 32px">Find, import, run</h2>
+      <div style="max-width:620px;display:flex;flex-direction:column;gap:0">
+        <div style="margin-bottom:24px">
+          <span style="font-family:var(--font-mono);font-size:13px;color:var(--muted)">01</span>
+          <h3 style="font-size:18px;font-weight:600;margin:6px 0 4px">Filter by backend and GPU class on Browse</h3>
+          <p style="font-size:15px;line-height:1.55;color:var(--ink);margin:0">Find profiles that match your runtime and hardware. The fit summary tells you in one line whether it's worth your time.</p>
+        </div>
+        <div style="margin-bottom:24px">
+          <span style="font-family:var(--font-mono);font-size:13px;color:var(--muted)">02</span>
+          <h3 style="font-size:18px;font-weight:600;margin:6px 0 4px">Copy the import command</h3>
+          <p style="font-size:15px;line-height:1.55;color:var(--ink);margin:0">Every profile page gives you a one-liner. Copy it and run it in your terminal.</p>
+        </div>
+        <div style="margin-bottom:24px">
+          <span style="font-family:var(--font-mono);font-size:13px;color:var(--muted)">03</span>
+          <h3 style="font-size:18px;font-weight:600;margin:6px 0 4px">Profile attaches — appears under p in the TUI on next launch</h3>
+          <p style="font-size:15px;line-height:1.55;color:var(--ink);margin:0">The imported profile shows up in your local llml. Select it with p and start running with the same args.</p>
+        </div>
+      </div>
+      <div style="max-width:620px;margin-top:32px">
+        <ImportBlock cmd="llml import https://flyingnobita.github.io/llml-catalog/profiles/qwen3-14b-q4.toml --activate" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer CTA -->
+  <section style="padding:48px 32px;border-top:1px solid var(--border);background:var(--surface-inverse);color:var(--surface-inverse-fg)">
+    <div style="max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+      <Button variant="primary" href={`${base}/browse`}>Browse the catalog →</Button>
+      <a href={`${base}/contribute`} style="color:var(--surface-inverse-fg);border-bottom:1px solid currentColor;text-decoration:none;font-family:var(--font-sans);font-size:14px">Contribute a profile →</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style is:global>
+  @media (max-width: 700px) {
+    body > section:first-of-type > div:first-child {
+      grid-template-columns: 1fr !important;
+      gap: 32px !important;
+    }
+    #how-you-know-it-matches-your-machine [style*="grid-template-columns:200px"] {
+      grid-template-columns: 110px 1fr !important;
+    }
+  }
+</style>
