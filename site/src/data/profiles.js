@@ -3,11 +3,12 @@
 import { readFileSync, readdirSync } from "fs";
 import { execSync } from "child_process";
 import { parse } from "smol-toml";
-import { resolve, dirname } from "path";
-import { fileURLToPath } from "url";
+import { resolve } from "path";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = resolve(__dirname, "../../..");
+// Astro 6 prerenders bundled chunks from dist/.prerender, so import.meta.url is
+// no longer a stable anchor for repo-relative data files.
+const SITE_ROOT = process.cwd();
+const REPO_ROOT = resolve(SITE_ROOT, "..");
 const PROFILES_DIR = resolve(REPO_ROOT, "profiles");
 
 const CATALOG_BASE = "https://flyingnobita.github.io/llml-catalog";
