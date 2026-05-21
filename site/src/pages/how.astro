@@ -14,7 +14,7 @@ const base = import.meta.env.BASE_URL;
   <!-- Hero -->
   <section style="border-bottom:1px solid var(--border);padding:48px 32px">
     <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
-      <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
         <span class="eyebrow">how it works</span>
         <h1 style="font-size:48px;letter-spacing:-0.01em;margin:0">
           You've run the model.<br />
@@ -28,7 +28,7 @@ const base = import.meta.env.BASE_URL;
           <Button variant="primary" href={`${base}/browse`}>Browse the catalog →</Button>
         </div>
       </div>
-      <pre style="background:var(--surface-inverse);color:var(--surface-inverse-fg);padding:24px;border-radius:12px;font-size:12.5px;line-height:1.55;font-family:var(--font-mono);margin:0;overflow-x:auto">{tomlSample}</pre>
+      <pre style="background:var(--surface-inverse);color:var(--surface-inverse-fg);padding:24px;border-radius:12px;font-size:12.5px;line-height:1.55;font-family:var(--font-mono);margin:0;overflow-x:auto;min-width:0">{tomlSample}</pre>
     </div>
   </section>
 
@@ -119,9 +119,21 @@ const base = import.meta.env.BASE_URL;
 
   <!-- Footer CTA -->
   <section style="padding:48px 32px;border-top:1px solid var(--border);background:var(--surface-inverse);color:var(--surface-inverse-fg)">
-    <div style="max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:24px">
+    <div style="max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:24px;flex-wrap:wrap">
       <Button variant="primary" href={`${base}/browse`}>Browse the catalog →</Button>
       <a href={`${base}/contribute`} style="color:var(--surface-inverse-fg);border-bottom:1px solid currentColor;text-decoration:none;font-family:var(--font-sans);font-size:14px">Contribute a profile →</a>
     </div>
   </section>
 </BaseLayout>
+
+<style is:global>
+  @media (max-width: 700px) {
+    body > section:first-of-type > div:first-child {
+      grid-template-columns: 1fr !important;
+      gap: 32px !important;
+    }
+    #how-you-know-it-matches-your-machine [style*="grid-template-columns:200px"] {
+      grid-template-columns: 110px 1fr !important;
+    }
+  }
+</style>
