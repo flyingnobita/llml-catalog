@@ -7,13 +7,14 @@ Before making visual or UI decisions, always read `design/README.md` and
 
 ## Agent coordination
 
-Before starting work, read `dev-docs/BOARD_working.md` (the live working board) to see what
-tasks are already claimed by other agents. Claim a task by moving it from "Up next" →
-"In progress" with your agent ID. Move it to "Recently completed" when done.
+Before starting work, read `/home/omarchy/Data/Projects/Personal/llml-internal/BOARD_working.md`
+(the live working board) to see what tasks are already claimed by other agents. Claim a task by
+moving it from "Up next" → "In progress" with your agent ID. Move it to "Recently completed"
+when done.
 
-`BOARD_working.md` is gitignored in dev-docs — changes are real-time and shared across
-both repos via the same filesystem path. Do NOT commit it. At end of session, the user
-archives it to `dev-docs/BOARD.md`.
+`BOARD_working.md` is gitignored in llml-internal — changes are real-time and shared across
+both repos via the same absolute path. Do NOT commit it. At end of session, the user
+archives it to `BOARD.md`.
 
 ---
 
