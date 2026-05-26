@@ -269,9 +269,9 @@ const base = import.meta.env.BASE_URL;
       var diff = isDifferent(row, items);
       var isLast = ri === rows.length - 1;
       var borderBottom = isLast ? "0" : "1px solid var(--border)";
-      html += '<div style="border-bottom:' + borderBottom + ';padding:14px 16px;background:' + (diff ? "rgba(47,107,255,0.04)" : "transparent") + ';font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:flex-start;padding-top:16px">' + row.label + '</div>';
+      html += '<div class="' + (diff ? "compare-diff" : "") + '" style="border-bottom:' + borderBottom + ';padding:14px 16px;font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:flex-start;padding-top:16px">' + row.label + '</div>';
       for (var j = 0; j < items.length; j++) {
-        html += '<div style="border-bottom:' + borderBottom + ';border-left:1px solid var(--border);padding:14px 16px;background:' + (diff ? "rgba(47,107,255,0.04)" : "transparent") + ';font-family:' + (row.mono ? "var(--font-mono)" : "var(--font-sans)") + ';font-size:' + (row.mono ? 13 : 14) + 'px;color:var(--ink);line-height:1.5;min-width:0;overflow:hidden">' + row.get(items[j]) + '</div>';
+        html += '<div class="' + (diff ? "compare-diff" : "") + '" style="border-bottom:' + borderBottom + ';border-left:1px solid var(--border);padding:14px 16px;font-family:' + (row.mono ? "var(--font-mono)" : "var(--font-sans)") + ';font-size:' + (row.mono ? 13 : 14) + 'px;color:var(--ink);line-height:1.5;min-width:0;overflow:hidden">' + row.get(items[j]) + '</div>';
       }
     }
 
@@ -409,6 +409,8 @@ const base = import.meta.env.BASE_URL;
   });
 
   var style = document.createElement("style");
-  style.textContent = ".import-btn { padding: 6px 12px !important; font-size: 13px !important; }";
+  style.textContent = ".import-btn { padding: 6px 12px !important; font-size: 13px !important; }" +
+    ".compare-diff { background: rgba(47,107,255,0.10) !important; }" +
+    "[data-theme=\"dark\"] .compare-diff { background: rgba(77,125,255,0.18) !important; }";
   document.head.appendChild(style);
 </script>
