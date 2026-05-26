@@ -6,6 +6,8 @@ uv = "latest"
 [tasks]
 sync = "git submodule sync --recursive && git submodule update --init --recursive"
 dev-docs-pull = "scripts/dev_docs_pull.sh"
+dev-docs-check-pins = "scripts/dev_docs_check_pins.sh"
+dev-docs-bump-parents = "scripts/dev_docs_bump_parents.sh"
 pull-latest = "git pull --rebase origin main && mise run dev-docs-pull"
 worktree-setup = "cd site && pnpm install && cd .. && git submodule update --init --recursive && LLML_AGENTS_SYNC=import ./scripts/sync_gitignore_agents.sh"
 dev = "cd site && pnpm dev"

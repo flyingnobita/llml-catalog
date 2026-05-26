@@ -1,5 +1,6 @@
 # Changelog
 
+- May-26, 2026 - [Add cross-repo dev-docs pin check (CI + mise) and bump-parents script via llml-internal]
 - May-22, 2026 - 12:15 AM +08:00 - Add /how page with problem-first story arc, shared TOML data module, ImportBlock progressive enhancement, mobile overflow fixes, and full Playwright coverage (66 tests)
 - May-21, 2026 - 10:18 PM +08:00 - Update GitHub Actions to Node 24-native action versions and remove the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24 workaround
 - May-21, 2026 - 10:10 PM +08:00 - Upgrade the site toolchain to pnpm 11 and Astro 6, preserving allowed native builds and fixing profile loading during static prerender
