@@ -516,3 +516,95 @@ const base = import.meta.env.BASE_URL;
   // Kick off the fetch on page load
   loadProfiles();
 </script>
+
+<style is:global>
+  /* ---- browse page mobile (≤700px) ---- */
+  @media (max-width: 700px) {
+    /* Stack sidebar above content */
+    [style*="grid-template-columns:220px 1fr"] {
+      grid-template-columns: 1fr !important;
+      gap: 16px !important;
+      padding: 16px !important;
+    }
+    /* Section heading */
+    body > section:first-of-type {
+      padding: 24px 16px !important;
+    }
+    body > section:first-of-type h1 {
+      font-size: 28px !important;
+    }
+    /* Filters as horizontal-scroll row */
+    #filters {
+      display: flex !important;
+      flex-direction: row !important;
+      overflow-x: auto !important;
+      gap: 16px !important;
+      padding-bottom: 8px !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+    #filters .filter-group {
+      flex: 0 0 auto !important;
+      min-width: 120px !important;
+    }
+    /* Search input — full width above filters */
+    #search {
+      width: 100% !important;
+    }
+    /* Results table — horizontal scroll */
+    main {
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+    .result-row,
+    [style*="grid-template-columns:20px 1fr 120px 130px 100px 100px 110px"] {
+      min-width: 620px !important;
+    }
+    /* Sort bar — stack */
+    main > div:first-of-type {
+      min-width: 620px !important;
+    }
+    /* Heading shrink */
+    [style*="font-size:40px"] {
+      font-size: 28px !important;
+    }
+    /* Compare tray — compact wrapping */
+    #compare-tray {
+      flex-wrap: wrap !important;
+      gap: 8px !important;
+      margin: 0 8px 8px !important;
+      padding: 10px 12px !important;
+    }
+    #compare-tray .eyebrow {
+      width: 100% !important;
+    }
+    #compare-chips {
+      flex-wrap: wrap !important;
+    }
+    /* Compare overlay — full-width on mobile */
+    #compare-sheet {
+      max-height: 95vh !important;
+      border-radius: var(--r-lg) var(--r-lg) 0 0 !important;
+    }
+    #compare-grid-wrap {
+      padding: 12px !important;
+    }
+    /* Compare grid — reduce column widths */
+    [style*="grid-template-columns:180px repeat"] {
+      display: block !important;
+      overflow-x: auto !important;
+    }
+  }
+
+  /* ---- browse page tablet (701–1024px) ---- */
+  @media (min-width: 701px) and (max-width: 1024px) {
+    /* Narrower filter sidebar */
+    [style*="grid-template-columns:220px 1fr"] {
+      grid-template-columns: 170px 1fr !important;
+      gap: 24px !important;
+    }
+    /* Slightly reduce heading */
+    body > section:first-of-type h1 {
+      font-size: 34px !important;
+    }
+  }
+</style>

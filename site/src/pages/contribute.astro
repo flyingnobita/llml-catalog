@@ -102,3 +102,63 @@ const base = import.meta.env.BASE_URL;
     </div>
   </section>
 </BaseLayout>
+
+<style is:global>
+  /* ---- contribute mobile (≤700px) ---- */
+  @media (max-width: 700px) {
+    /* Hero — stack grid, shrink heading */
+    body > section:first-of-type > div:first-child {
+      grid-template-columns: 1fr !important;
+      gap: 32px !important;
+    }
+    body > section:first-of-type h1 {
+      font-size: 32px !important;
+    }
+    body > section:first-of-type {
+      padding: 40px 16px !important;
+    }
+    /* Hero code block — constrain width */
+    body > section:first-of-type pre {
+      max-height: 240px !important;
+      font-size: 11px !important;
+    }
+
+    /* Content — stack sidebar above article */
+    body > section:last-of-type > div:first-child {
+      grid-template-columns: 1fr !important;
+      gap: 32px !important;
+    }
+    body > section:last-of-type {
+      padding: 40px 16px !important;
+    }
+    body > section:last-of-type aside ol {
+      flex-direction: row !important;
+      flex-wrap: wrap !important;
+      gap: 12px !important;
+    }
+    body > section:last-of-type h2 {
+      font-size: 24px !important;
+    }
+
+    /* Validation table — tighter on mobile */
+    [style*="grid-template-columns:1fr 100px"] {
+      grid-template-columns: 1fr 70px !important;
+      font-size: 11px !important;
+      padding: 8px 10px !important;
+    }
+  }
+
+  /* ---- contribute tablet (701–1024px) ---- */
+  @media (min-width: 701px) and (max-width: 1024px) {
+    body > section:first-of-type > div:first-child {
+      gap: 40px !important;
+    }
+    body > section:first-of-type h1 {
+      font-size: 38px !important;
+    }
+    body > section:last-of-type > div:first-child {
+      grid-template-columns: 180px 1fr !important;
+      gap: 32px !important;
+    }
+  }
+</style>

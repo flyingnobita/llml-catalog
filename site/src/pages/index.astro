@@ -194,3 +194,104 @@ const p1 = PROFILES[1];
     color: var(--surface-inverse-fg) !important;
   }
 </style>
+
+<style is:global>
+  /* ---- index mobile (≤700px) ---- */
+  @media (max-width: 700px) {
+    /* Hero — stack grid, shrink heading */
+    body > section:first-of-type > div:first-child {
+      grid-template-columns: 1fr !important;
+      gap: 32px !important;
+    }
+    body > section:first-of-type h1 {
+      font-size: 36px !important;
+    }
+    body > section:first-of-type {
+      padding: 40px 16px 32px !important;
+    }
+    /* Hero artifact — full width on mobile */
+    body > section:first-of-type [style*="border-radius:12px"] {
+      min-width: 0;
+    }
+
+    /* ProofStrip — stack to 1 col */
+    section:nth-of-type(2) [style*="repeat(3,1fr)"] {
+      grid-template-columns: 1fr !important;
+      gap: 20px !important;
+    }
+    section:nth-of-type(2) > div {
+      padding: 24px 16px !important;
+    }
+
+    /* HowItWorks — stack cards */
+    body > section:nth-of-type(3) [style*="repeat(3,1fr)"] {
+      grid-template-columns: 1fr !important;
+      gap: 20px !important;
+    }
+    body > section:nth-of-type(3) {
+      padding: 48px 16px !important;
+    }
+
+    /* BrowsePreview — 1-col cards */
+    body > section:nth-of-type(4) [style*="repeat(3,1fr)"] {
+      grid-template-columns: 1fr !important;
+    }
+    body > section:nth-of-type(4) {
+      padding: 24px 16px 48px !important;
+    }
+    body > section:nth-of-type(4) h2 {
+      font-size: 28px !important;
+    }
+
+    /* WhyDifferent — stack to 1 col */
+    body > section:nth-of-type(5) [style*="repeat(3,1fr)"] {
+      grid-template-columns: 1fr !important;
+      gap: 20px !important;
+    }
+    body > section:nth-of-type(5) {
+      padding: 48px 16px !important;
+    }
+    body > section:nth-of-type(5) h2 {
+      font-size: 28px !important;
+    }
+
+    /* ContributeCTA — stack vertically */
+    body > section:last-of-type {
+      padding: 32px 16px !important;
+    }
+    body > section:last-of-type h2 {
+      font-size: 24px !important;
+    }
+
+    /* General — shrink all h2 headings on mobile */
+    section h2[style*="font-size:40px"] {
+      font-size: 28px !important;
+    }
+  }
+
+  /* ---- index tablet (701–1024px) ---- */
+  @media (min-width: 701px) and (max-width: 1024px) {
+    /* Hero — tighter gap */
+    body > section:first-of-type > div:first-child {
+      gap: 32px !important;
+    }
+    body > section:first-of-type h1 {
+      font-size: 48px !important;
+    }
+
+    /* ProofStrip — keep 3-col but tighter */
+    section:nth-of-type(2) > div {
+      padding: 24px !important;
+    }
+
+    /* BrowsePreview — 2-col cards */
+    body > section:nth-of-type(4) [style*="repeat(3,1fr)"] {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    /* WhyDifferent — 2-col */
+    body > section:nth-of-type(5) [style*="repeat(3,1fr)"] {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+  }
+</style>
