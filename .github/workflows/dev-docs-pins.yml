@@ -14,8 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-        with:
-          submodules: true
 
       - name: Fetch llm-launcher for pin comparison
         run: git clone --depth 1 https://github.com/flyingnobita/llml.git "${RUNNER_TEMP}/llml"
