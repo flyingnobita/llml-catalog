@@ -1,6 +1,6 @@
 // Build-time data loader: reads profiles/*.toml and transforms into the JS shape
 // expected by browse, compare, index, and profile/[id] pages.
-import { readFileSync, readdirSync } from "fs";
+import { readFileSync, readdirSync, writeFileSync, mkdirSync, existsSync } from "fs";
 import { execSync } from "child_process";
 import { parse } from "smol-toml";
 import { resolve } from "path";
@@ -221,3 +221,23 @@ const { profiles, filters } = loadProfiles();
 
 export const PROFILES = profiles;
 export const FILTERS = filters;
+
+// Write profiles JSON for client-side fetch (loading/error states on browse page).
+// Write to both public/ (dev mode) and dist/ (production build) since Astro copies
+// public/ to dist/ before page modules are evaluated.
+const profilesJSON = JSON.stringify(profiles.map(p => ({
+  id: p.id, name: p.name, fit: p.fit, backend: p.backend,
+  hardware: p.hardware, os: p.os, useCase: p.useCase,
+  tags: p.tags || [], modelOrg: p.modelOrg, profileOrg: p.profileOrg,
+  verified: p.verified, updated: p.updated, args: p.args || [],
+  env: p.env || [], maintainer: p.maintainer, importCmd: p.importCmd,
+})));
+
+const profilesPublic = resolve(SITE_ROOT, "public", "profiles");
+mkdirSync(profilesPublic, { recursive: true });
+writeFileSync(resolve(profilesPublic, "index.json"), profilesJSON);
+
+const distDir = resolve(SITE_ROOT, "dist", "profiles");
+if (existsSync(distDir)) {
+  writeFileSync(resolve(distDir, "index.json"), profilesJSON);
+}

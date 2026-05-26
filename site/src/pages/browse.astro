@@ -1,12 +1,11 @@
 ---
-// browse.astro — filterable catalog browse page.
+// browse.astro — filterable catalog browse page with loading/error states.
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Button from "../components/Button.astro";
 import Badge from "../components/Badge.astro";
 import { PROFILES, FILTERS } from "../data/profiles";
 
 const base = import.meta.env.BASE_URL;
-// For initial static build, show all profiles. Filtering will be client-side JS.
 ---
 
 <BaseLayout
@@ -83,23 +82,31 @@ const base = import.meta.env.BASE_URL;
 
       <!-- Result rows -->
       <div id="results">
-        {PROFILES.map((p) => (
-          <div class="result-row" data-backend={p.backend} data-hardware={p.hardware} data-os={p.os} data-usecase={p.useCase} data-tags={(p.tags || []).join(",")} data-model-org={p.modelOrg} data-profile-org={p.profileOrg} data-verified={String(p.verified)} data-name={p.name} style="border-bottom:1px solid var(--border);padding:14px 0;display:grid;grid-template-columns:20px 1fr 120px 130px 100px 100px 110px;gap:16px;align-items:center">
-            <input type="checkbox" class="compare-check" data-id={p.id} style="accent-color:var(--primary);width:16px;height:16px" />
-            <a href={`${base}/profile/${p.id}`} style="font:inherit;background:transparent;border:0;text-align:left;cursor:pointer;padding:0;min-width:0;text-decoration:none;color:inherit">
-              <div style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap">
-                <strong style="font-family:var(--font-sans);font-size:15px;flex:1 1 auto;min-width:0">{p.name}</strong>
-                {p.verified && <span style="font-family:var(--font-mono);font-size:11px;color:var(--success);flex:0 0 auto;white-space:nowrap">✓</span>}
-              </div>
-              <div style="font-size:13px;color:var(--ink);margin-top:2px">{p.fit}</div>
-            </a>
-            <span style="font-family:var(--font-mono);font-size:12px">{p.backend}</span>
-            <span style="font-family:var(--font-mono);font-size:12px">{p.hardware}</span>
-            <span style="font-family:var(--font-mono);font-size:12px;color:var(--muted)">{p.os}</span>
-            <span style="font-family:var(--font-mono);font-size:12px;color:var(--muted)">{p.updated}</span>
-            <Button variant="primary" href={`${base}/profile/${p.id}`} class="import-btn">Import</Button>
+        <!-- Skeleton loading rows (shown during fetch) -->
+        {[0, 1, 2, 3].map((i) => (
+          <div class="skeleton-row" style="border-bottom:1px solid var(--border);padding:14px 0;display:grid;grid-template-columns:20px 1fr 120px 130px 100px 100px 110px;gap:16px;align-items:center">
+            <div style="width:16px;height:16px;border-radius:2px;background:var(--paper-2)"></div>
+            <div>
+              <div style="width:55%;height:14px;background:var(--paper-2);border-radius:4px"></div>
+              <div style="width:78%;height:12px;background:var(--paper-2);border-radius:4px;margin-top:8px"></div>
+            </div>
+            <div style="width:70px;height:12px;background:var(--paper-2);border-radius:4px"></div>
+            <div style="width:90px;height:12px;background:var(--paper-2);border-radius:4px"></div>
+            <div style="width:60px;height:12px;background:var(--paper-2);border-radius:4px"></div>
+            <div style="width:70px;height:12px;background:var(--paper-2);border-radius:4px"></div>
+            <div style="width:76px;height:28px;background:var(--paper-2);border-radius:6px"></div>
           </div>
         ))}
+      </div>
+
+      <!-- Error state (hidden by default) -->
+      <div id="error-state" style="display:none;padding:48px;text-align:center;flex-direction:column;gap:12px;align-items:center">
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--error);letter-spacing:.08em;text-transform:uppercase">error</div>
+        <div style="font-family:var(--font-sans);font-size:16px;font-weight:600">Couldn't reach the catalog index</div>
+        <div style="font-size:13px;color:var(--muted);max-width:420px;line-height:1.5">
+          The catalog couldn't fetch <code class="mono">profiles/index.json</code> from the registry. Check your connection or try again.
+        </div>
+        <button id="retry-btn" style="font:inherit;font-family:var(--font-sans);font-size:13px;font-weight:500;padding:8px 16px;border:1px solid var(--border);border-radius:var(--r-md);background:var(--surface-raised);color:var(--ink);cursor:pointer;margin-top:8px">Retry</button>
       </div>
 
       <!-- No results (hidden by default) -->
@@ -133,33 +140,40 @@ const base = import.meta.env.BASE_URL;
   </div>
 </BaseLayout>
 
-<script define:vars={{ 
-  profilesJson: JSON.stringify(PROFILES.map(p => ({ id:p.id, name:p.name, fit:p.fit, backend:p.backend, hardware:p.hardware, os:p.os, useCase:p.useCase, tags:p.tags || [], modelOrg:p.modelOrg, profileOrg:p.profileOrg, verified:p.verified, updated:p.updated, args:p.args || [], env:p.env || [], maintainer:p.maintainer, importCmd:p.importCmd }))),
+<script define:vars={{
+  profilesJson: JSON.stringify(PROFILES.map(p => ({
+    id: p.id, name: p.name, fit: p.fit, backend: p.backend,
+    hardware: p.hardware, os: p.os, useCase: p.useCase,
+    tags: p.tags || [], modelOrg: p.modelOrg, profileOrg: p.profileOrg,
+    verified: p.verified, updated: p.updated, args: p.args || [],
+    env: p.env || [], maintainer: p.maintainer, importCmd: p.importCmd,
+  }))),
   base: import.meta.env.BASE_URL
 }}>
-  const PROFILES = JSON.parse(profilesJson);
-
-  const search = document.getElementById("search");
-  const sort = document.getElementById("sort");
-  const rows = Array.from(document.querySelectorAll(".result-row"));
-  const noResults = document.getElementById("no-results");
-  const countEl = document.getElementById("count");
-  const tray = document.getElementById("compare-tray");
-  const trayChips = document.getElementById("compare-chips");
-  const trayCount = document.getElementById("compare-count");
-  const trayClear = document.getElementById("compare-clear");
-  const trayOpen = document.getElementById("compare-open");
-  const overlay = document.getElementById("compare-overlay");
-  const overlayBackdrop = document.getElementById("compare-backdrop");
-  const overlayClose = document.getElementById("compare-close");
-  const overlaySheet = document.getElementById("compare-sheet");
-  const overlayGrid = document.getElementById("compare-grid");
-  const overlayActions = document.getElementById("compare-actions");
-  const overlayCount = document.getElementById("compare-sheet-count");
-  const overlayPlural = document.getElementById("compare-sheet-plural");
-  const resultsContainer = document.getElementById("results");
-  let compareIds = [];
-  let activeFilters = {
+  var FALLBACK_PROFILES = JSON.parse(profilesJson);
+  var PROFILES = [];
+  var search = document.getElementById("search");
+  var sort = document.getElementById("sort");
+  var noResults = document.getElementById("no-results");
+  var errorState = document.getElementById("error-state");
+  var countEl = document.getElementById("count");
+  var resultsContainer = document.getElementById("results");
+  var retryBtn = document.getElementById("retry-btn");
+  var tray = document.getElementById("compare-tray");
+  var trayChips = document.getElementById("compare-chips");
+  var trayCount = document.getElementById("compare-count");
+  var trayClear = document.getElementById("compare-clear");
+  var trayOpen = document.getElementById("compare-open");
+  var overlay = document.getElementById("compare-overlay");
+  var overlayBackdrop = document.getElementById("compare-backdrop");
+  var overlayClose = document.getElementById("compare-close");
+  var overlaySheet = document.getElementById("compare-sheet");
+  var overlayGrid = document.getElementById("compare-grid");
+  var overlayActions = document.getElementById("compare-actions");
+  var overlayCount = document.getElementById("compare-sheet-count");
+  var overlayPlural = document.getElementById("compare-sheet-plural");
+  var compareIds = [];
+  var activeFilters = {
     backend: new Set(),
     hardware: new Set(),
     os: new Set(),
@@ -209,14 +223,8 @@ const base = import.meta.env.BASE_URL;
     });
   }
 
-  var didRestore = restoreState();
-  if (didRestore) {
-    applyFilterButtonStyles();
-    applyFilters();
-  }
-
   function updateTray() {
-    const items = compareIds.map(function(id) { return PROFILES.find(function(p) { return p.id === id; }); }).filter(Boolean);
+    var items = compareIds.map(function(id) { return PROFILES.find(function(p) { return p.id === id; }); }).filter(Boolean);
     if (items.length < 2) {
       tray.style.display = "none";
     } else {
@@ -254,7 +262,6 @@ const base = import.meta.env.BASE_URL;
     var w = items.length;
     var html = '<div style="display:grid;grid-template-columns:180px repeat(' + w + ', minmax(0, 1fr));border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;background:var(--surface-raised)">';
 
-    // Header row
     html += '<div style="background:var(--paper-2);border-bottom:1px solid var(--border);padding:16px"></div>';
     for (var i = 0; i < items.length; i++) {
       html += '<div style="background:var(--paper-2);border-bottom:1px solid var(--border);border-left:1px solid var(--border);padding:16px;display:flex;flex-direction:column;gap:6px">';
@@ -263,7 +270,6 @@ const base = import.meta.env.BASE_URL;
       html += '</div>';
     }
 
-    // Data rows
     for (var ri = 0; ri < rows.length; ri++) {
       var row = rows[ri];
       var diff = isDifferent(row, items);
@@ -294,7 +300,6 @@ const base = import.meta.env.BASE_URL;
     overlayActions.innerHTML = actionsHtml;
 
     overlay.style.display = "block";
-    // Force reflow so the transition fires
     overlaySheet.offsetHeight;
     overlaySheet.style.transform = "translateY(0)";
     document.body.style.overflow = "hidden";
@@ -305,13 +310,14 @@ const base = import.meta.env.BASE_URL;
     setTimeout(function() {
       overlay.style.display = "none";
       document.body.style.overflow = "";
-    }, 280); // match --d-medium
+    }, 280);
   }
 
   function applyFilters() {
     var q = search.value.trim().toLowerCase();
     var terms = q ? q.split(/\s+/).filter(Boolean) : [];
     var sortVal = sort.value;
+    var rows = Array.from(document.querySelectorAll(".result-row"));
 
     var visible = rows.filter(function(row) {
       if (activeFilters.backend.size && !activeFilters.backend.has(row.dataset.backend)) return false;
@@ -340,21 +346,114 @@ const base = import.meta.env.BASE_URL;
     if (sortVal === "Name") {
       visible.sort(function(a, b) { return (a.dataset.name || "").localeCompare(b.dataset.name || ""); });
     } else if (sortVal === "Fit") {
-      visible.sort(function(a, b) { 
-        return (Number(b.dataset.verified === "true") - Number(a.dataset.verified === "true")) || 
-               (a.dataset.name || "").localeCompare(b.dataset.name || ""); 
+      visible.sort(function(a, b) {
+        return (Number(b.dataset.verified === "true") - Number(a.dataset.verified === "true")) ||
+               (a.dataset.name || "").localeCompare(b.dataset.name || "");
       });
     }
 
     rows.forEach(function(r) { r.style.display = "none"; });
-    visible.forEach(function(r) { 
-      r.style.display = "grid"; 
+    visible.forEach(function(r) {
+      r.style.display = "grid";
       resultsContainer.appendChild(r);
     });
 
     noResults.style.display = visible.length ? "none" : "block";
     countEl.innerHTML = '<strong>' + visible.length + '</strong> <span style="color:var(--muted)">of ' + PROFILES.length + ' profiles</span>' + (q ? '<span style="color:var(--muted);margin-left:8px">· matching "' + q + '"</span>' : "");
   }
+
+  // --- Data fetching and state management ---
+
+  function rowHTML(p) {
+    var verifiedBadge = p.verified ? '<span style="font-family:var(--font-mono);font-size:11px;color:var(--success);flex:0 0 auto;white-space:nowrap">✓</span>' : '';
+    return '<div class="result-row" data-backend="' + p.backend + '" data-hardware="' + p.hardware + '" data-os="' + p.os + '" data-usecase="' + p.useCase + '" data-tags="' + (p.tags || []).join(",") + '" data-model-org="' + p.modelOrg + '" data-profile-org="' + p.profileOrg + '" data-verified="' + String(p.verified) + '" data-name="' + p.name + '" style="border-bottom:1px solid var(--border);padding:14px 0;display:grid;grid-template-columns:20px 1fr 120px 130px 100px 100px 110px;gap:16px;align-items:center">' +
+      '<input type="checkbox" class="compare-check" data-id="' + p.id + '" style="accent-color:var(--primary);width:16px;height:16px" />' +
+      '<a href="' + base + '/profile/' + p.id + '" style="font:inherit;background:transparent;border:0;text-align:left;cursor:pointer;padding:0;min-width:0;text-decoration:none;color:inherit">' +
+        '<div style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap">' +
+          '<strong style="font-family:var(--font-sans);font-size:15px;flex:1 1 auto;min-width:0">' + p.name + '</strong>' +
+          verifiedBadge +
+        '</div>' +
+        '<div style="font-size:13px;color:var(--ink);margin-top:2px">' + p.fit + '</div>' +
+      '</a>' +
+      '<span style="font-family:var(--font-mono);font-size:12px">' + p.backend + '</span>' +
+      '<span style="font-family:var(--font-mono);font-size:12px">' + p.hardware + '</span>' +
+      '<span style="font-family:var(--font-mono);font-size:12px;color:var(--muted)">' + p.os + '</span>' +
+      '<span style="font-family:var(--font-mono);font-size:12px;color:var(--muted)">' + p.updated + '</span>' +
+      '<a href="' + base + '/profile/' + p.id + '" class="import-btn" style="font:inherit;font-family:var(--font-sans);font-size:13px;font-weight:600;padding:6px 12px;border:0;border-radius:var(--r-md);background:var(--primary);color:#fff;cursor:pointer;text-decoration:none;text-align:center;display:inline-block">Import</a>' +
+    '</div>';
+  }
+
+  function renderAllRows() {
+    var html = "";
+    for (var i = 0; i < PROFILES.length; i++) {
+      html += rowHTML(PROFILES[i]);
+    }
+    resultsContainer.innerHTML = html;
+  }
+
+  function showSkeleton() {
+    var html = "";
+    for (var i = 0; i < 4; i++) {
+      html += '<div class="skeleton-row" style="border-bottom:1px solid var(--border);padding:14px 0;display:grid;grid-template-columns:20px 1fr 120px 130px 100px 100px 110px;gap:16px;align-items:center">' +
+        '<div style="width:16px;height:16px;border-radius:2px;background:var(--paper-2)"></div>' +
+        '<div>' +
+          '<div style="width:55%;height:14px;background:var(--paper-2);border-radius:4px"></div>' +
+          '<div style="width:78%;height:12px;background:var(--paper-2);border-radius:4px;margin-top:8px"></div>' +
+        '</div>' +
+        '<div style="width:70px;height:12px;background:var(--paper-2);border-radius:4px"></div>' +
+        '<div style="width:90px;height:12px;background:var(--paper-2);border-radius:4px"></div>' +
+        '<div style="width:60px;height:12px;background:var(--paper-2);border-radius:4px"></div>' +
+        '<div style="width:70px;height:12px;background:var(--paper-2);border-radius:4px"></div>' +
+        '<div style="width:76px;height:28px;background:var(--paper-2);border-radius:6px"></div>' +
+      '</div>';
+    }
+    resultsContainer.innerHTML = html;
+  }
+
+  function showError() {
+    resultsContainer.style.display = "none";
+    errorState.style.display = "flex";
+    noResults.style.display = "none";
+    countEl.innerHTML = '<strong style="color:var(--error)">—</strong> <span style="color:var(--muted)">of — profiles</span>';
+  }
+
+  function hideError() {
+    errorState.style.display = "none";
+    resultsContainer.style.display = "";
+  }
+
+  async function fetchProfiles() {
+    var resp = await fetch(base + "profiles/index.json");
+    if (!resp.ok) throw new Error("HTTP " + resp.status);
+    PROFILES = await resp.json();
+  }
+
+  async function loadProfiles() {
+    showSkeleton();
+    errorState.style.display = "none";
+    resultsContainer.style.display = "";
+    try {
+      await fetchProfiles();
+    } catch (e) {
+      // Fetch failed — fall back to inline data (always available from build).
+      PROFILES = FALLBACK_PROFILES;
+    }
+    if (PROFILES.length === 0) {
+      showError();
+      return;
+    }
+    hideError();
+    renderAllRows();
+    var didRestore = restoreState();
+    if (didRestore) {
+      applyFilterButtonStyles();
+      applyFilters();
+    }
+  }
+
+  retryBtn.addEventListener("click", loadProfiles);
+
+  // --- Event listeners ---
 
   document.querySelectorAll(".filter-opt").forEach(function(btn) {
     btn.addEventListener("click", function() {
@@ -374,16 +473,16 @@ const base = import.meta.env.BASE_URL;
   search.addEventListener("input", function() { saveState(); applyFilters(); });
   sort.addEventListener("change", function() { saveState(); applyFilters(); });
 
-  document.querySelectorAll(".compare-check").forEach(function(cb) {
-    cb.addEventListener("change", function() {
-      var id = cb.dataset.id;
-      if (cb.checked) {
-        compareIds.push(id);
-      } else {
-        compareIds = compareIds.filter(function(x) { return x !== id; });
-      }
-      updateTray();
-    });
+  // Event delegation for compare checkboxes (rows are dynamically rendered)
+  resultsContainer.addEventListener("change", function(e) {
+    if (!e.target.classList.contains("compare-check")) return;
+    var id = e.target.dataset.id;
+    if (e.target.checked) {
+      compareIds.push(id);
+    } else {
+      compareIds = compareIds.filter(function(x) { return x !== id; });
+    }
+    updateTray();
   });
 
   trayClear.addEventListener("click", function() {
@@ -413,4 +512,7 @@ const base = import.meta.env.BASE_URL;
     ".compare-diff { background: rgba(47,107,255,0.10) !important; }" +
     "[data-theme=\"dark\"] .compare-diff { background: rgba(77,125,255,0.18) !important; }";
   document.head.appendChild(style);
+
+  // Kick off the fetch on page load
+  loadProfiles();
 </script>
