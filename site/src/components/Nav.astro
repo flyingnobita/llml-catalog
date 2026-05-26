@@ -21,8 +21,8 @@ function link(href: string, label: string) {
       <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase">profile catalog</span>
     </a>
     <nav style="display:flex;gap:24px;margin-left:12px;flex-wrap:wrap">
-      {["/browse", "/compare", "/how", "/contribute"].map((href) => {
-        const l = link(href, href === "/browse" ? "Browse Profiles" : href === "/compare" ? "Compare" : href === "/how" ? "How It Works" : "Contribute");
+      {["/browse", "/how", "/contribute"].map((href) => {
+        const l = link(href, href === "/browse" ? "Browse Profiles" : href === "/how" ? "How It Works" : "Contribute");
         return (
           <a href={l.href} style={`font:inherit;font-family:var(--font-sans);font-size:14px;font-weight:500;background:transparent;border:0;padding:6px 2px;color:${l.color};border-bottom:${l.border};cursor:pointer;white-space:nowrap;text-decoration:none`}>
             {l.label}
