@@ -201,6 +201,37 @@ const base = import.meta.env.BASE_URL;
   var overlayCount = document.getElementById("compare-sheet-count");
   var overlayPlural = document.getElementById("compare-sheet-plural");
   var compareIds = [];
+  var focusedRowIndex = -1;
+
+  function visibleRowEls() {
+    var rows = Array.from(document.querySelectorAll(".result-row"));
+    return rows.filter(function(r) { return r.style.display !== "none"; });
+  }
+
+  function clearRowFocus() {
+    var rows = Array.from(document.querySelectorAll(".result-row"));
+    rows.forEach(function(r) { r.classList.remove("keyboard-focused"); });
+    focusedRowIndex = -1;
+  }
+
+  function focusRow(index) {
+    var visible = visibleRowEls();
+    if (visible.length === 0) return;
+    if (index < 0) index = visible.length - 1;
+    if (index >= visible.length) index = 0;
+    clearRowFocus();
+    focusedRowIndex = index;
+    visible[index].classList.add("keyboard-focused");
+    visible[index].scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }
+
+  function openFocusedProfile() {
+    if (focusedRowIndex < 0) return;
+    var visible = visibleRowEls();
+    if (focusedRowIndex >= visible.length) return;
+    var link = visible[focusedRowIndex].querySelector("a");
+    if (link) window.location.href = link.href;
+  }
   var activeFilters = {
     backend: new Set(),
     hardware: new Set(),
@@ -346,6 +377,7 @@ const base = import.meta.env.BASE_URL;
   }
 
   function applyFilters() {
+    clearRowFocus();
     var q = search.value.trim().toLowerCase();
     var terms = q ? q.split(/\s+/).filter(Boolean) : [];
     var sortVal = sort.value;
@@ -611,19 +643,77 @@ const base = import.meta.env.BASE_URL;
   overlayBackdrop.addEventListener("click", closeCompare);
 
   document.addEventListener("keydown", function(e) {
+    // Don't intercept when shortcuts overlay is open (global handler owns it)
+    var shortcutsOverlay = document.getElementById("shortcuts-overlay");
+    if (shortcutsOverlay && shortcutsOverlay.style.display === "block") return;
+
     if (e.key === "Escape" && overlay.style.display === "block") {
       e.preventDefault();
       closeCompare();
       return;
     }
-    if (e.key === "/" && ["INPUT","SELECT","TEXTAREA"].indexOf(e.target.tagName) === -1) {
+
+    // Ignore when focus is in a form control (except for Escape)
+    var tag = e.target.tagName;
+    if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") {
+      if (e.key === "Escape" && document.activeElement === search) {
+        search.blur();
+        return;
+      }
+      return;
+    }
+
+    if (e.key === "/") {
       e.preventDefault();
       search.focus();
+      return;
+    }
+
+    if (e.key === "j") {
+      e.preventDefault();
+      focusRow(focusedRowIndex + 1);
+      return;
+    }
+
+    if (e.key === "k") {
+      e.preventDefault();
+      if (focusedRowIndex === -1) {
+        focusRow(0);
+      } else {
+        focusRow(focusedRowIndex - 1);
+      }
+      return;
+    }
+
+    if (e.key === "Enter" && focusedRowIndex >= 0) {
+      e.preventDefault();
+      openFocusedProfile();
+      return;
+    }
+
+    if (e.key === " " && focusedRowIndex >= 0) {
+      e.preventDefault();
+      var visible = visibleRowEls();
+      if (focusedRowIndex < visible.length) {
+        var cb = visible[focusedRowIndex].querySelector(".compare-check");
+        if (cb) {
+          cb.checked = !cb.checked;
+          cb.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+      }
+      return;
+    }
+
+    if (e.key === "c") {
+      e.preventDefault();
+      if (compareIds.length >= 2) openCompare();
+      return;
     }
   });
 
   var style = document.createElement("style");
-  style.textContent = ".import-btn { padding: 6px 12px !important; font-size: 13px !important; }" +
+  style.textContent = ".result-row.keyboard-focused { background: var(--paper-2); box-shadow: inset 3px 0 0 var(--primary); }" +
+    ".import-btn { padding: 6px 12px !important; font-size: 13px !important; }" +
     ".compare-diff { background: rgba(47,107,255,0.10) !important; }" +
     "[data-theme=\"dark\"] .compare-diff { background: rgba(77,125,255,0.18) !important; }";
   document.head.appendChild(style);
