@@ -114,7 +114,7 @@ const isBrowse = Astro.url.pathname === base + "/browse" || Astro.url.pathname =
             e.preventDefault();
             hideOverlay();
           }
-          e.stopImmediatePropagation();
+          e.stopPropagation();
           return;
         }
 

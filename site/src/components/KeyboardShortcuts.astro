@@ -18,15 +18,15 @@ const { browseMode = false } = Astro.props;
       <div style="display:flex;flex-direction:column;gap:10px">
         <div style="display:flex;align-items:center;gap:12px">
           <span style="display:flex;gap:4px">
-            <kbd style="font-family:var(--font-mono);font-size:11px;padding:2px 6px;border:1px solid var(--border);border-bottom-width:2px;border-radius:4px;background:var(--paper);color:var(--ink)">g</kbd>
-            <kbd style="font-family:var(--font-mono);font-size:11px;padding:2px 6px;border:1px solid var(--border);border-bottom-width:2px;border-radius:4px;background:var(--paper);color:var(--ink)">b</kbd>
+            <kbd class="shortcut-kbd">g</kbd>
+            <kbd class="shortcut-kbd">b</kbd>
           </span>
           <span style="font-size:14px;color:var(--muted)">Go to Browse</span>
         </div>
         <div style="display:flex;align-items:center;gap:12px">
           <span style="display:flex;gap:4px">
-            <kbd style="font-family:var(--font-mono);font-size:11px;padding:2px 6px;border:1px solid var(--border);border-bottom-width:2px;border-radius:4px;background:var(--paper);color:var(--ink)">g</kbd>
-            <kbd style="font-family:var(--font-mono);font-size:11px;padding:2px 6px;border:1px solid var(--border);border-bottom-width:2px;border-radius:4px;background:var(--paper);color:var(--ink)">h</kbd>
+            <kbd class="shortcut-kbd">g</kbd>
+            <kbd class="shortcut-kbd">h</kbd>
           </span>
           <span style="font-size:14px;color:var(--muted)">Go to Home</span>
         </div>
@@ -39,26 +39,26 @@ const { browseMode = false } = Astro.props;
         <div style="display:flex;flex-direction:column;gap:10px">
           <div style="display:flex;align-items:center;gap:12px">
             <span style="display:flex;gap:4px">
-              <kbd style="font-family:var(--font-mono);font-size:11px;padding:2px 6px;border:1px solid var(--border);border-bottom-width:2px;border-radius:4px;background:var(--paper);color:var(--ink)">j</kbd>
+              <kbd class="shortcut-kbd">j</kbd>
               <span style="font-size:11px;color:var(--muted)">/</span>
-              <kbd style="font-family:var(--font-mono);font-size:11px;padding:2px 6px;border:1px solid var(--border);border-bottom-width:2px;border-radius:4px;background:var(--paper);color:var(--ink)">k</kbd>
+              <kbd class="shortcut-kbd">k</kbd>
             </span>
             <span style="font-size:14px;color:var(--muted)">Next / Previous profile</span>
           </div>
           <div style="display:flex;align-items:center;gap:12px">
-            <kbd style="font-family:var(--font-mono);font-size:11px;padding:2px 6px;border:1px solid var(--border);border-bottom-width:2px;border-radius:4px;background:var(--paper);color:var(--ink)">Enter</kbd>
+            <kbd class="shortcut-kbd">Enter</kbd>
             <span style="font-size:14px;color:var(--muted)">Open focused profile</span>
           </div>
           <div style="display:flex;align-items:center;gap:12px">
-            <kbd style="font-family:var(--font-mono);font-size:11px;padding:2px 6px;border:1px solid var(--border);border-bottom-width:2px;border-radius:4px;background:var(--paper);color:var(--ink)">Space</kbd>
+            <kbd class="shortcut-kbd">Space</kbd>
             <span style="font-size:14px;color:var(--muted)">Select / Deselect profile for compare</span>
           </div>
           <div style="display:flex;align-items:center;gap:12px">
-            <kbd style="font-family:var(--font-mono);font-size:11px;padding:2px 6px;border:1px solid var(--border);border-bottom-width:2px;border-radius:4px;background:var(--paper);color:var(--ink)">c</kbd>
+            <kbd class="shortcut-kbd">c</kbd>
             <span style="font-size:14px;color:var(--muted)">Compare selected profiles</span>
           </div>
           <div style="display:flex;align-items:center;gap:12px">
-            <kbd style="font-family:var(--font-mono);font-size:11px;padding:2px 6px;border:1px solid var(--border);border-bottom-width:2px;border-radius:4px;background:var(--paper);color:var(--ink)">/</kbd>
+            <kbd class="shortcut-kbd">/</kbd>
             <span style="font-size:14px;color:var(--muted)">Focus search</span>
           </div>
         </div>
@@ -69,14 +69,27 @@ const { browseMode = false } = Astro.props;
       <span class="eyebrow" style="display:block;margin-bottom:12px">General</span>
       <div style="display:flex;flex-direction:column;gap:10px">
         <div style="display:flex;align-items:center;gap:12px">
-          <kbd style="font-family:var(--font-mono);font-size:11px;padding:2px 6px;border:1px solid var(--border);border-bottom-width:2px;border-radius:4px;background:var(--paper);color:var(--ink)">?</kbd>
+          <kbd class="shortcut-kbd">?</kbd>
           <span style="font-size:14px;color:var(--muted)">Show keyboard shortcuts</span>
         </div>
         <div style="display:flex;align-items:center;gap:12px">
-          <kbd style="font-family:var(--font-mono);font-size:11px;padding:2px 6px;border:1px solid var(--border);border-bottom-width:2px;border-radius:4px;background:var(--paper);color:var(--ink)">Esc</kbd>
+          <kbd class="shortcut-kbd">Esc</kbd>
           <span style="font-size:14px;color:var(--muted)">Close overlay</span>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<style>
+  .shortcut-kbd {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 2px 6px;
+    border: 1px solid var(--border);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--ink);
+  }
+</style>
