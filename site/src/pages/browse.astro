@@ -606,5 +606,14 @@ const base = import.meta.env.BASE_URL;
     body > section:first-of-type h1 {
       font-size: 34px !important;
     }
+    /* Results table — allow horizontal scroll at tablet (7 cols won't fit) */
+    main {
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+    .result-row,
+    [style*="grid-template-columns:20px 1fr 120px 130px 100px 100px 110px"] {
+      min-width: 600px !important;
+    }
   }
 </style>
