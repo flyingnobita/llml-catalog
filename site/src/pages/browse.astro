@@ -200,6 +200,7 @@ const base = import.meta.env.BASE_URL;
   var overlayActions = document.getElementById("compare-actions");
   var overlayCount = document.getElementById("compare-sheet-count");
   var overlayPlural = document.getElementById("compare-sheet-plural");
+  var COMPARE_MIN = 2;
   var compareIds = [];
   var focusedRowIndex = -1;
 
@@ -217,12 +218,13 @@ const base = import.meta.env.BASE_URL;
   function focusRow(index) {
     var visible = visibleRowEls();
     if (visible.length === 0) return;
-    if (index < 0) index = visible.length - 1;
-    if (index >= visible.length) index = 0;
+    var target = index;
+    if (target < 0) target = visible.length - 1;
+    if (target >= visible.length) target = 0;
     clearRowFocus();
-    focusedRowIndex = index;
-    visible[index].classList.add("keyboard-focused");
-    visible[index].scrollIntoView({ block: "nearest", behavior: "smooth" });
+    focusedRowIndex = target;
+    visible[target].classList.add("keyboard-focused");
+    visible[target].scrollIntoView({ block: "nearest", behavior: "smooth" });
   }
 
   function openFocusedProfile() {
@@ -653,15 +655,21 @@ const base = import.meta.env.BASE_URL;
       return;
     }
 
-    // Ignore when focus is in a form control (except for Escape)
+    // Don't intercept row nav when compare overlay is open
+    if (overlay.style.display === "block") return;
+
+    // Ignore when focus is in a form control or button (except for Escape)
     var tag = e.target.tagName;
-    if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") {
+    if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA" || tag === "BUTTON") {
       if (e.key === "Escape" && document.activeElement === search) {
         search.blur();
         return;
       }
       return;
     }
+
+    // Don't intercept modified keystrokes (Ctrl+C, Cmd+J, etc.)
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
 
     if (e.key === "/") {
       e.preventDefault();
@@ -706,7 +714,7 @@ const base = import.meta.env.BASE_URL;
 
     if (e.key === "c") {
       e.preventDefault();
-      if (compareIds.length >= 2) openCompare();
+      if (compareIds.length >= COMPARE_MIN) openCompare();
       return;
     }
   });
