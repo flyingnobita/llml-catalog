@@ -86,7 +86,7 @@ between metadata, `→` for flow, `↑↓` for sort. Avoid decorative arrows in 
 ### Color
 - **Restrained palette.** Warm paper neutrals (`#F3F1EA → #D8D2C4`) carry most
   surface area; ink (`#111318`) and slate (`#1A1F27`) carry text and dense
-  panels. Operative blue `#2F6BFF` is reserved for active state, key CTAs, and
+  panels. Operative blue `#3D6DA8` is reserved for active state, key CTAs, and
   import — never decoration, never wallpaper.
 - **Semantic colors are functional only:** success `#1EBC73`, warning `#C98512`,
   error `#D84B45`, info = primary blue. Compatibility badges are tinted, not
@@ -147,7 +147,7 @@ sticky compare tray and the import-confirmation toast only.
   active/visited.
 
 ### Focus
-2px solid `#2F6BFF` outline with 2px offset. Always visible on keyboard focus.
+2px solid `#3D6DA8` outline with 2px offset. Always visible on keyboard focus.
 Never `outline: none` without a replacement.
 
 ### Motion

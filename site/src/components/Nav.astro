@@ -1,6 +1,5 @@
 ---
 // Nav.astro — sticky top navigation bar.
-import Button from "./Button.astro";
 
 const currentPath = Astro.url.pathname;
 const base = import.meta.env.BASE_URL;
@@ -15,14 +14,41 @@ function link(href: string, label: string) {
 ---
 
 <header style="border-bottom:1px solid var(--border);background:var(--paper);position:sticky;top:0;z-index:10">
-  <div style="max-width:1280px;margin:0 auto;padding:16px 32px;display:flex;align-items:center;gap:32px;flex-wrap:wrap;row-gap:8px">
-    <a href={`${base}/`} style="font:inherit;background:transparent;border:0;cursor:pointer;padding:0;display:flex;align-items:baseline;gap:10px;text-decoration:none">
-      <span style="font-family:var(--font-serif);font-style:italic;font-size:28px;line-height:1;letter-spacing:-0.02em;color:var(--ink)">llml</span>
-      <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase">profile catalog</span>
-    </a>
-    <nav style="display:flex;gap:24px;margin-left:12px;flex-wrap:wrap">
+  <div style="max-width:1280px;margin:0 auto;padding:16px 32px;display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;align-items:center">
+      <a href={`${base}/`} style="font:inherit;background:transparent;border:0;cursor:pointer;padding:0;display:flex;align-items:baseline;gap:10px;text-decoration:none">
+        <span style="font-family:var(--font-serif);font-style:italic;font-size:28px;line-height:1;letter-spacing:-0.02em;color:var(--ink)">llml</span>
+        <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase">profile catalog</span>
+      </a>
+      <div style="margin-left:auto;display:flex;gap:12px;align-items:center">
+      <a href="https://github.com/flyingnobita/llml" aria-label="GitHub repository" title="GitHub repository"
+        style="display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:8px;padding:0;width:44px;height:44px;color:var(--muted);text-decoration:none"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+      </a>
+
+      <!-- Keyboard shortcuts (hidden when JS disabled, hidden on mobile) -->
+      <button id="shortcuts-nav-btn" class="shortcuts-nav-btn no-js-hidden no-js-hidden--inline-flex" aria-label="Keyboard shortcuts"
+        style="font:inherit;background:transparent;border:0;border-radius:8px;padding:0;width:44px;height:44px;cursor:pointer;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:13px;color:var(--muted)"
+      >?</button>
+
+      <!-- Theme toggle (hidden when JS disabled) -->
+      <button id="theme-toggle" class="no-js-hidden no-js-hidden--inline-flex" aria-label="Switch to dark mode"
+        style="font:inherit;background:transparent;border:0;border-radius:8px;padding:0;width:44px;height:44px;cursor:pointer;align-items:center;justify-content:center;color:var(--muted)"
+      >
+        <!-- Sun icon (shown in light mode) -->
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <!-- Moon icon (shown in dark mode) -->
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+
+    </div>
+    </div>
+    <nav style="display:flex;gap:24px;flex-wrap:wrap">
       {["/browse", "/how", "/contribute"].map((href) => {
-        const l = link(href, href === "/browse" ? "Browse Profiles" : href === "/how" ? "How It Works" : "Contribute");
+        const l = link(href, href === "/browse" ? "Profiles" : href === "/how" ? "How It Works" : "Contribute");
         return (
           <a href={l.href} style={`font:inherit;font-family:var(--font-sans);font-size:14px;font-weight:500;background:transparent;border:0;padding:6px 2px;color:${l.color};border-bottom:${l.border};cursor:pointer;white-space:nowrap;text-decoration:none`}>
             {l.label}
@@ -30,24 +56,6 @@ function link(href: string, label: string) {
         );
       })}
     </nav>
-    <div style="margin-left:auto;display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
-      <a href="https://github.com/flyingnobita/llml" style="font-family:var(--font-mono);font-size:12px;color:var(--muted);border-bottom:1px solid transparent;text-decoration:none">
-        github.com/flyingnobita/llml ↗
-      </a>
-
-      <!-- Theme toggle (hidden when JS disabled) -->
-      <button id="theme-toggle" class="no-js-hidden no-js-hidden--inline-flex" aria-label="Switch to dark mode"
-        style="font:inherit;background:transparent;border:1px solid var(--border);border-radius:8px;padding:6px 12px;cursor:pointer;align-items:center;gap:6px;font-family:var(--font-sans);font-size:13px;color:var(--muted);min-height:44px;min-width:44px;justify-content:center;white-space:nowrap"
-      >
-        <!-- Sun icon (shown in light mode) -->
-        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
-        <!-- Moon icon (shown in dark mode) -->
-        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-        <span>Light</span>
-      </button>
-
-      <Button variant="secondary" href={`${base}/browse`}>Browse</Button>
-    </div>
   </div>
 </header>
 
@@ -59,8 +67,7 @@ function link(href: string, label: string) {
 
     const iconSun = toggle.querySelector(".icon-sun") as HTMLElement | null;
     const iconMoon = toggle.querySelector(".icon-moon") as HTMLElement | null;
-    const label = toggle.querySelector("span") as HTMLElement | null;
-    if (!iconSun || !iconMoon || !label) return;
+    if (!iconSun || !iconMoon) return;
 
     // Remove transition class after animations complete so future style
     // changes (hover, focus, etc.) don't animate.
@@ -74,12 +81,10 @@ function link(href: string, label: string) {
       if (theme === "dark") {
         iconSun.style.display = "none";
         iconMoon.style.display = "";
-        label.textContent = "Dark";
         toggle.setAttribute("aria-label", "Switch to light mode");
       } else {
         iconSun.style.display = "";
         iconMoon.style.display = "none";
-        label.textContent = "Light";
         toggle.setAttribute("aria-label", "Switch to dark mode");
       }
     }
@@ -120,5 +125,32 @@ function link(href: string, label: string) {
       applyTheme(next);
       try { localStorage.setItem("llml-theme", next); } catch (_) {}
     });
+
+    // Keyboard shortcuts button — toggles the ? overlay
+    var shortcutsBtn = document.getElementById("shortcuts-nav-btn");
+    if (shortcutsBtn) {
+      shortcutsBtn.addEventListener("click", function () {
+        var overlay = document.getElementById("shortcuts-overlay");
+        if (!overlay) return;
+        if (overlay.style.display === "block") {
+          overlay.style.display = "none";
+          document.body.style.overflow = "";
+        } else {
+          overlay.style.display = "block";
+          document.body.style.overflow = "hidden";
+        }
+      });
+    }
   })();
 </script>
+
+<style>
+  .shortcuts-nav-btn {
+    display: none !important;
+  }
+  @media (min-width: 701px) {
+    .shortcuts-nav-btn {
+      display: inline-flex !important;
+    }
+  }
+</style>
