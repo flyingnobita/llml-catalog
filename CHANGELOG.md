@@ -1,5 +1,6 @@
 # Changelog
 
+- May-28, 2026 - You can now browse the catalog on your phone. All 5 pages adapt to mobile (≤700px) and tablet (701–1024px) viewports with an off-canvas filter drawer and card layout on browse. Navigate with keyboard shortcuts — press `?` to see them all, `gb`/`gh` to jump between pages. Warmer slate-blue primary (#3D6DA8) and 123 Playwright tests
 - May-26, 2026 - Replace standalone /compare page with slide-up overlay tray on browse (2+ profiles checked), with comparison grid, diff highlighting, and 14 Playwright tests; remove /compare nav entry
 - May-26, 2026 - [Add cross-repo dev-docs pin check (CI + mise) and bump-parents script via llml-internal]
 - May-22, 2026 - 12:15 AM +08:00 - Add /how page with problem-first story arc, shared TOML data module, ImportBlock progressive enhancement, mobile overflow fixes, and full Playwright coverage (66 tests)
