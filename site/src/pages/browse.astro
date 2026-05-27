@@ -33,7 +33,7 @@ const base = import.meta.env.BASE_URL;
           placeholder="Search profiles…"
           style="font:inherit;padding:8px 12px;padding-right:36px;border:1px solid var(--border);border-radius:8px;background:var(--surface-raised);width:100%;box-sizing:border-box"
         />
-        <kbd style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-family:var(--font-mono);font-size:11px;padding:2px 6px;border:1px solid var(--border);border-bottom-width:2px;border-radius:4px;background:var(--paper);color:var(--muted);pointer-events:none">/</kbd>
+        <kbd class="search-shortcut" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-family:var(--font-mono);font-size:11px;padding:2px 6px;border:1px solid var(--border);border-bottom-width:2px;border-radius:4px;background:var(--paper);color:var(--muted);pointer-events:none">/</kbd>
       </div>
       {[
         { key: "backend", title: "Backend", options: FILTERS.backend },
@@ -520,6 +520,8 @@ const base = import.meta.env.BASE_URL;
 <style is:global>
   /* ---- browse page mobile (≤700px) ---- */
   @media (max-width: 700px) {
+    /* Hide keyboard shortcut hint on mobile */
+    .search-shortcut { display: none !important; }
     /* Stack sidebar above content */
     [style*="grid-template-columns:220px 1fr"] {
       grid-template-columns: 1fr !important;

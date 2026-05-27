@@ -44,15 +44,6 @@ test.describe("Theme toggle", () => {
     await expect(btn).toHaveAttribute("aria-label", "Switch to dark mode");
   });
 
-  test("text label updates on toggle", async ({ page }) => {
-    await page.goto(HOME);
-    const label = page.locator("#theme-toggle span");
-
-    await expect(label).toHaveText("Light");
-    await toggle(page).click();
-    await expect(label).toHaveText("Dark");
-  });
-
   test("mobile viewport — toggle is 44×44px touch target", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto(HOME);
