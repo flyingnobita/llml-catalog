@@ -179,8 +179,8 @@ test.describe("Browse page (/browse) — mobile responsive", () => {
     await expect(page.locator("#filter-count-badge")).toHaveText("1");
   });
 
-  test("sort control is visible", async ({ page }) => {
-    await expect(page.locator("#sort")).toBeVisible();
+  test("sort control is hidden", async ({ page }) => {
+    await expect(page.locator("#sort")).not.toBeVisible();
   });
 
   test("filter options toggle active state on click", async ({ page }) => {

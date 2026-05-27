@@ -29,7 +29,7 @@ const base = import.meta.env.BASE_URL;
       id="search-mobile"
       type="text"
       placeholder="Search profiles…"
-      style="font:inherit;height:40px;padding:0 12px;border:1px solid var(--border);border-radius:4px;background:var(--surface-raised);flex:1 1 auto;min-width:0;box-sizing:border-box"
+      style="font:inherit;color:var(--ink);height:40px;padding:0 12px;border:1px solid var(--border);border-radius:4px;background:var(--surface-raised);flex:1 1 auto;min-width:0;box-sizing:border-box"
     />
     <button id="filter-toggle" aria-label="Filters" aria-expanded="false" aria-controls="filters" style="font:inherit;padding:0;border:1px solid var(--border);border-radius:4px;background:var(--surface-raised);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;flex:0 0 40px;position:relative">
       <svg width="16" height="16" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="2" y1="3" x2="12" y2="3"/><line x1="4" y1="7" x2="10" y2="7"/><line x1="6" y1="11" x2="8" y2="11"/></svg>
@@ -51,7 +51,7 @@ const base = import.meta.env.BASE_URL;
           id="search"
           type="text"
           placeholder="Search profiles…"
-          style="font:inherit;padding:8px 12px;padding-right:36px;border:1px solid var(--border);border-radius:8px;background:var(--surface-raised);width:100%;box-sizing:border-box"
+          style="font:inherit;color:var(--ink);padding:8px 12px;padding-right:36px;border:1px solid var(--border);border-radius:8px;background:var(--surface-raised);width:100%;box-sizing:border-box"
         />
         <kbd class="search-shortcut" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-family:var(--font-mono);font-size:11px;padding:2px 6px;border:1px solid var(--border);border-bottom-width:2px;border-radius:4px;background:var(--paper);color:var(--muted);pointer-events:none">/</kbd>
       </div>
@@ -90,9 +90,9 @@ const base = import.meta.env.BASE_URL;
         <span id="count" style="font-family:var(--font-mono);font-size:13px">
           <strong>{PROFILES.length}</strong> <span style="color:var(--muted)">of {PROFILES.length} profiles</span>
         </span>
-        <div style="display:flex;gap:8px;align-items:center">
+        <div style="display:flex;gap:8px;align-items:center" hidden>
           <span class="eyebrow">sort</span>
-          <select id="sort" style="font:inherit;padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface-raised)">
+          <select id="sort" style="font:inherit;color:var(--ink);padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface-raised)">
             <option>Updated</option>
             <option>Fit</option>
             <option>Name</option>
@@ -375,7 +375,9 @@ const base = import.meta.env.BASE_URL;
       return true;
     });
 
-    if (sortVal === "Name") {
+    if (sortVal === "Updated") {
+      visible.sort(function(a, b) { return Number(a.dataset.index) - Number(b.dataset.index); });
+    } else if (sortVal === "Name") {
       visible.sort(function(a, b) { return (a.dataset.name || "").localeCompare(b.dataset.name || ""); });
     } else if (sortVal === "Fit") {
       visible.sort(function(a, b) {
@@ -396,9 +398,9 @@ const base = import.meta.env.BASE_URL;
 
   // --- Data fetching and state management ---
 
-  function rowHTML(p) {
+  function rowHTML(p, idx) {
     var verifiedBadge = p.verified ? '<span style="font-family:var(--font-mono);font-size:11px;color:var(--success);flex:0 0 auto;white-space:nowrap">✓</span>' : '';
-    return '<div class="result-row" data-backend="' + p.backend + '" data-hardware="' + p.hardware + '" data-os="' + p.os + '" data-usecase="' + p.useCase + '" data-tags="' + (p.tags || []).join(",") + '" data-model-org="' + p.modelOrg + '" data-profile-org="' + p.profileOrg + '" data-verified="' + String(p.verified) + '" data-name="' + p.name + '" style="border-bottom:1px solid var(--border);padding:14px 0;display:grid;grid-template-columns:20px 1fr 120px 130px 100px 100px 110px;gap:16px;align-items:center">' +
+    return '<div class="result-row" data-index="' + idx + '" data-backend="' + p.backend + '" data-hardware="' + p.hardware + '" data-os="' + p.os + '" data-usecase="' + p.useCase + '" data-tags="' + (p.tags || []).join(",") + '" data-model-org="' + p.modelOrg + '" data-profile-org="' + p.profileOrg + '" data-verified="' + String(p.verified) + '" data-name="' + p.name + '" style="border-bottom:1px solid var(--border);padding:14px 0;display:grid;grid-template-columns:20px 1fr 120px 130px 100px 100px 110px;gap:16px;align-items:center">' +
       '<input type="checkbox" class="compare-check" data-id="' + p.id + '" style="accent-color:var(--primary);width:16px;height:16px" />' +
       '<a href="' + base + '/profile/' + p.id + '" style="font:inherit;background:transparent;border:0;text-align:left;cursor:pointer;padding:0;min-width:0;text-decoration:none;color:inherit">' +
         '<div style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap">' +
@@ -416,7 +418,7 @@ const base = import.meta.env.BASE_URL;
   function renderAllRows() {
     var html = "";
     for (var i = 0; i < PROFILES.length; i++) {
-      html += rowHTML(PROFILES[i]);
+      html += rowHTML(PROFILES[i], i);
     }
     resultsContainer.innerHTML = html;
   }
