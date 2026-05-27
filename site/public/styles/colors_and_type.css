@@ -9,8 +9,8 @@
   color-scheme: light dark;
 
   /* ---------- Color ---------- */
-  --primary: #2F6BFF;
-  --primary-press: #234fc2;
+  --primary: #3D6DA8;
+  --primary-press: #2E5685;
 
   --paper: #F3F1EA;            /* default page surface */
   --paper-2: #E7E1D4;           /* alt section fill, row hover */
@@ -27,7 +27,7 @@
   --success: #1EBC73;
   --warning: #C98512;
   --error:   #D84B45;
-  --info:    #2F6BFF;
+  --info:    #3D6DA8;
 
   /* ---------- Type ---------- */
   --font-serif: "Instrument Serif", "Iowan Old Style", Georgia, serif;
@@ -106,13 +106,13 @@
   --accent-ink:       #F3F1EA;
 
   /* Accent saturation reduced ~10% */
-  --primary:       #4D7DFF;
-  --primary-press: #6F95FF;
+  --primary:       #5A8EC7;
+  --primary-press: #719FD4;
 
   --success: #25b06d;
   --warning: #C68722;
   --error:   #D2554F;
-  --info:    #4D7DFF;
+  --info:    #5A8EC7;
 
   --shadow-card: 0 1px 0 rgba(0,0,0,0.3);
   --shadow-float: 0 1px 0 rgba(0,0,0,0.3), 0 12px 28px -14px rgba(0,0,0,0.6);

@@ -116,84 +116,100 @@ test.describe("Home page (/) — mobile responsive", () => {
 /*  browse.astro                                                       */
 /* ------------------------------------------------------------------ */
 test.describe("Browse page (/browse) — mobile responsive", () => {
-  test("no horizontal overflow on body at 375px", async ({ page }) => {
+  test.beforeEach(async ({ page }) => {
     await page.setViewportSize(MOBILE);
     await page.goto("./browse");
-    await expectNoHorizontalOverflow(page);
+    await page.waitForSelector(".result-row");
+  });
+
+  test("no horizontal page scroll at 375px", async ({ page }) => {
+    const scrollWidth = await page.evaluate(() => document.body.scrollWidth);
+    expect(scrollWidth).toBeLessThanOrEqual(375 + 2);
   });
 
   test("header section visible", async ({ page }) => {
-    await page.setViewportSize(MOBILE);
-    await page.goto("./browse");
     await expect(page.locator("h1")).toContainText("Profiles");
   });
 
-  test("filter sidebar is visible (stacked above)", async ({ page }) => {
-    await page.setViewportSize(MOBILE);
-    await page.goto("./browse");
-    await expect(page.locator("#filters")).toBeVisible();
-    await expect(page.locator("#search")).toBeVisible();
-  });
-
-  test("results table is horizontally scrollable", async ({ page }) => {
-    await page.setViewportSize(MOBILE);
-    await page.goto("./browse");
-    const main = page.locator("main");
-    const overflowX = await main.evaluate((el) =>
-      window.getComputedStyle(el).overflowX,
+  test("filter toggle is visible, sidebar is hidden by default", async ({ page }) => {
+    await expect(page.locator("#filter-toggle")).toBeVisible();
+    const transform = await page.locator("#filters").evaluate(el =>
+      getComputedStyle(el).transform,
     );
-    expect(overflowX).toBe("auto");
+    // translateX(100%) produces a non-identity matrix
+    expect(transform).not.toBe("none");
   });
 
-  test("result rows are visible", async ({ page }) => {
-    await page.setViewportSize(MOBILE);
-    await page.goto("./browse");
-    const rows = page.locator(".result-row");
-    await expect(rows.first()).toBeVisible();
+  test("clicking filter toggle opens drawer", async ({ page }) => {
+    await page.click("#filter-toggle");
+    await expect(page.locator("#filters")).toHaveAttribute("data-open", "true");
+  });
+
+  test("backdrop click closes drawer", async ({ page }) => {
+    await page.click("#filter-toggle");
+    await page.click("#filter-backdrop");
+    await expect(page.locator("#filters")).toHaveAttribute("data-open", "false");
+  });
+
+  test("result rows render as full-width cards", async ({ page }) => {
+    const display = await page.locator(".result-row").first().evaluate(el =>
+      getComputedStyle(el).display,
+    );
+    expect(display).toBe("flex");
+  });
+
+  test("Import button is reachable without horizontal scroll", async ({ page }) => {
+    const btn = page.locator(".result-row a.import-btn").first();
+    const box = await btn.boundingBox();
+    expect(box).not.toBeNull();
+    expect(box!.x + box!.width).toBeLessThanOrEqual(375 + 2);
+  });
+
+  test("long profile names wrap and card fits viewport", async ({ page }) => {
+    const card = page.locator(".result-row").filter({ hasText: "gemma" }).first();
+    const box = await card.boundingBox();
+    expect(box).not.toBeNull();
+    expect(box!.width).toBeLessThanOrEqual(375 - 32);
+  });
+
+  test("filter count badge updates when filter is selected", async ({ page }) => {
+    // Open drawer and click a filter
+    await page.click("#filter-toggle");
+    await page.locator(".filter-opt").first().click();
+    await expect(page.locator("#filter-count-badge")).toHaveText("1");
   });
 
   test("sort control is visible", async ({ page }) => {
-    await page.setViewportSize(MOBILE);
-    await page.goto("./browse");
     await expect(page.locator("#sort")).toBeVisible();
   });
 
   test("filter options toggle active state on click", async ({ page }) => {
-    await page.setViewportSize(MOBILE);
-    await page.goto("./browse");
+    // Open drawer first
+    await page.click("#filter-toggle");
     const filterBtn = page.locator(".filter-opt").first();
     const dot = filterBtn.locator(".filter-dot");
 
-    // Initial state: inactive (transparent background)
+    // Initial state: inactive
     const initialBg = await dot.evaluate((el) =>
       window.getComputedStyle(el).backgroundColor,
     );
-    // rgb(0, 0, 0, 0) or rgba(0,0,0,0) or "transparent"
     expect(initialBg).toMatch(/rgba?\(0,\s*0,\s*0,\s*0\)|transparent/);
 
     // Click to activate
     await filterBtn.click();
 
-    // Active state: should have a background color (not transparent)
+    // Active state: should have a background color
     const activeBg = await dot.evaluate((el) =>
       window.getComputedStyle(el).backgroundColor,
     );
     expect(activeBg).not.toMatch(/rgba?\(0,\s*0,\s*0,\s*0\)|transparent/);
-
-    // Count should still show profiles
-    const countText = await page.locator("#count").textContent();
-    expect(countText).not.toContain("of 0");
   });
 
   test("compare tray hidden with <2 checked", async ({ page }) => {
-    await page.setViewportSize(MOBILE);
-    await page.goto("./browse");
     await expect(page.locator("#compare-tray")).not.toBeVisible();
   });
 
   test("compare tray appears with 2+ checked", async ({ page }) => {
-    await page.setViewportSize(MOBILE);
-    await page.goto("./browse");
     const checks = page.locator(".compare-check");
     await checks.nth(0).check();
     await checks.nth(1).check();
@@ -201,8 +217,6 @@ test.describe("Browse page (/browse) — mobile responsive", () => {
   });
 
   test("compare overlay opens and closes on mobile", async ({ page }) => {
-    await page.setViewportSize(MOBILE);
-    await page.goto("./browse");
     await page.locator(".compare-check").nth(0).check();
     await page.locator(".compare-check").nth(1).check();
     await page.locator("#compare-open").click();
@@ -212,14 +226,10 @@ test.describe("Browse page (/browse) — mobile responsive", () => {
   });
 
   test("no results message hidden with profiles present", async ({ page }) => {
-    await page.setViewportSize(MOBILE);
-    await page.goto("./browse");
     await expect(page.locator("#no-results")).not.toBeVisible();
   });
 
   test("search filters results on mobile", async ({ page }) => {
-    await page.setViewportSize(MOBILE);
-    await page.goto("./browse");
     await page.locator("#search").fill("nonexistentxyz123");
     await expect(page.locator("#no-results")).toBeVisible();
   });
@@ -227,7 +237,6 @@ test.describe("Browse page (/browse) — mobile responsive", () => {
   test("filter sidebar in side-by-side layout at tablet", async ({ page }) => {
     await page.setViewportSize(TABLET);
     await page.goto("./browse");
-    // The main grid container has grid-template-columns: 170px 1fr at tablet
     const gridContainer = page.locator(
       '[style*="grid-template-columns"]',
     ).first();

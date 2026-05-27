@@ -16,10 +16,10 @@ const p1 = PROFILES[1];
   description="A registry of portable TOML parameter profiles for llama.cpp, vLLM, Ollama, and KoboldCpp. Filter by backend, hardware, and OS — then import into your local llml with one command."
 >
   <!-- Hero -->
-  <section style="padding:64px 32px 48px">
+  <section style="padding:32px 32px 48px">
     <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center">
       <div style="display:flex;flex-direction:column;gap:20px">
-        <span class="eyebrow">v2 · portable parameter profiles</span>
+        <span class="eyebrow">portable parameter profiles</span>
         <h1 style="font-size:64px;line-height:1.05;letter-spacing:-0.02em;max-width:16ch">
           Find the profile that fits your <em style="font-style:italic;color:var(--accent-ink)">model</em> and your <em style="font-style:italic;color:var(--accent-ink)">machine</em>.
         </h1>
@@ -35,11 +35,11 @@ const p1 = PROFILES[1];
       </div>
       <!-- HeroArtifact -->
       <div style="border:1px solid var(--border);border-radius:12px;background:var(--surface-raised);overflow:hidden;box-shadow:var(--shadow-float)">
-        <div style="padding:16px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center">
+        <div style="padding:16px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center;flex-wrap:wrap">
           <input
             value="qwen3 14b coding"
             disabled
-            style="font:inherit;flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--paper)"
+            style="font:inherit;flex:1;min-width:0;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--paper)"
           />
           <Badge tone="info" mono={false}>backend: koboldcpp</Badge>
           <Badge tone="fill">24GB NVIDIA</Badge>
@@ -183,14 +183,14 @@ const p1 = PROFILES[1];
   </section>
 </BaseLayout>
 
-<style>
+<style is:global>
   .contribute-btn {
     background: var(--surface-inverse-fg) !important;
     color: var(--surface-inverse) !important;
     border-color: var(--surface-inverse-fg) !important;
   }
   .contribute-btn-ghost {
-    border-color: var(--border) !important;
+    border-color: rgba(243,241,234,0.35) !important;
     color: var(--surface-inverse-fg) !important;
   }
 </style>
@@ -207,7 +207,7 @@ const p1 = PROFILES[1];
       font-size: 36px !important;
     }
     body > section:first-of-type {
-      padding: 40px 16px 32px !important;
+      padding: 24px 16px 32px !important;
     }
     /* Hero artifact — full width on mobile */
     body > section:first-of-type [style*="border-radius:12px"] {
