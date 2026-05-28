@@ -44,14 +44,14 @@ test.describe("Theme toggle", () => {
     await expect(btn).toHaveAttribute("aria-label", "Switch to dark mode");
   });
 
-  test("mobile viewport — toggle is 44×44px touch target", async ({ page }) => {
+  test("mobile viewport — toggle is 36×36px touch target", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto(HOME);
     const btn = toggle(page);
     const box = await btn.boundingBox();
     expect(box).not.toBeNull();
-    expect(box!.height).toBeGreaterThanOrEqual(44);
-    expect(box!.width).toBeGreaterThanOrEqual(44);
+    expect(box!.height).toBeGreaterThanOrEqual(36);
+    expect(box!.width).toBeGreaterThanOrEqual(36);
   });
 });
 

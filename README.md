@@ -1,6 +1,6 @@
-# llml profile catalog
+# LLM Launcher
 
-Community-contributed parameter profiles for [llml](https://github.com/flyingnobita/llm-launcher) — the terminal UI for discovering and launching local LLMs.
+Community-contributed parameter profiles for [llml](https://github.com/flyingnobita/llml) — the terminal UI for discovering and launching local LLMs.
 
 **[Browse the catalog →](https://flyingnobita.github.io/llml-catalog/)**
 
@@ -10,7 +10,7 @@ A **profile** is a named set of launch arguments and environment variables for a
 
 ```
 profiles/           one .toml file per profile; PRs add new profiles here
-site/               static catalog site source (Astro/11ty/Hugo — TBD)
+site/               static catalog site (Astro), deployed to GitHub Pages
 design/             design system: colors, type, components, prototypes
 docs/               contributing guide, profile validation rules
 .github/workflows/  CI: validate incoming profiles, build + deploy site
@@ -19,7 +19,7 @@ docs/               contributing guide, profile validation rules
 ## Profile format
 
 Profiles use the portable TOML format defined in
-[`llml/docs/profile-format.md`](https://github.com/flyingnobita/llm-launcher/blob/main/docs/profile-format.md).
+[`llml/docs/profile-format.md`](https://github.com/flyingnobita/llml/blob/main/docs/profile-format.md).
 
 A minimal profile looks like:
 
