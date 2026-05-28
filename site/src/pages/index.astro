@@ -4,100 +4,69 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Button from "../components/Button.astro";
 import Badge from "../components/Badge.astro";
 import ImportBlock from "../components/ImportBlock.astro";
-import { PROFILES } from "../data/profiles";
+import { PROFILES, INSTALL_COMMANDS } from "../data/profiles";
 
 const base = import.meta.env.BASE_URL;
-const p0 = PROFILES[0];
-const p1 = PROFILES[1];
+const profileCount = PROFILES.length;
+const sampleImport = "llml import https://flyingnobita.github.io/llml-catalog/profiles/qwen3-14b-q4.toml --activate";
 ---
 
 <BaseLayout
-  title="llml profile catalog"
-  description="A registry of portable TOML parameter profiles for llama.cpp, vLLM, Ollama, and KoboldCpp. Filter by backend, hardware, and OS — then import into your local llml with one command."
+  title="LLM Launcher"
+  description="llml is a terminal UI that scans your machine for local models, detects installed runtimes, and launches them with saved profiles. Browse importable TOML profiles tuned for specific models, hardware, and backends."
 >
-  <!-- Hero -->
-  <section style="padding:32px 32px 48px">
-    <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center">
-      <div style="display:flex;flex-direction:column;gap:20px">
-        <span class="eyebrow">portable parameter profiles</span>
-        <h1 style="font-size:64px;line-height:1.05;letter-spacing:-0.02em;max-width:16ch">
-          Find the profile that fits your <em style="font-style:italic;color:var(--accent-ink)">model</em> and your <em style="font-style:italic;color:var(--accent-ink)">machine</em>.
+  <!-- 1. Hero — pain-led, 2-col -->
+  <section class="home-hero" style="padding:48px 32px">
+    <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center">
+      <div style="display:flex;flex-direction:column;gap:20px;min-width:0">
+        <span class="eyebrow">LLM Launcher</span>
+        <h1 style="font-size:56px;line-height:1.05;letter-spacing:-0.02em;max-width:18ch">
+          Stop reconstructing <code class="mono" style="font-size:inherit">llama-server</code> flags from shell history.
         </h1>
         <p style="font-size:18px;line-height:1.55;max-width:52ch;color:var(--ink)">
-          A registry of TOML parameter profiles for <code class="mono">llama.cpp</code>, <code class="mono">vLLM</code>,{" "}
-          <code class="mono">Ollama</code>, and <code class="mono">KoboldCpp</code>. Filter by backend, hardware,
-          and OS — then import into your local <code class="mono">llml</code> with one command.
+          llml finds your local models, detects your runtimes, and launches them with a saved profile.
+          Pick a model, pick a profile, press <code class="mono">R</code>.
         </p>
-        <div style="display:flex;gap:12px;margin-top:8px">
-          <Button variant="primary" href={`${base}/browse`}>Browse profiles →</Button>
-          <Button variant="secondary" href={`${base}/how`}>Learn how profiles work</Button>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+          <div style="background:var(--surface-inverse);color:var(--surface-inverse-fg);border-radius:8px;padding:14px 16px;display:flex;align-items:center;gap:12px;font-family:var(--font-mono);font-size:13px">
+            <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">$ {INSTALL_COMMANDS.mac}</span>
+            <button class="hero-copy-btn no-js-hidden" data-cmd={INSTALL_COMMANDS.mac} style="font:inherit;font-family:var(--font-sans);font-size:13px;font-weight:600;background:transparent;color:var(--surface-inverse-fg);border:0;border-left:1px solid var(--border);padding:0 0 0 14px;cursor:pointer;white-space:nowrap">Copy</button>
+          </div>
+          <div style="font-size:12px;color:var(--muted);font-family:var(--font-mono);overflow-wrap:break-word;word-break:break-all">
+            Linux: {INSTALL_COMMANDS.linux}
+          </div>
+          <div style="display:flex;gap:12px">
+            <Button variant="primary" href="https://github.com/flyingnobita/llml">Install llml ↗</Button>
+            <Button variant="secondary" href={`${base}/browse`}>Browse profiles →</Button>
+          </div>
         </div>
       </div>
-      <!-- HeroArtifact -->
+      <!-- Hero artifact: TUI screenshot -->
       <div style="border:1px solid var(--border);border-radius:12px;background:var(--surface-raised);overflow:hidden;box-shadow:var(--shadow-float)">
-        <div style="padding:16px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <input
-            value="qwen3 14b coding"
-            disabled
-            style="font:inherit;flex:1;min-width:0;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--paper)"
-          />
-          <Badge tone="info" mono={false}>backend: koboldcpp</Badge>
-          <Badge tone="fill">24GB NVIDIA</Badge>
-        </div>
-        <div style="padding:16px;display:flex;flex-direction:column;gap:10px">
-          {[p0, p1].map((p) => (
-            <a href={`${base}/profile/${p.id}`} style="border:1px solid var(--border);border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:16px;text-decoration:none;color:inherit">
-              <div style="flex:1;min-width:0">
-                <div style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap">
-                  <strong style="font-family:var(--font-sans);font-size:15px;flex:1 1 auto;min-width:0">{p.name}</strong>
-                  {p.verified && <span style="font-family:var(--font-mono);font-size:11px;color:var(--success);flex:0 0 auto;white-space:nowrap">✓ Verified</span>}
-                </div>
-                <div style="font-size:13px;color:var(--ink);margin-top:2px">{p.fit}</div>
-                <div style="display:flex;gap:10px;font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-top:6px">
-                  <span>{p.backend}</span><span>·</span><span>{p.hardware}</span><span>·</span><span>{p.os}</span><span>·</span><span>{p.updated}</span>
-                </div>
-              </div>
-              <Button>Import</Button>
-            </a>
-          ))}
-        </div>
-        <div style="padding:16px;border-top:1px solid var(--border);background:var(--paper)">
-          <ImportBlock cmd="llml import qwen3-14b-coding.toml" />
-        </div>
+        <img
+          src={`${base}/llml-screenshot.png`}
+          alt="llml terminal UI showing model scan, runtime selection, and profile launch workflow"
+          width="1045"
+          height="575"
+          loading="eager"
+          style="display:block;width:100%;height:auto"
+        />
       </div>
     </div>
   </section>
 
-  <!-- ProofStrip -->
-  <section style="border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--paper-2)">
-    <div style="max-width:1180px;margin:0 auto;padding:24px 32px;display:grid;grid-template-columns:repeat(3,1fr);gap:32px">
-      <div style="display:flex;flex-direction:column;gap:4px">
-        <span class="eyebrow">BACKENDS</span>
-        <span style="font-family:var(--font-sans);font-size:16px;font-weight:500">llama.cpp · vLLM · Ollama · KoboldCpp</span>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:4px">
-        <span class="eyebrow">MATCH ON</span>
-        <span style="font-family:var(--font-sans);font-size:16px;font-weight:500">GPU class · VRAM · OS · use case</span>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:4px">
-        <span class="eyebrow">SOURCE</span>
-        <span style="font-family:var(--font-sans);font-size:16px;font-weight:500">Every profile linked to a GitHub commit</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- HowItWorks -->
-  <section style="padding:72px 32px">
+  <!-- 2. What llml does — the loop band -->
+  <section class="home-loop" style="padding:72px 32px;background:var(--paper-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
     <div style="max-width:1180px;margin:0 auto">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:32px">
-        <h2 style="font-size:40px;letter-spacing:-0.01em">How it works</h2>
-        <span class="eyebrow">three steps</span>
+        <h2 style="font-size:40px;letter-spacing:-0.01em">What llml does</h2>
+        <span class="eyebrow">the loop</span>
       </div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
         {[
-          { n: "01", t: "Find a profile", d: "Filter by backend, hardware class, and OS. The fit summary tells you in one line whether it's worth your time." },
-          { n: "02", t: "Check machine fit", d: "Every profile declares VRAM, GPU count, and tested context. Compatibility shows up as a verdict, not a guess." },
-          { n: "03", t: "Import into llml", d: "Copy the import command. Profiles attach to your local model and appear under p in the TUI on next launch." },
+          { n: "01", t: "Scan", d: "llml finds every local model — GGUF files, safetensors, Hugging Face cache — and lists the runtimes on your machine." },
+          { n: "02", t: "Pick", d: "Choose a model, a runtime, and a saved profile. The generated launch command is shown before execution — no surprises." },
+          { n: "03", t: "Launch", d: "Press R. One keypress, and the right command runs against the right model on the right backend." },
         ].map((s) => (
           <div style="border-top:1px solid var(--ink);padding-top:20px;display:flex;flex-direction:column;gap:10px">
             <span style="font-family:var(--font-mono);font-size:13px;color:var(--muted)">{s.n}</span>
@@ -108,54 +77,93 @@ const p1 = PROFILES[1];
       </div>
       <div style="margin-top:24px">
         <a href={`${base}/how`} style="font-family:var(--font-sans);font-size:14px;color:var(--ink);border-bottom:1px solid var(--ink);text-decoration:none">
-          Read more about how profiles work →
+          Read more about profiles →
         </a>
       </div>
     </div>
   </section>
 
-  <!-- BrowsePreview -->
-  <section style="padding:32px 32px 72px;background:var(--paper-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <!-- 3. Catalog payoff -->
+  <section class="home-catalog-payoff" style="padding:72px 32px">
+    <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center">
+      <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+        <h2 style="font-size:40px;letter-spacing:-0.01em">Don't start from scratch.</h2>
+        <p style="font-size:16px;line-height:1.55;max-width:52ch;color:var(--ink)">
+          Import the exact config someone already tuned for your model and hardware — one command, it runs.
+          Every profile is a TOML file with args, env vars, and hardware metadata. The catalog matches them
+          to your machine.
+        </p>
+        <p style="font-size:14px;line-height:1.5;max-width:52ch;color:var(--muted)">
+          Profiles are starting points, not guarantees. Hardware differs — expect to adapt.
+          But starting from someone's working config beats starting from an empty terminal.
+        </p>
+        <a href={`${base}/browse`} style="font-family:var(--font-sans);font-size:14px;color:var(--ink);border-bottom:1px solid var(--ink);text-decoration:none;width:fit-content">
+          Find a profile for your machine →
+        </a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;min-width:0;overflow:hidden">
+        <ImportBlock cmd={sampleImport} />
+        <p style="font-size:13px;color:var(--muted);line-height:1.5">
+          <code class="mono">llml export</code> writes a portable TOML. The catalog is where those get shared.
+          <code class="mono">llml import</code> pulls one back. Export → share → import → run.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. BrowsePreview -->
+  <section class="home-browse" style="padding:32px 32px 72px;background:var(--paper-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
     <div style="max-width:1180px;margin:0 auto">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin:32px 0 20px">
-        <h2 style="font-size:40px;letter-spacing:-0.01em">Recently updated</h2>
-        <a href={`${base}/browse`} style="font:inherit;font-family:var(--font-sans);font-size:14px;cursor:pointer;color:var(--ink);border-bottom:1px solid var(--ink);text-decoration:none">
-          Browse all {PROFILES.length} profiles →
-        </a>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
-        {PROFILES.slice(0, 6).map((p) => (
-          <a href={`${base}/profile/${p.id}`} style="font:inherit;text-align:left;background:var(--paper);border:1px solid var(--border);border-radius:8px;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;transition:transform var(--d-micro)">
-            <div style="display:flex;justify-content:space-between;align-items:baseline">
-              <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase">{p.backend}</span>
-              {p.verified ? (
-                <span style="font-family:var(--font-mono);font-size:11px;color:var(--success)">✓ verified</span>
-              ) : (
-                <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">community</span>
-              )}
-            </div>
-            <h4 style="font-size:16px;font-weight:600;margin:0">{p.name}</h4>
-            <p style="font-size:13px;color:var(--ink);line-height:1.5;margin:0">{p.fit}</p>
-            <div style="display:flex;gap:6px;margin-top:auto;padding-top:10px;flex-wrap:wrap">
-              <Badge tone="fill">{p.hardware}</Badge>
-              <Badge>{p.os}</Badge>
-              <Badge>{p.useCase}</Badge>
-            </div>
+        <h2 style="font-size:40px;letter-spacing:-0.01em">
+          {profileCount >= 3 ? "Recently updated" : "Profiles"}
+        </h2>
+        {profileCount >= 3 && (
+          <a href={`${base}/browse`} style="font:inherit;font-family:var(--font-sans);font-size:14px;cursor:pointer;color:var(--ink);border-bottom:1px solid var(--ink);text-decoration:none">
+            Browse all {profileCount} profiles →
           </a>
-        ))}
+        )}
       </div>
+      {profileCount < 3 ? (
+        <div style="display:flex;flex-direction:column;align-items:center;gap:16px;padding:48px 24px;text-align:center;background:var(--paper);border:1px solid var(--border);border-radius:8px">
+          <p style="font-size:16px;color:var(--ink);max-width:48ch">The catalog is just getting started. Be the first to contribute a profile.</p>
+          <Button variant="primary" href={`${base}/contribute`}>Contribute a profile →</Button>
+        </div>
+      ) : (
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+          {PROFILES.slice(0, 6).map((p) => (
+            <a href={`${base}/profile/${p.id}`} style="font:inherit;text-align:left;background:var(--paper);border:1px solid var(--border);border-radius:8px;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;transition:transform var(--d-micro)">
+              <div style="display:flex;justify-content:space-between;align-items:baseline">
+                <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase">{p.backend}</span>
+                {p.verified ? (
+                  <span style="font-family:var(--font-mono);font-size:11px;color:var(--success)">✓ verified</span>
+                ) : (
+                  <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">community</span>
+                )}
+              </div>
+              <h4 style="font-size:16px;font-weight:600;margin:0">{p.name}</h4>
+              <p style="font-size:13px;color:var(--ink);line-height:1.5;margin:0">{p.fit}</p>
+              <div style="display:flex;gap:6px;margin-top:auto;padding-top:10px;flex-wrap:wrap">
+                <Badge tone="fill">{p.hardware}</Badge>
+                <Badge>{p.os}</Badge>
+                <Badge>{p.useCase}</Badge>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
     </div>
   </section>
 
-  <!-- WhyDifferent -->
-  <section style="padding:72px 32px">
+  <!-- 5. WhyDifferent — reframed around the wedge -->
+  <section class="home-why" style="padding:72px 32px">
     <div style="max-width:1180px;margin:0 auto">
       <h2 style="font-size:40px;letter-spacing:-0.01em;margin-bottom:32px;max-width:20ch">
-        Why this <em style="font-style:italic">isn't</em> another model gallery
+        What makes this <em style="font-style:italic">different</em>
       </h2>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px">
         {[
-          { t: "Fit over popularity", d: "Result rows lead with hardware match and update recency, not stars or downloads. The first question is whether the profile will run, not whether it trended." },
+          { t: "Importable recipes, not fit data", d: "Not a list of what fits. Not per-backend defaults. The exact config someone tuned for your model and hardware — imported and run with one command." },
           { t: "Portable, not platform-locked", d: "Profiles are TOML files with a documented schema. They live in GitHub, not a service. The catalog is a thin index over real source files." },
           { t: "Reproducible imports", d: "An import is one shell command. The same TOML produces the same args and env on every machine — no hidden web of preferences." },
         ].map((c) => (
@@ -168,8 +176,8 @@ const p1 = PROFILES[1];
     </div>
   </section>
 
-  <!-- ContributeCTA -->
-  <section style="padding:48px 32px;border-top:1px solid var(--border);background:var(--surface-inverse);color:var(--surface-inverse-fg)">
+  <!-- 6. ContributeCTA -->
+  <section class="home-contribute" style="padding:48px 32px;border-top:1px solid var(--border);background:var(--surface-inverse);color:var(--surface-inverse-fg)">
     <div style="max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap">
       <div style="display:flex;flex-direction:column;gap:6px">
         <h2 style="font-size:32px;color:var(--surface-inverse-fg);margin:0">Got a profile that just works?</h2>
@@ -199,72 +207,90 @@ const p1 = PROFILES[1];
   /* ---- index mobile (≤700px) ---- */
   @media (max-width: 700px) {
     /* Hero — stack grid, shrink heading */
-    body > section:first-of-type > div:first-child {
-      grid-template-columns: 1fr !important;
+    .home-hero > div:first-child {
+      grid-template-columns: minmax(0, 1fr) !important;
       gap: 32px !important;
     }
-    body > section:first-of-type h1 {
-      font-size: 36px !important;
-    }
-    body > section:first-of-type {
-      padding: 24px 16px 32px !important;
-    }
-    /* Hero artifact — full width on mobile */
-    body > section:first-of-type [style*="border-radius:12px"] {
+    .home-hero > div:first-child > * {
       min-width: 0;
     }
+    .home-hero h1 {
+      font-size: 36px !important;
+    }
+    .home-hero {
+      padding: 24px 16px 32px !important;
+      overflow-x: hidden;
+    }
+    /* Hero screenshot — full width on mobile, demoted below text */
+    .home-hero img {
+      max-width: 100%;
+    }
+    /* Hero install command — allow wrap on mobile */
+    .home-hero [style*="surface-inverse"] span {
+      white-space: normal !important;
+      overflow-wrap: break-word !important;
+      word-break: break-all !important;
+    }
 
-    /* ProofStrip — stack to 1 col */
-    section:nth-of-type(2) [style*="repeat(3,1fr)"] {
+    /* Loop — stack to 1 col */
+    .home-loop [style*="repeat(3,1fr)"] {
       grid-template-columns: 1fr !important;
       gap: 20px !important;
     }
-    section:nth-of-type(2) > div {
-      padding: 24px 16px !important;
+    .home-loop {
+      padding: 48px 16px !important;
     }
 
-    /* HowItWorks — stack cards */
-    body > section:nth-of-type(3) [style*="repeat(3,1fr)"] {
-      grid-template-columns: 1fr !important;
-      gap: 20px !important;
+    /* Catalog payoff — stack + wrap ImportBlock */
+    .home-catalog-payoff > div:first-child {
+      grid-template-columns: minmax(0, 1fr) !important;
+      gap: 32px !important;
     }
-    body > section:nth-of-type(3) {
+    .home-catalog-payoff > div:first-child > * {
+      min-width: 0;
+    }
+    .home-catalog-payoff .import-block-cmd {
+      white-space: normal !important;
+      overflow-wrap: break-word !important;
+      word-break: break-all !important;
+    }
+    .home-catalog-payoff {
       padding: 48px 16px !important;
     }
 
     /* BrowsePreview — 1-col cards */
-    body > section:nth-of-type(4) [style*="repeat(3,1fr)"] {
+    .home-browse [style*="repeat(3,1fr)"] {
       grid-template-columns: 1fr !important;
     }
-    body > section:nth-of-type(4) {
+    .home-browse {
       padding: 24px 16px 48px !important;
     }
-    body > section:nth-of-type(4) h2 {
+    .home-browse h2 {
       font-size: 28px !important;
     }
 
     /* WhyDifferent — stack to 1 col */
-    body > section:nth-of-type(5) [style*="repeat(3,1fr)"] {
+    .home-why [style*="repeat(3,1fr)"] {
       grid-template-columns: 1fr !important;
       gap: 20px !important;
     }
-    body > section:nth-of-type(5) {
+    .home-why {
       padding: 48px 16px !important;
     }
-    body > section:nth-of-type(5) h2 {
+    .home-why h2 {
       font-size: 28px !important;
     }
 
     /* ContributeCTA — stack vertically */
-    body > section:last-of-type {
+    .home-contribute {
       padding: 32px 16px !important;
     }
-    body > section:last-of-type h2 {
+    .home-contribute h2 {
       font-size: 24px !important;
     }
 
-    /* General — shrink all h2 headings on mobile */
-    section h2[style*="font-size:40px"] {
+    /* General — shrink all section h2 headings on mobile */
+    section[class^="home-"] h2[style*="font-size:40px"] {
       font-size: 28px !important;
     }
   }
@@ -272,26 +298,48 @@ const p1 = PROFILES[1];
   /* ---- index tablet (701–1024px) ---- */
   @media (min-width: 701px) and (max-width: 1024px) {
     /* Hero — tighter gap */
-    body > section:first-of-type > div:first-child {
+    .home-hero > div:first-child {
       gap: 32px !important;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
     }
-    body > section:first-of-type h1 {
-      font-size: 48px !important;
+    .home-hero > div:first-child > * {
+      min-width: 0;
+    }
+    .home-hero h1 {
+      font-size: 42px !important;
     }
 
-    /* ProofStrip — keep 3-col but tighter */
-    section:nth-of-type(2) > div {
-      padding: 24px !important;
+    /* Catalog payoff — constrain grid items */
+    .home-catalog-payoff > div:first-child {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    }
+    .home-catalog-payoff > div:first-child > * {
+      min-width: 0;
     }
 
     /* BrowsePreview — 2-col cards */
-    body > section:nth-of-type(4) [style*="repeat(3,1fr)"] {
+    .home-browse [style*="repeat(3,1fr)"] {
       grid-template-columns: repeat(2, 1fr) !important;
     }
 
     /* WhyDifferent — 2-col */
-    body > section:nth-of-type(5) [style*="repeat(3,1fr)"] {
+    .home-why [style*="repeat(3,1fr)"] {
       grid-template-columns: repeat(2, 1fr) !important;
     }
   }
 </style>
+
+<script>
+  // Hero install command copy
+  document.addEventListener("click", (e) => {
+    const btn = e.target as HTMLElement;
+    if (!btn.classList.contains("hero-copy-btn")) return;
+    const cmd = btn.dataset.cmd;
+    if (!cmd) return;
+    navigator.clipboard?.writeText(cmd);
+    btn.textContent = "✓ Copied";
+    setTimeout(() => {
+      btn.textContent = "Copy";
+    }, 1200);
+  });
+</script>

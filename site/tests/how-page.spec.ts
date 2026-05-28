@@ -37,13 +37,7 @@ test.describe("How It Works page", () => {
     expect(borderColor).not.toBe("rgba(0, 0, 0, 0)"); // transparent
   });
 
-  test("home CTA 'Learn how profiles work' links to /how", async ({ page }) => {
-    await page.goto(".");
-    const cta = page.locator("a[href$='/how']").filter({ hasText: "Learn how profiles work" });
-    await expect(cta).toBeVisible();
-  });
-
-  test("home 'How it works' section has Read more link", async ({ page }) => {
+  test("home loop band links to /how via Read more", async ({ page }) => {
     await page.goto(".");
     const readMore = page.locator("a[href$='/how']").filter({ hasText: /Read more/ });
     await expect(readMore).toBeVisible();

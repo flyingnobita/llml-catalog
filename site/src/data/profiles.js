@@ -14,9 +14,9 @@ const PROFILES_DIR = resolve(REPO_ROOT, "profiles");
 const CATALOG_BASE = "https://flyingnobita.github.io/llml-catalog";
 
 export const INSTALL_COMMANDS = {
-  mac: "brew install flyingnobita/tap/llml",
-  linux: "brew install flyingnobita/tap/llml",
-  windows: "scoop install llml",
+  mac: "brew install --cask flyingnobita/tap/llml",
+  linux: "go install github.com/flyingnobita/llml/cmd/llml@latest",
+  windows: "scoop bucket add flyingnobita https://github.com/flyingnobita/scoop-bucket && scoop install flyingnobita/llml",
 };
 
 // ---------------------------------------------------------------------------

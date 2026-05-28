@@ -25,7 +25,7 @@ test.describe("Home page (/) — mobile responsive", () => {
   test("hero heading is visible and fits", async ({ page }) => {
     await page.setViewportSize(MOBILE);
     await page.goto("./");
-    const h1 = page.locator("h1");
+    const h1 = page.locator(".home-hero h1");
     await expect(h1).toBeVisible();
     const fontSize = await h1.evaluate(
       (el) => window.getComputedStyle(el).fontSize,
@@ -33,29 +33,26 @@ test.describe("Home page (/) — mobile responsive", () => {
     expect(parseFloat(fontSize)).toBeLessThanOrEqual(40);
   });
 
-  test("hero artifact input is visible", async ({ page }) => {
+  test("hero screenshot is visible with alt text", async ({ page }) => {
     await page.setViewportSize(MOBILE);
     await page.goto("./");
-    // The hero artifact contains a disabled search input
-    const input = page.locator("section").first().locator("input[disabled]");
-    await expect(input).toBeVisible();
+    const img = page.locator(".home-hero img");
+    await expect(img).toBeVisible();
+    await expect(img).toHaveAttribute("alt");
   });
 
-  test("ProofStrip stats visible", async ({ page }) => {
+  test("loop band three steps visible", async ({ page }) => {
     await page.setViewportSize(MOBILE);
     await page.goto("./");
-    // Eyebrow labels use CSS text-transform: uppercase
-    await expect(page.locator(".eyebrow").filter({ hasText: "BACKENDS" })).toBeVisible();
-    await expect(page.locator(".eyebrow").filter({ hasText: "MATCH ON" })).toBeVisible();
-    await expect(page.locator(".eyebrow").filter({ hasText: "SOURCE" })).toBeVisible();
+    await expect(page.locator(".home-loop").getByRole("heading", { name: "Scan" })).toBeVisible();
+    await expect(page.locator(".home-loop").getByRole("heading", { name: "Pick" })).toBeVisible();
+    await expect(page.locator(".home-loop").getByRole("heading", { name: "Launch" })).toBeVisible();
   });
 
-  test("HowItWorks three steps visible", async ({ page }) => {
+  test("catalog payoff section visible", async ({ page }) => {
     await page.setViewportSize(MOBILE);
     await page.goto("./");
-    await expect(page.getByText("Find a profile")).toBeVisible();
-    await expect(page.getByText("Check machine fit")).toBeVisible();
-    await expect(page.getByText("Import into llml")).toBeVisible();
+    await expect(page.getByText("Don't start from scratch.")).toBeVisible();
   });
 
   test("BrowsePreview section visible", async ({ page }) => {
@@ -63,16 +60,14 @@ test.describe("Home page (/) — mobile responsive", () => {
     await page.goto("./");
     await expect(page.getByText("Recently updated")).toBeVisible();
     // Profile cards should be present
-    const cards = page.locator(
-      'a[href*="/profile/"]',
-    );
+    const cards = page.locator(".home-browse").locator('a[href*="/profile/"]');
     await expect(cards.first()).toBeVisible();
   });
 
   test("WhyDifferent section visible", async ({ page }) => {
     await page.setViewportSize(MOBILE);
     await page.goto("./");
-    await expect(page.getByText("Fit over popularity")).toBeVisible();
+    await expect(page.getByText("Importable recipes, not fit data")).toBeVisible();
   });
 
   test("ContributeCTA visible", async ({ page }) => {
@@ -83,13 +78,12 @@ test.describe("Home page (/) — mobile responsive", () => {
     ).toBeVisible();
   });
 
-  test("two CTAs in hero are visible", async ({ page }) => {
+  test("hero CTAs visible", async ({ page }) => {
     await page.setViewportSize(MOBILE);
     await page.goto("./");
-    const ctas = page.locator("section")
-      .first()
-      .locator('a[href*="browse"], a[href*="how"]');
-    await expect(ctas.first()).toBeVisible();
+    const hero = page.locator(".home-hero");
+    await expect(hero.locator('a[href*="github.com/flyingnobita/llml"]')).toBeVisible();
+    await expect(hero.locator('a[href*="browse"]')).toBeVisible();
   });
 
   test("no horizontal overflow at tablet (768px)", async ({ page }) => {
@@ -101,8 +95,7 @@ test.describe("Home page (/) — mobile responsive", () => {
   test("BrowsePreview is 2-col at tablet", async ({ page }) => {
     await page.setViewportSize(TABLET);
     await page.goto("./");
-    // The BrowsePreview grid is inside section:nth-of-type(4)
-    const section = page.locator("section").nth(4);
+    const section = page.locator(".home-browse");
     const grid = section.locator('[style*="grid-template-columns"]');
     const cols = await grid.evaluate((el) =>
       window.getComputedStyle(el).gridTemplateColumns,

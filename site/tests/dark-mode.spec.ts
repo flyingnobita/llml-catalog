@@ -215,7 +215,7 @@ test.describe("Hardcoded color audit", () => {
     await expect(html(page)).toHaveAttribute("data-theme", "dark");
 
     // Check HeroArtifact uses surface-raised
-    const artifact = page.locator("section:first-of-type div[style*='surface-raised']");
+    const artifact = page.locator(".home-hero div[style*='surface-raised']");
     await expect(artifact.first()).toBeVisible();
   });
 
@@ -229,5 +229,61 @@ test.describe("Hardcoded color audit", () => {
     // In light mode, --surface-raised resolves to #FFFFFF
     // Rely on the computed value being a shade of white/light
     expect(bg).toBeTruthy();
+  });
+});
+
+test.describe("Home page — dark mode sections", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto(HOME);
+    // Set dark mode
+    await toggle(page).click();
+    await expect(html(page)).toHaveAttribute("data-theme", "dark");
+  });
+
+  test("hero headline is visible in dark mode", async ({ page }) => {
+    const h1 = page.locator(".home-hero h1");
+    await expect(h1).toBeVisible();
+  });
+
+  test("install command block is visible in dark mode", async ({ page }) => {
+    const cmdBlock = page.locator(".home-hero [style*='surface-inverse']").first();
+    await expect(cmdBlock).toBeVisible();
+    await expect(cmdBlock).toContainText("brew");
+  });
+
+  test("hero copy button is visible in dark mode", async ({ page }) => {
+    const btn = page.locator(".hero-copy-btn");
+    await expect(btn).toBeVisible();
+  });
+
+  test("loop band steps are visible in dark mode", async ({ page }) => {
+    await expect(page.locator(".home-loop").getByRole("heading", { name: "Scan" })).toBeVisible();
+    await expect(page.locator(".home-loop").getByRole("heading", { name: "Pick" })).toBeVisible();
+    await expect(page.locator(".home-loop").getByRole("heading", { name: "Launch" })).toBeVisible();
+  });
+
+  test("catalog payoff heading is visible in dark mode", async ({ page }) => {
+    const h2 = page.locator(".home-catalog-payoff h2");
+    await expect(h2).toBeVisible();
+  });
+
+  test("WhyDifferent cards are visible in dark mode", async ({ page }) => {
+    await expect(page.getByText("Importable recipes, not fit data")).toBeVisible();
+    await expect(page.getByText("Portable, not platform-locked")).toBeVisible();
+  });
+
+  test("ContributeCTA has inverse surface styling", async ({ page }) => {
+    const section = page.locator(".home-contribute");
+    await expect(section).toBeVisible();
+    const bg = await section.evaluate((el: HTMLElement) =>
+      getComputedStyle(el).backgroundColor
+    );
+    // Should be dark inverse surface
+    expect(bg).not.toBe("rgb(243, 241, 234)");
+  });
+
+  test("contribute buttons are visible in dark mode", async ({ page }) => {
+    await expect(page.getByText("Read the format")).toBeVisible();
+    await expect(page.getByText("Open a PR ↗")).toBeVisible();
   });
 });
