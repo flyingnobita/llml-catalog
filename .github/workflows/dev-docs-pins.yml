@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Fetch llm-launcher for pin comparison
+      - name: Fetch llml for pin comparison
         run: git clone --depth 1 https://github.com/flyingnobita/llml.git "${RUNNER_TEMP}/llml"
 
       - name: Check dev-docs pins match catalog and launcher

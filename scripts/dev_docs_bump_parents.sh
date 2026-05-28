@@ -14,5 +14,5 @@ fi
 
 exec "$SCRIPT" \
 	--catalog "$ROOT" \
-	--launcher "${LLML_LAUNCHER_ROOT:-$ROOT/../llm-launcher}" \
+	--launcher "${LLML_LAUNCHER_ROOT:-$ROOT/../llml}" \
 	"$@"
