@@ -29,11 +29,11 @@ const sampleImport = "llml import https://llml.dev/profiles/qwen3-14b-q4.toml --
         </p>
         <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
           <div style="background:var(--surface-inverse);color:var(--surface-inverse-fg);border-radius:8px;padding:14px 16px;display:flex;align-items:center;gap:12px;font-family:var(--font-mono);font-size:13px">
-            <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">$ {INSTALL_COMMANDS.mac}</span>
-            <button class="hero-copy-btn no-js-hidden" data-cmd={INSTALL_COMMANDS.mac} style="font:inherit;font-family:var(--font-sans);font-size:13px;font-weight:600;background:transparent;color:var(--surface-inverse-fg);border:0;border-left:1px solid var(--border);padding:0 0 0 14px;cursor:pointer;white-space:nowrap">Copy</button>
+            <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">$ curl -fsSL https://llml.dev/install.sh | sh</span>
+            <button class="hero-copy-btn no-js-hidden" data-cmd="curl -fsSL https://llml.dev/install.sh | sh" style="font:inherit;font-family:var(--font-sans);font-size:13px;font-weight:600;background:transparent;color:var(--surface-inverse-fg);border:0;border-left:1px solid var(--border);padding:0 0 0 14px;cursor:pointer;white-space:nowrap">Copy</button>
           </div>
-          <div style="font-size:12px;color:var(--muted);font-family:var(--font-mono);overflow-wrap:break-word;word-break:break-all">
-            Linux: {INSTALL_COMMANDS.linux}
+          <div style="font-size:12px;color:var(--muted);font-family:var(--font-sans);overflow-wrap:break-word;word-break:break-all">
+            Alternatives: Homebrew cask (macOS), Scoop/Winget (Windows), or Go. See <a href="https://github.com/flyingnobita/llml#install" style="color:inherit;text-decoration:underline">Install instructions ↗</a>
           </div>
           <div style="display:flex;gap:12px">
             <Button variant="primary" href="https://github.com/flyingnobita/llml">Install llml ↗</Button>
