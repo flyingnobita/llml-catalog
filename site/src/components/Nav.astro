@@ -5,8 +5,9 @@ const currentPath = Astro.url.pathname;
 const base = import.meta.env.BASE_URL;
 
 function link(href: string, label: string) {
-  const fullHref = base + href;
-  const active = currentPath === fullHref || (href !== "/" && currentPath.startsWith(fullHref));
+  const cleanHref = href.startsWith("/") ? href.slice(1) : href;
+  const fullHref = base + cleanHref;
+  const active = currentPath === fullHref || (cleanHref !== "" && currentPath.startsWith(fullHref));
   const color = active ? "var(--ink)" : "var(--muted)";
   const border = active ? "1px solid var(--ink)" : "1px solid transparent";
   return { href: fullHref, label, color, border };
@@ -16,7 +17,7 @@ function link(href: string, label: string) {
 <header style="border-bottom:1px solid var(--border);background:var(--paper);position:sticky;top:0;z-index:10">
   <div style="max-width:1280px;margin:0 auto;padding:16px 32px;display:flex;flex-direction:column;gap:8px">
     <div style="display:flex;align-items:center">
-      <a href={`${base}/`} style="font:inherit;background:transparent;border:0;cursor:pointer;padding:0;display:flex;align-items:baseline;gap:10px;text-decoration:none">
+      <a href={base} style="font:inherit;background:transparent;border:0;cursor:pointer;padding:0;display:flex;align-items:baseline;gap:10px;text-decoration:none">
         <span style="font-family:var(--font-serif);font-style:italic;font-size:28px;line-height:1;letter-spacing:-0.02em;color:var(--ink)">llml</span>
         <span style="font-family:var(--font-sans);font-size:13px;color:var(--muted)">LLM Launcher</span>
       </a>

@@ -37,14 +37,14 @@ const sampleImport = "llml import https://llml.dev/profiles/qwen3-14b-q4.toml --
           </div>
           <div style="display:flex;gap:12px">
             <Button variant="primary" href="https://github.com/flyingnobita/llml">Install llml ↗</Button>
-            <Button variant="secondary" href={`${base}/browse`}>Browse profiles →</Button>
+            <Button variant="secondary" href={`${base}browse`}>Browse profiles →</Button>
           </div>
         </div>
       </div>
       <!-- Hero artifact: TUI screenshot -->
       <div style="border:1px solid var(--border);border-radius:12px;background:var(--surface-raised);overflow:hidden;box-shadow:var(--shadow-float)">
         <img
-          src={`${base}/llml-screenshot.png`}
+          src={`${base}llml-screenshot.png`}
           alt="llml terminal UI showing model scan, runtime selection, and profile launch workflow"
           width="1045"
           height="575"
@@ -76,7 +76,7 @@ const sampleImport = "llml import https://llml.dev/profiles/qwen3-14b-q4.toml --
         ))}
       </div>
       <div style="margin-top:24px">
-        <a href={`${base}/how`} style="font-family:var(--font-sans);font-size:14px;color:var(--ink);border-bottom:1px solid var(--ink);text-decoration:none">
+        <a href={`${base}how`} style="font-family:var(--font-sans);font-size:14px;color:var(--ink);border-bottom:1px solid var(--ink);text-decoration:none">
           Read more about profiles →
         </a>
       </div>
@@ -97,7 +97,7 @@ const sampleImport = "llml import https://llml.dev/profiles/qwen3-14b-q4.toml --
           Profiles are starting points, not guarantees. Hardware differs — expect to adapt.
           But starting from someone's working config beats starting from an empty terminal.
         </p>
-        <a href={`${base}/browse`} style="font-family:var(--font-sans);font-size:14px;color:var(--ink);border-bottom:1px solid var(--ink);text-decoration:none;width:fit-content">
+        <a href={`${base}browse`} style="font-family:var(--font-sans);font-size:14px;color:var(--ink);border-bottom:1px solid var(--ink);text-decoration:none;width:fit-content">
           Find a profile for your machine →
         </a>
       </div>
@@ -119,7 +119,7 @@ const sampleImport = "llml import https://llml.dev/profiles/qwen3-14b-q4.toml --
           {profileCount >= 3 ? "Recently updated" : "Profiles"}
         </h2>
         {profileCount >= 3 && (
-          <a href={`${base}/browse`} style="font:inherit;font-family:var(--font-sans);font-size:14px;cursor:pointer;color:var(--ink);border-bottom:1px solid var(--ink);text-decoration:none">
+          <a href={`${base}browse`} style="font:inherit;font-family:var(--font-sans);font-size:14px;cursor:pointer;color:var(--ink);border-bottom:1px solid var(--ink);text-decoration:none">
             Browse all {profileCount} profiles →
           </a>
         )}
@@ -127,12 +127,12 @@ const sampleImport = "llml import https://llml.dev/profiles/qwen3-14b-q4.toml --
       {profileCount < 3 ? (
         <div style="display:flex;flex-direction:column;align-items:center;gap:16px;padding:48px 24px;text-align:center;background:var(--paper);border:1px solid var(--border);border-radius:8px">
           <p style="font-size:16px;color:var(--ink);max-width:48ch">The catalog is just getting started. Be the first to contribute a profile.</p>
-          <Button variant="primary" href={`${base}/contribute`}>Contribute a profile →</Button>
+          <Button variant="primary" href={`${base}contribute`}>Contribute a profile →</Button>
         </div>
       ) : (
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
           {PROFILES.slice(0, 6).map((p) => (
-            <a href={`${base}/profile/${p.id}`} style="font:inherit;text-align:left;background:var(--paper);border:1px solid var(--border);border-radius:8px;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;transition:transform var(--d-micro)">
+            <a href={`${base}profile/${p.id}`} style="font:inherit;text-align:left;background:var(--paper);border:1px solid var(--border);border-radius:8px;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;transition:transform var(--d-micro)">
               <div style="display:flex;justify-content:space-between;align-items:baseline">
                 <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase">{p.backend}</span>
                 {p.verified ? (
@@ -184,7 +184,7 @@ const sampleImport = "llml import https://llml.dev/profiles/qwen3-14b-q4.toml --
         <p style="color:var(--muted);font-size:16px;margin:0">Share the args your machine and model converged on. PR-only. No accounts.</p>
       </div>
       <div style="display:flex;gap:12px">
-        <Button variant="primary" href={`${base}/contribute`} class="contribute-btn">Read the format</Button>
+        <Button variant="primary" href={`${base}contribute`} class="contribute-btn">Read the format</Button>
         <Button variant="secondary" href="https://github.com/flyingnobita/llml-catalog" class="contribute-btn-ghost">Open a PR ↗</Button>
       </div>
     </div>

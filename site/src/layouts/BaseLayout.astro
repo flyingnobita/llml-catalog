@@ -10,7 +10,7 @@ export interface Props {
 }
 const { title, description } = Astro.props;
 const base = import.meta.env.BASE_URL;
-const isBrowse = Astro.url.pathname === base + "/browse" || Astro.url.pathname === base + "/browse/";
+const isBrowse = Astro.url.pathname === base + "browse" || Astro.url.pathname === base + "browse/";
 ---
 
 <!doctype html>
@@ -33,8 +33,8 @@ const isBrowse = Astro.url.pathname === base + "/browse" || Astro.url.pathname =
     })();
   </script>
 
-  <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}/favicon.svg`} />
-  <link rel="stylesheet" href={`${import.meta.env.BASE_URL}/styles/colors_and_type.css`} />
+  <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+  <link rel="stylesheet" href={`${import.meta.env.BASE_URL}styles/colors_and_type.css`} />
   <style is:global>
     body { margin: 0; }
 
@@ -127,12 +127,12 @@ const isBrowse = Astro.url.pathname === base + "/browse" || Astro.url.pathname =
           clearChord();
           if (e.key === "b") {
             e.preventDefault();
-            window.location.href = base + "/browse";
+            window.location.href = base + "browse";
             return;
           }
           if (e.key === "h") {
             e.preventDefault();
-            window.location.href = base + "/";
+            window.location.href = base;
             return;
           }
           return;

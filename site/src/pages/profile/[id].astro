@@ -24,7 +24,7 @@ const base = import.meta.env.BASE_URL;
   <section style="border-bottom:1px solid var(--border);padding:40px 32px 32px">
     <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 360px;gap:48px">
       <div style="display:flex;flex-direction:column;gap:14px">
-        <a href={`${base}/browse`} style="font:inherit;background:transparent;border:0;padding:0;cursor:pointer;font-family:var(--font-sans);font-size:13px;color:var(--muted);text-align:left;width:fit-content;text-decoration:none">← browse</a>
+        <a href={`${base}browse`} style="font:inherit;background:transparent;border:0;padding:0;cursor:pointer;font-family:var(--font-sans);font-size:13px;color:var(--muted);text-align:left;width:fit-content;text-decoration:none">← browse</a>
         <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
           <h1 style="font-size:48px;letter-spacing:-0.01em;margin:0">{p.name}</h1>
           {p.verified && <Badge tone="success">✓ Verified maintainer</Badge>}
@@ -125,7 +125,7 @@ const base = import.meta.env.BASE_URL;
             const r = PROFILES.find((x) => x.id === rid);
             if (!r) return null;
             return (
-              <a href={`${base}/profile/${rid}`} style="font:inherit;text-align:left;background:transparent;border:1px solid var(--border);border-radius:8px;padding:12px;cursor:pointer;display:flex;flex-direction:column;gap:4px;text-decoration:none;color:inherit">
+              <a href={`${base}profile/${rid}`} style="font:inherit;text-align:left;background:transparent;border:1px solid var(--border);border-radius:8px;padding:12px;cursor:pointer;display:flex;flex-direction:column;gap:4px;text-decoration:none;color:inherit">
                 <span style="font-family:var(--font-sans);font-size:14px;font-weight:600">{r.name}</span>
                 <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">
                   {r.backend} · {r.hardware}
