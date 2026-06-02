@@ -36,12 +36,27 @@ jobs:
         run: pnpm install
         working-directory: site
 
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('site/pnpm-lock.yaml') }}
+
       - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: pnpm exec playwright install --with-deps chromium
         working-directory: site
         env:
           DEBIAN_FRONTEND: noninteractive
-        timeout-minutes: 10
+        timeout-minutes: 20
+
+      - name: Install Playwright OS dependencies (cache hit)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm exec playwright install-deps chromium
+        working-directory: site
+        env:
+          DEBIAN_FRONTEND: noninteractive
 
       - name: Run Playwright tests
         run: pnpm exec playwright test
