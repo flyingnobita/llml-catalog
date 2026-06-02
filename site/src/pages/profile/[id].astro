@@ -104,17 +104,23 @@ const base = import.meta.env.BASE_URL;
         <!-- Provenance -->
         <div style="border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--surface-raised);display:flex;flex-direction:column;gap:10px">
           <span class="eyebrow">Source provenance</span>
-          <div style="display:grid;grid-template-columns:100px 1fr;row-gap:6px;column-gap:12px;font-family:var(--font-mono);font-size:12px">
-            <span style="color:var(--muted)">model org</span><span>{p.modelOrg || "—"}</span>
-            <span style="color:var(--muted)">profile org</span><span>{p.profileOrg || "—"}</span>
-            <span style="color:var(--muted)">repo</span><span>flyingnobita/llml-catalog</span>
-            <span style="color:var(--muted)">path</span><span>{p.repoPath}</span>
-            <span style="color:var(--muted)">commit</span><span>{p.commit}</span>
-            <span style="color:var(--muted)">maintainer</span><span>{p.maintainer}</span>
+          <div style="display:grid;grid-template-columns:100px 1fr;row-gap:6px;column-gap:12px;font-family:var(--font-mono);font-size:12px;overflow:hidden">
+            <span style="color:var(--muted)">model org</span><span style="overflow-wrap:break-word;min-width:0">{p.modelOrg || "—"}</span>
+            <span style="color:var(--muted)">profile org</span><span style="overflow-wrap:break-word;min-width:0">{p.profileOrg || "—"}</span>
+            <span style="color:var(--muted)">repo</span><span style="overflow-wrap:break-word;min-width:0">flyingnobita/llml-catalog</span>
+            <span style="color:var(--muted)">path</span><span style="overflow-wrap:break-word;min-width:0">{p.repoPath}</span>
+            <span style="color:var(--muted)">commit</span><span style="overflow-wrap:break-word;word-break:break-all;min-width:0">{p.commit}</span>
+            <span style="color:var(--muted)">maintainer</span><span style="overflow-wrap:break-word;min-width:0">{p.maintainer}</span>
           </div>
-          <a href="#" style="font-family:var(--font-sans);font-size:13px;color:var(--primary);border-bottom:1px solid var(--primary);width:fit-content;text-decoration:none">
-            View on GitHub ↗
-          </a>
+          {p.githubUrl ? (
+            <a href={p.githubUrl} target="_blank" rel="noopener noreferrer" style="font-family:var(--font-sans);font-size:13px;color:var(--primary);border-bottom:1px solid var(--primary);width:fit-content;text-decoration:none">
+              View on GitHub ↗
+            </a>
+          ) : (
+            <span style="font-family:var(--font-sans);font-size:13px;color:var(--muted)">
+              Source unavailable
+            </span>
+          )}
         </div>
 
         <!-- Related profiles -->

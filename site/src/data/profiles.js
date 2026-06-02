@@ -83,7 +83,7 @@ function buildGitInfo() {
   const map = {};
   try {
     const out = execSync(
-      `for f in profiles/*.toml; do echo "$(basename "$f")|$(git log -1 --format='%h|%ar|%an' -- "$f" 2>/dev/null || echo '?|unknown|unknown')"; done`,
+      `for f in profiles/*.toml; do echo "$(basename "$f")|$(git log -1 --format='%H|%ar|%an' -- "$f" 2>/dev/null || echo '?|unknown|unknown')"; done`,
       { cwd: REPO_ROOT, encoding: "utf-8", timeout: 5000 }
     );
     for (const line of out.trim().split("\n")) {
@@ -151,6 +151,12 @@ function loadProfiles() {
       const notes = hw.notes || "";
       const tags = (uc.tags || []).map((t) => t.toLowerCase());
 
+      const repoPath = `profiles/${filename}`;
+      const fullCommit = gi.commit && gi.commit !== "?" ? gi.commit : null;
+      const githubUrl = fullCommit
+        ? `https://github.com/flyingnobita/llml-catalog/blob/${fullCommit}/${repoPath}`
+        : null;
+
       rawProfiles.push({
         id: slugify(p.name),
         name: p.name,
@@ -163,8 +169,9 @@ function loadProfiles() {
         verified: false,
         updated: gi.updated,
         maintainer: gi.maintainer,
-        repoPath: `profiles/${filename}`,
+        repoPath,
         commit: gi.commit,
+        githubUrl,
         downloadUrl: `${CATALOG_BASE}/profiles/${filename}`,
         importCmd: `llml import ${CATALOG_BASE}/profiles/${filename} --activate`,
         rationale: notes,

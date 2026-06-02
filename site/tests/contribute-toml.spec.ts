@@ -1,6 +1,51 @@
 import { test, expect } from "@playwright/test";
 
 // ---------------------------------------------------------------------------
+// Contribute page TOC and content tests
+// ---------------------------------------------------------------------------
+test.describe("Contribute page TOC anchors", () => {
+  const sections = [
+    { label: "What belongs in the catalog", id: "what-belongs-in-the-catalog" },
+    { label: "What a strong profile includes", id: "what-a-strong-profile-includes" },
+    { label: "Validation", id: "validation" },
+    { label: "PR flow", id: "pr-flow" },
+  ];
+
+  for (const { label, id } of sections) {
+    test(`TOC link '${label}' targets real section #${id}`, async ({ page }) => {
+      await page.goto("./contribute");
+      const link = page.locator(`a[href="#${id}"]`);
+      await expect(link).toBeVisible();
+      const section = page.locator(`#${id}`);
+      await expect(section).toBeAttached();
+    });
+
+    test(`clicking TOC link '${label}' updates URL hash`, async ({ page }) => {
+      await page.goto("./contribute");
+      const link = page.locator(`a[href="#${id}"]`);
+      await link.click();
+      expect(page.url()).toContain(`#${id}`);
+    });
+  }
+});
+
+test.describe("Contribute page PR flow content", () => {
+  test("PR flow names flyingnobita/llml-catalog (not llml-profiles)", async ({ page }) => {
+    await page.goto("./contribute");
+    const prSection = page.locator("#pr-flow");
+    await expect(prSection).toContainText("flyingnobita/llml-catalog");
+    await expect(prSection).not.toContainText("flyingnobita/llml-profiles");
+  });
+
+  test("PR flow shows python validate command (not npm run validate)", async ({ page }) => {
+    await page.goto("./contribute");
+    const prSection = page.locator("#pr-flow");
+    await expect(prSection).toContainText("python scripts/validate_profiles.py");
+    await expect(prSection).not.toContainText("npm run validate");
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Contribute page TOML regression tests
 // ---------------------------------------------------------------------------
 // Verifies that the contribute page still renders the TOML sample correctly

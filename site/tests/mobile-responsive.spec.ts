@@ -82,7 +82,7 @@ test.describe("Home page (/) — mobile responsive", () => {
     await page.setViewportSize(MOBILE);
     await page.goto("./");
     const hero = page.locator(".home-hero");
-    await expect(hero.locator('a[href*="github.com/flyingnobita/llml"]')).toBeVisible();
+    await expect(hero.locator('a[href="https://github.com/flyingnobita/llml"]')).toBeVisible();
     await expect(hero.locator('a[href*="browse"]')).toBeVisible();
   });
 

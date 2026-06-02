@@ -40,21 +40,21 @@ const base = import.meta.env.BASE_URL;
         <span class="eyebrow">Contents</span>
         <ol style="margin:12px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans);font-size:14px">
           {[
-            "What belongs in the catalog",
-            "What a strong profile includes",
-            "Validation expectations",
-            "PR flow",
-          ].map((t, i) => (
+            { label: "What belongs in the catalog", id: "what-belongs-in-the-catalog" },
+            { label: "What a strong profile includes", id: "what-a-strong-profile-includes" },
+            { label: "Validation", id: "validation" },
+            { label: "PR flow", id: "pr-flow" },
+          ].map(({ label, id }, i) => (
             <li>
-              <a href="#" style={`color:${i === 0 ? "var(--ink)" : "var(--muted)"};border-bottom:${i === 0 ? "1px solid var(--ink)" : "none"};text-decoration:none`}>
-                {String(i + 1).padStart(2, "0")} · {t}
+              <a href={`#${id}`} style={`color:${i === 0 ? "var(--ink)" : "var(--muted)"};border-bottom:${i === 0 ? "1px solid var(--ink)" : "none"};text-decoration:none`}>
+                {String(i + 1).padStart(2, "0")} · {label}
               </a>
             </li>
           ))}
         </ol>
       </aside>
       <article style="display:flex;flex-direction:column;gap:32px">
-        <div>
+        <div id="what-belongs-in-the-catalog">
           <h2 style="font-size:30px;margin:0 0 12px">What belongs in the catalog</h2>
           <p style="font-size:16px;line-height:1.6;max-width:62ch;margin:0">
             Profiles for <code class="mono">llama.cpp</code>, <code class="mono">vLLM</code>, <code class="mono">Ollama</code>, and{" "}
@@ -63,7 +63,7 @@ const base = import.meta.env.BASE_URL;
             excluded — <code class="mono">llml</code> supplies them at launch.
           </p>
         </div>
-        <div>
+        <div id="what-a-strong-profile-includes">
           <h2 style="font-size:30px;margin:0 0 12px">What a strong profile includes</h2>
           <ul style="margin:0;padding-left:18px;font-size:16px;line-height:1.7;max-width:62ch">
             <li>A <strong>name</strong> that reads as a setup, not a brand: <code class="mono">balanced-q4</code> beats <code class="mono">my-best-config</code>.</li>
@@ -72,7 +72,7 @@ const base = import.meta.env.BASE_URL;
             <li>Args as panel-row strings: <code class="mono">"--ctx-size 4096"</code>, not pre-split tokens.</li>
           </ul>
         </div>
-        <div>
+        <div id="validation">
           <h2 style="font-size:30px;margin:0 0 12px">Validation</h2>
           <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden;font-family:var(--font-mono);font-size:13px">
             {[
@@ -89,12 +89,12 @@ const base = import.meta.env.BASE_URL;
             ))}
           </div>
         </div>
-        <div>
+        <div id="pr-flow">
           <h2 style="font-size:30px;margin:0 0 12px">PR flow</h2>
           <ol style="margin:0;padding-left:18px;font-size:16px;line-height:1.7;max-width:62ch">
-            <li>Fork <code class="mono">flyingnobita/llml-profiles</code></li>
+            <li>Fork <code class="mono">flyingnobita/llml-catalog</code></li>
             <li>Add your TOML under <code class="mono">profiles/&lt;name&gt;.toml</code></li>
-            <li>Run <code class="mono">npm run validate</code> locally</li>
+            <li>Run <code class="mono">python scripts/validate_profiles.py profiles/*.toml</code> locally</li>
             <li>Open a PR with one paragraph about your machine</li>
           </ol>
         </div>

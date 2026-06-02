@@ -248,7 +248,7 @@ test.describe("Home page — dark mode sections", () => {
   test("install command block is visible in dark mode", async ({ page }) => {
     const cmdBlock = page.locator(".home-hero [style*='surface-inverse']").first();
     await expect(cmdBlock).toBeVisible();
-    await expect(cmdBlock).toContainText("brew");
+    await expect(cmdBlock).toContainText("curl");
   });
 
   test("hero copy button is visible in dark mode", async ({ page }) => {

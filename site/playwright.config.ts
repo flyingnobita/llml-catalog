@@ -1,7 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const PORT = 4199;
-const BASE_URL = `http://localhost:${PORT}/llml-catalog/`;
+const BASE_URL = `http://localhost:${PORT}/`;
 
 export default defineConfig({
   testDir: "./tests",

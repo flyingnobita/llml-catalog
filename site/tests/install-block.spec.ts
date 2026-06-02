@@ -326,6 +326,43 @@ test.describe("TOML preview", () => {
 });
 
 // ---------------------------------------------------------------------------
+// Test 46b: GitHub provenance link
+// ---------------------------------------------------------------------------
+test.describe("GitHub provenance link", () => {
+  test("View on GitHub link is visible and not href='#'", async ({ page }) => {
+    await page.goto(PROFILE_URL);
+    const link = page.locator("a").filter({ hasText: /View on GitHub/ });
+    await expect(link).toBeVisible();
+    const href = await link.getAttribute("href");
+    expect(href).not.toBe("#");
+    expect(href).not.toBeNull();
+  });
+
+  test("View on GitHub link includes /blob/<40-char-sha>/profiles/", async ({ page }) => {
+    await page.goto(PROFILE_URL);
+    const link = page.locator("a").filter({ hasText: /View on GitHub/ });
+    const href = await link.getAttribute("href");
+    expect(href).toMatch(/\/blob\/[0-9a-f]{40}\/profiles\//);
+  });
+
+  test("View on GitHub link points to github.com", async ({ page }) => {
+    await page.goto(PROFILE_URL);
+    const link = page.locator("a").filter({ hasText: /View on GitHub/ });
+    const href = await link.getAttribute("href");
+    expect(href).toContain("github.com/flyingnobita/llml-catalog");
+  });
+
+  test("linked source URL returns 200", async ({ page }) => {
+    await page.goto(PROFILE_URL);
+    const link = page.locator("a").filter({ hasText: /View on GitHub/ });
+    const href = await link.getAttribute("href");
+    expect(href).toBeTruthy();
+    const response = await page.request.get(href!);
+    expect(response.status()).toBe(200);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Test 47: Version badge
 // ---------------------------------------------------------------------------
 test.describe("Version badge", () => {

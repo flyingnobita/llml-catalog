@@ -50,6 +50,19 @@ test.describe("How It Works page", () => {
     await expect(cmdBlock).toContainText("llml import");
   });
 
+  test("ImportBlock uses Qwen3.6-enable-thinking.toml", async ({ page }) => {
+    await page.goto("./how");
+    const cmdBlock = page.locator(".import-block-cmd");
+    await expect(cmdBlock).toContainText("Qwen3.6-enable-thinking.toml");
+  });
+
+  test("sample profile URL returns 200", async ({ page }) => {
+    const response = await page.request.get(
+      "https://llml.dev/profiles/Qwen3.6-enable-thinking.toml"
+    );
+    expect(response.status()).toBe(200);
+  });
+
   test("ImportBlock Copy button works with JS", async ({ page }) => {
     await page.goto("./how");
     const copyBtn = page.locator(".import-block-btn");

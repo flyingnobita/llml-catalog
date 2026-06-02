@@ -59,11 +59,12 @@ test.describe("Hero section", () => {
     await expect(img).toHaveAttribute("height");
   });
 
-  test("install command is visible and sourced from INSTALL_COMMANDS", async ({ page }) => {
+  test("install command is visible and shows curl installer", async ({ page }) => {
     await page.goto(HOME);
     const cmdBlock = page.locator(".home-hero [style*='surface-inverse']").first();
     await expect(cmdBlock).toBeVisible();
-    await expect(cmdBlock).toContainText("brew install");
+    await expect(cmdBlock).toContainText("curl");
+    await expect(cmdBlock).toContainText("install.sh");
   });
 
   test("install copy button works", async ({ page }) => {
@@ -80,7 +81,7 @@ test.describe("Hero section", () => {
 
   test("Install CTA links to GitHub", async ({ page }) => {
     await page.goto(HOME);
-    const cta = page.locator('.home-hero a[href*="github.com/flyingnobita/llml"]');
+    const cta = page.locator('.home-hero a[href="https://github.com/flyingnobita/llml"]');
     await expect(cta).toBeVisible();
   });
 
@@ -134,6 +135,19 @@ test.describe("Catalog payoff", () => {
     const cmdBlock = page.locator(".home-catalog-payoff .import-block-cmd");
     await expect(cmdBlock).toBeVisible();
     await expect(cmdBlock).toContainText("llml import");
+  });
+
+  test("sample import command uses Qwen3.6-enable-thinking.toml", async ({ page }) => {
+    await page.goto(HOME);
+    const cmdBlock = page.locator(".home-catalog-payoff .import-block-cmd");
+    await expect(cmdBlock).toContainText("Qwen3.6-enable-thinking.toml");
+  });
+
+  test("sample profile URL returns 200", async ({ page }) => {
+    const response = await page.request.get(
+      "https://llml.dev/profiles/Qwen3.6-enable-thinking.toml"
+    );
+    expect(response.status()).toBe(200);
   });
 
   test("profile link points to /browse", async ({ page }) => {
