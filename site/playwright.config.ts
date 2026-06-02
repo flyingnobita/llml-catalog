@@ -3,6 +3,13 @@ import { defineConfig, devices } from "@playwright/test";
 const PORT = 4199;
 const BASE_URL = `http://localhost:${PORT}/`;
 
+// On GitHub Actions runners, google-chrome-stable is pre-installed.
+// Using channel:'chrome' skips the 170 MB Playwright Chromium download
+// and its slow extraction, which exceeds any reasonable CI timeout.
+const chromiumProject = process.env.CI
+  ? { name: "chromium", use: { ...devices["Desktop Chrome"], channel: "chrome" } }
+  : { name: "chromium", use: { ...devices["Desktop Chrome"] } };
+
 export default defineConfig({
   testDir: "./tests",
   timeout: 10000,
@@ -15,12 +22,7 @@ export default defineConfig({
     trace: "on-first-retry",
   },
 
-  projects: [
-    {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
-    },
-  ],
+  projects: [chromiumProject],
 
   webServer: {
     command: `npx astro build && npx astro preview --port ${PORT}`,
