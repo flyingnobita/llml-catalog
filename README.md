@@ -2,7 +2,7 @@
 
 Importable launch recipes for [llml](https://github.com/flyingnobita/llml). Stop reconstructing `llama-server` flags from shell history — grab a profile someone already tuned for your model and hardware, import it, and run.
 
-**[Browse the catalog →](https://flyingnobita.github.io/llml-catalog/)**
+**[Browse the catalog →](https://llml.dev/)**
 
 A **profile** is a TOML file that captures the exact args and env vars someone converged on for a specific model, backend, and hardware configuration. Export yours from llml, share it here, and others with the same setup can import it instead of starting from scratch.
 
@@ -49,7 +49,7 @@ Before opening a PR, check that:
 
 ```bash
 # Import from the catalog URL
-llml import https://flyingnobita.github.io/llml-catalog/profiles/llama-3-8b-q4-rtx4090.toml --activate
+llml import https://llml.dev/profiles/llama-3-8b-q4-rtx4090.toml --activate
 ```
 
 The profile appears under `p` in the llml TUI on next launch.

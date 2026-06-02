@@ -11,7 +11,7 @@ const SITE_ROOT = process.cwd();
 const REPO_ROOT = resolve(SITE_ROOT, "..");
 const PROFILES_DIR = resolve(REPO_ROOT, "profiles");
 
-const CATALOG_BASE = "https://flyingnobita.github.io/llml-catalog";
+const CATALOG_BASE = "https://llml.dev";
 
 export const INSTALL_COMMANDS = {
   mac: "brew install --cask flyingnobita/tap/llml",

@@ -5,8 +5,8 @@ import { fileURLToPath } from "url";
 import { parse } from "smol-toml";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const SITE = "https://flyingnobita.github.io";
-const BASE = "/llml-catalog";
+const SITE = "https://llml.dev";
+const BASE = "";
 const REPO_ROOT = resolve(__dirname, "..");
 const PROFILES_SRC = resolve(REPO_ROOT, "profiles");
 const PROFILES_DST = resolve(__dirname, "public", "profiles");
