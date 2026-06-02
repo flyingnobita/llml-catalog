@@ -39,6 +39,9 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium
         working-directory: site
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        timeout-minutes: 10
 
       - name: Run Playwright tests
         run: pnpm exec playwright test
