@@ -1,4 +1,5 @@
 [tools]
+"aqua:asciinema/agg" = "latest"
 node = "24"
 pnpm = "11.1.3"
 uv = "latest"
