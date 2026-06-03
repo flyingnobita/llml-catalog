@@ -1,6 +1,7 @@
 ---
 // BaseLayout.astro — wraps every page with CSS tokens, fonts, Nav, and Footer.
 import Nav from "../components/Nav.astro";
+import AnnouncementBar from "../components/AnnouncementBar.astro";
 import Footer from "../components/Footer.astro";
 import KeyboardShortcuts from "../components/KeyboardShortcuts.astro";
 
@@ -33,6 +34,19 @@ const isBrowse = Astro.url.pathname === base + "browse" || Astro.url.pathname ==
     })();
   </script>
 
+  <!-- Blocking script: hide announcement bar before paint if already dismissed -->
+  <script is:inline>
+    (function () {
+      var VERSION = "growing-2026-06";
+      var KEY = "llml-announce-dismissed";
+      try {
+        if (localStorage.getItem(KEY) === VERSION) {
+          document.documentElement.setAttribute("data-announce", "off");
+        }
+      } catch (_) {}
+    })();
+  </script>
+
   <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
   <link rel="stylesheet" href={`${import.meta.env.BASE_URL}styles/colors_and_type.css`} />
   <style is:global>
@@ -59,6 +73,10 @@ const isBrowse = Astro.url.pathname === base + "browse" || Astro.url.pathname ==
     html.js .no-js-hidden { display: initial; }
     html.js .no-js-hidden--flex { display: flex; }
     html.js .no-js-hidden--inline-flex { display: inline-flex; }
+
+    /* Announcement bar — hidden instantly when data-announce="off" is set
+       by the blocking head script before paint (no flash). */
+    html[data-announce="off"] #announce-bar { display: none; }
   </style>
 </head>
 <body data-page={isBrowse ? "browse" : "default"}>
@@ -67,6 +85,7 @@ const isBrowse = Astro.url.pathname === base + "browse" || Astro.url.pathname ==
     document.documentElement.classList.add("js");
   </script>
   <Nav />
+  <AnnouncementBar />
   <slot />
   <Footer />
   <KeyboardShortcuts browseMode={isBrowse} />

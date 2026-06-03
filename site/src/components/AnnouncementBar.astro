@@ -1,0 +1,73 @@
+---
+// AnnouncementBar.astro — dismissible "catalog is growing" notice.
+//
+// Shown between Nav and page content on every page.
+// Dismissed state is saved in localStorage under a versioned key so that
+// bumping ANNOUNCE_VERSION re-shows the bar for a new announcement.
+//
+// No-flash: BaseLayout.astro injects a blocking <script is:inline> in <head>
+// that reads localStorage and sets data-announce="off" on <html> before paint,
+// so the bar is hidden via CSS before the stylesheet even loads.
+---
+
+<!-- Versioned key — bump to re-show for a new announcement -->
+<script is:inline>
+  window.__ANNOUNCE_VERSION = "growing-2026-06";
+</script>
+
+<div
+  id="announce-bar"
+  role="region"
+  aria-label="Site announcement"
+  style="background:var(--paper-2);border-bottom:1px solid var(--border);padding:10px 32px"
+>
+  <div style="max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:10px">
+    <!-- Lucide 'info' icon, 16px, 1.5px stroke, primary-colored as a signal glyph -->
+    <svg
+      width="16" height="16" viewBox="0 0 24 24"
+      fill="none" stroke="var(--primary)" stroke-width="1.5"
+      stroke-linecap="round" stroke-linejoin="round"
+      aria-hidden="true" style="flex-shrink:0"
+    >
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="16" x2="12" y2="12"/>
+      <line x1="12" y1="8" x2="12.01" y2="8"/>
+    </svg>
+
+    <p style="margin:0;font-family:var(--font-sans);font-size:13px;color:var(--ink);flex:1;min-width:0;line-height:1.5">
+      The catalog is actively curated — new profiles are added regularly.
+      <a
+        href="https://github.com/flyingnobita/llml-catalog"
+        style="color:var(--ink);text-decoration:underline;white-space:nowrap"
+        target="_blank"
+        rel="noopener noreferrer"
+      >Watch the repo &#x2197;</a>
+      to get notified when new ones land.
+    </p>
+
+    <button
+      id="announce-dismiss"
+      aria-label="Dismiss announcement"
+      style="font:inherit;background:transparent;border:0;cursor:pointer;padding:4px 8px;color:var(--muted);font-size:18px;line-height:1;flex-shrink:0"
+    >&#x00D7;</button>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var VERSION = (window as any).__ANNOUNCE_VERSION || "growing-2026-06";
+    var KEY = "llml-announce-dismissed";
+    var bar = document.getElementById("announce-bar");
+    var btn = document.getElementById("announce-dismiss");
+    if (!bar || !btn) return;
+
+    btn.addEventListener("click", function () {
+      bar!.style.display = "none";
+      try {
+        localStorage.setItem(KEY, VERSION);
+      } catch (_) {
+        // Private mode or storage quota — dismiss for session only
+      }
+    });
+  })();
+</script>

@@ -4,6 +4,11 @@ Importable launch recipes for [llml](https://github.com/flyingnobita/llml). Stop
 
 **[Browse the catalog →](https://llml.dev/)**
 
+> [!NOTE]
+> **The catalog is growing.** Alongside community PRs, the maintainers regularly find
+> and add new profiles. [Watch this repo](https://github.com/flyingnobita/llml-catalog)
+> (Watch → Custom → Releases) to get notified when new profiles land — or check back any time.
+
 A **profile** is a TOML file that captures the exact args and env vars someone converged on for a specific model, backend, and hardware configuration. Export yours from llml, share it here, and others with the same setup can import it instead of starting from scratch.
 
 ## Profile format
