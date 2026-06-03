@@ -33,11 +33,12 @@ test.describe("Home page (/) — mobile responsive", () => {
     expect(parseFloat(fontSize)).toBeLessThanOrEqual(40);
   });
 
-  test("hero screenshot is visible with alt text", async ({ page }) => {
+  test("hero terminal cast is visible with fallback alt text", async ({ page }) => {
     await page.setViewportSize(MOBILE);
     await page.goto("./");
-    const img = page.locator(".home-hero img");
-    await expect(img).toBeVisible();
+    await expect(page.locator("#llml-hero-cast")).toBeVisible();
+    await expect(page.locator(".home-hero .ap-player")).toBeVisible();
+    const img = page.locator(".hero-cast-fallback");
     await expect(img).toHaveAttribute("alt");
   });
 

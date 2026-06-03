@@ -46,17 +46,22 @@ test.describe("Hero section", () => {
     await expect(page.getByText("Pick a model, pick a profile")).toBeVisible();
   });
 
-  test("screenshot is visible with alt and eager loading", async ({ page }) => {
+  test("terminal cast is visible with cast source and accessible label", async ({ page }) => {
     await page.goto(HOME);
-    const img = page.locator(".home-hero img");
-    await expect(img).toBeVisible();
+    const cast = page.locator("#llml-hero-cast");
+    await expect(cast).toBeVisible();
+    await expect(cast).toHaveAttribute("data-cast-src", /llml-hero\.cast$/);
+    await expect(cast).toHaveAttribute("aria-label", /terminal cast/);
+    await expect(page.locator(".home-hero .ap-player")).toBeVisible();
+  });
+
+  test("terminal cast fallback keeps explicit image dimensions", async ({ page }) => {
+    await page.goto(HOME);
+    const img = page.locator(".hero-cast-fallback");
     await expect(img).toHaveAttribute("alt");
-    const alt = await img.getAttribute("alt");
-    expect(alt).toBeTruthy();
-    expect(alt!.length).toBeGreaterThan(10);
     await expect(img).toHaveAttribute("loading", "eager");
-    await expect(img).toHaveAttribute("width");
-    await expect(img).toHaveAttribute("height");
+    await expect(img).toHaveAttribute("width", "1045");
+    await expect(img).toHaveAttribute("height", "575");
   });
 
   test("install command is visible and shows curl installer", async ({ page }) => {
@@ -257,18 +262,15 @@ test.describe("Edge cases", () => {
     await expect(btn).toHaveText("Copy", { timeout: 3000 });
   });
 
-  test("screenshot 404 — alt text still visible", async ({ page }) => {
-    // Intercept the screenshot request and return 404
-    await page.route("**/llml-screenshot.png", (route) => route.abort());
+  test("cast 404 — fallback screenshot remains available", async ({ page }) => {
+    await page.route("**/llml-hero.cast", (route) => route.abort());
     await page.goto(HOME);
 
-    // The img element should still be present
-    const img = page.locator(".home-hero img");
-    await expect(img).toBeVisible();
-
-    // Alt text should be non-empty (browsers show alt on broken images)
+    const img = page.locator(".hero-cast-fallback");
     const alt = await img.getAttribute("alt");
     expect(alt).toBeTruthy();
     expect(alt!.length).toBeGreaterThan(5);
+    await expect(img).toHaveAttribute("width", "1045");
+    await expect(img).toHaveAttribute("height", "575");
   });
 });
