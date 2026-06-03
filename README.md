@@ -49,7 +49,7 @@ Before opening a PR, check that:
 
 ```bash
 # Import from the catalog URL
-llml import https://llml.dev/profiles/llama-3-8b-q4-rtx4090.toml --activate
+llml import https://llml.dev/profiles/Qwen3.6-enable-thinking.toml --activate
 ```
 
 The profile appears under `p` in the llml TUI on next launch.

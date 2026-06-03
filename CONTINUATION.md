@@ -1,5 +1,9 @@
 # Continuation note — model card scraping pipeline
 
+> Superseded: This historical scraping-pipeline handoff was completed on 2026-05-11.
+> Use [README.md](README.md) for the current repository entry point and
+> [dev-docs/PROJECT-STATUS.md](dev-docs/PROJECT-STATUS.md) for the current roadmap.
+
 ## What was built
 
 A `scripts/scrape_catalog.py` pipeline that crawls model card sites, extracts LLM parameter profiles via LLM, and writes portable TOML files into `profiles/`.

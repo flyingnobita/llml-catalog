@@ -1,5 +1,7 @@
 # Changelog
 
+- Jun-03, 2026 - 02:12 AM +0800 - [Launch hardening: replace the broken sample import URL, add immutable GitHub provenance links, repair contribution instructions, and publish root-domain browser-test coverage]
+- Jun-03, 2026 - 02:12 AM +0800 - [CI: run 178 Playwright tests against the root-domain preview before Pages deployment, use pre-installed Chrome on GitHub-hosted runners, and tolerate rate-limited live URL assertions]
 - Jun-02, 2026 - 09:40 PM +08:00 - Add one-line curl | sh installer script at llml.dev/install.sh and promote it in the homepage hero
 - Jun-02, 2026 - 01:35 PM +0800 - Configure custom domain llml.dev: update Astro site config, remove base sub-path, and update all catalog and profile import URLs
 - May-28, 2026 - Fix navigation icon order and "Open a PR" button links; add profile contribution PR template
