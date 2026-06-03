@@ -44,7 +44,7 @@ RULES:
 1. ONLY extract from code blocks that invoke an inference backend (llama-cli, llama-server, vllm serve, ollama run, koboldcpp). SKIP install commands (curl|sh, apt, pip, brew), build commands (cmake, make, git clone), chat-template/prompt-format examples (showing only system prompts, turn tokens, or multi-turn dialogue with no launch flags), and download commands (huggingface-cli, wget). No invented defaults.
 2. Backend mapping: llama.cpp->llama, vLLM->vllm, Ollama->ollama, KoboldCpp->koboldcpp
 3. model_hint: model name from page heading
-4. EXCLUDE model-location params: --model, -m, --hf-repo, etc.
+4. EXCLUDE model-location params (--model, -m, --hf-repo, etc.) AND server-binding/identity params (--alias, -a, --port, --host, --served-model-name) — the launcher owns these at runtime.
 5. use_case.primary: chat|completion|tool-calling|embedding|eval|batch
 6. hardware.class: cpu|gpu|mixed
 7. Name profiles as ModelFamily[-Variant][-mode][-quantization]:

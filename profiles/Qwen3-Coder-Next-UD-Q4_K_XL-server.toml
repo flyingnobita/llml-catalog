@@ -4,7 +4,7 @@ schema_version = 2
 name = "Qwen3-Coder-Next-UD-Q4_K_XL-server"
 backend = "llama"
 model_hint = "Qwen3-Coder-Next"
-args = [ "--seed 3407", "--temp 1.0", "--top-p 0.95", "--min-p 0.01", "--top-k 40", "--port 8001" ]
+args = [ "--seed 3407", "--temp 1.0", "--top-p 0.95", "--min-p 0.01", "--top-k 40" ]
 model_org = "unsloth"
 profile_org = "unsloth"
 

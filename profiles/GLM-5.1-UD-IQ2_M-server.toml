@@ -4,7 +4,7 @@ schema_version = 2
 name = "GLM-5.1-UD-IQ2_M-server"
 backend = "llama"
 model_hint = "GLM-5.1"
-args = [ "--alias unsloth/GLM-5.1", "--prio 3", "--ctx-size 16384", "--temp 1.0", "--top-p 0.95", "--port 8001" ]
+args = [ "--prio 3", "--ctx-size 16384", "--temp 1.0", "--top-p 0.95" ]
 model_org = "unsloth"
 profile_org = "unsloth"
 

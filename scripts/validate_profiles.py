@@ -7,6 +7,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from profile_schema import ProfileDocument
+from post_filters import SERVER_BINDING_PARAMS
 
 
 def validate_file(path: str) -> list[str]:
@@ -34,6 +35,13 @@ def validate_file(path: str) -> list[str]:
             errors.append(f"{prefix}: backend is empty")
         if not profile.args:
             errors.append(f"{prefix}: args is empty — profile has no launch parameters")
+        for arg in profile.args:
+            flag = arg.split()[0] if arg.split() else ""
+            if flag in SERVER_BINDING_PARAMS:
+                errors.append(
+                    f"{prefix}: arg '{arg}' is launcher-owned — "
+                    f"remove {'/'.join(sorted(SERVER_BINDING_PARAMS))} from profiles"
+                )
         if not profile.model_hint.strip():
             errors.append(f"{prefix}: model_hint is empty")
 

@@ -3,6 +3,9 @@
 Ports the MODEL_LOCATION_PARAMS stripping logic from /llml-import (v1.5.0).
 llml supplies the model path at launch, so model-location parameters must be
 stripped from extracted profiles.
+
+Server-binding and identity parameters (--port, --host, --alias, etc.) are also
+stripped because the launcher owns those values at runtime.
 """
 
 from scripts.profile_schema import PortableProfile
@@ -100,6 +103,32 @@ MODEL_LOCATION_PARAMS: dict[str, dict[str, set[str]]] = {
 }
 
 
+# Server-binding and identity parameters the launcher owns at runtime.
+# Applied to all backends (no per-backend variation needed).
+# Short forms: -a is llama-server's short alias flag.
+# vLLM equivalent: --served-model-name.
+SERVER_BINDING_PARAMS: set[str] = {
+    "--alias", "-a",
+    "--port",
+    "--host",
+    "--served-model-name",
+}
+
+
+def strip_server_binding_params(profile: PortableProfile) -> PortableProfile:
+    """Remove server-binding and identity args from a profile in-place.
+
+    Args are stored as combined strings (e.g. "--port 8001", "--alias foo").
+    We match on the first whitespace-split token so this works for both
+    combined-string format (LLM output) and tokenised format.
+    """
+    profile.args = [
+        a for a in profile.args
+        if a.split()[0] not in SERVER_BINDING_PARAMS
+    ]
+    return profile
+
+
 def strip_model_location_params(profile: PortableProfile) -> PortableProfile:
     """Remove model-location env vars and args from a profile in-place.
 
@@ -156,6 +185,7 @@ def filter_profiles(profiles: list[PortableProfile]) -> list[PortableProfile]:
     cleaned = []
     for p in profiles:
         p = strip_model_location_params(p)
+        p = strip_server_binding_params(p)
         # Drop profiles with no args — they add no value
         if not p.args:
             continue

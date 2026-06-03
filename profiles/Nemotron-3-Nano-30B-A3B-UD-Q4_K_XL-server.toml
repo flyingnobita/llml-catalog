@@ -4,7 +4,7 @@ schema_version = 2
 name = "Nemotron-3-Nano-30B-A3B-UD-Q4_K_XL-server"
 backend = "llama"
 model_hint = "NVIDIA Nemotron 3 Nano 30B-A3B"
-args = [ "--prio 3", "--min-p 0.01", "--temp 0.6", "--top-p 0.95", "--ctx-size 16384", "--port 8001" ]
+args = [ "--prio 3", "--min-p 0.01", "--temp 0.6", "--top-p 0.95", "--ctx-size 16384" ]
 model_org = "unsloth"
 profile_org = "unsloth"
 
