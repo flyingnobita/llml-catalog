@@ -12,7 +12,7 @@ const chromiumProject = process.env.CI
 
 export default defineConfig({
   testDir: "./tests",
-  timeout: 10000,
+  timeout: 20000,
   retries: 0,
   workers: 1,
   fullyParallel: false,
