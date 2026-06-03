@@ -1,5 +1,6 @@
 # Changelog
 
+- Jun-03, 2026 - 12:20 PM +0800 - [Smoke test fixes: keep Browse profile and Import links same-origin, add regression coverage, and make Contribute Contents links highlight the active hash section]
 - Jun-03, 2026 - 02:12 AM +0800 - [Launch hardening: replace the broken sample import URL, add immutable GitHub provenance links, repair contribution instructions, and publish root-domain browser-test coverage]
 - Jun-03, 2026 - 02:12 AM +0800 - [CI: run 178 Playwright tests against the root-domain preview before Pages deployment, use pre-installed Chrome on GitHub-hosted runners, and tolerate rate-limited live URL assertions]
 - Jun-02, 2026 - 09:40 PM +08:00 - Add one-line curl | sh installer script at llml.dev/install.sh and promote it in the homepage hero

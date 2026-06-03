@@ -136,7 +136,7 @@ const base = import.meta.env.BASE_URL;
 
       <!-- No results (hidden by default) -->
       <div id="no-results" style="display:none;padding:48px;text-align:center;color:var(--muted);font-family:var(--font-sans);font-size:14px">
-        No profiles match these filters. <a href={base + "/contribute"} style="color:var(--primary);text-decoration:underline">Open a PR for this combo →</a>
+        No profiles match these filters. <a href={`${base}contribute`} style="color:var(--primary);text-decoration:underline">Open a PR for this combo →</a>
       </div>
     </main>
   </div>
@@ -203,6 +203,16 @@ const base = import.meta.env.BASE_URL;
   var COMPARE_MIN = 2;
   var compareIds = [];
   var focusedRowIndex = -1;
+
+  function sitePath(route) {
+    var root = base || "/";
+    if (root.charAt(root.length - 1) !== "/") root += "/";
+    return root + route.replace(/^\/+/, "");
+  }
+
+  function profilePath(id) {
+    return sitePath("profile/" + id);
+  }
 
   function visibleRowEls() {
     var rows = Array.from(document.querySelectorAll(".result-row"));
@@ -330,7 +340,7 @@ const base = import.meta.env.BASE_URL;
     html += '<div style="background:var(--paper-2);border-bottom:1px solid var(--border);padding:16px"></div>';
     for (var i = 0; i < items.length; i++) {
       html += '<div style="background:var(--paper-2);border-bottom:1px solid var(--border);border-left:1px solid var(--border);padding:16px;display:flex;flex-direction:column;gap:6px">';
-      html += '<a href="' + base + '/profile/' + items[i].id + '" style="font:inherit;background:transparent;border:0;text-align:left;cursor:pointer;font-family:var(--font-sans);font-size:16px;font-weight:600;color:var(--ink);line-height:1.3;text-decoration:none">' + items[i].name + '</a>';
+      html += '<a href="' + profilePath(items[i].id) + '" style="font:inherit;background:transparent;border:0;text-align:left;cursor:pointer;font-family:var(--font-sans);font-size:16px;font-weight:600;color:var(--ink);line-height:1.3;text-decoration:none">' + items[i].name + '</a>';
       html += '<span style="font-family:var(--font-sans);font-size:13px;color:var(--muted);line-height:1.4">' + (items[i].fit || "") + '</span>';
       html += '</div>';
     }
@@ -360,7 +370,7 @@ const base = import.meta.env.BASE_URL;
 
     var actionsHtml = '';
     for (var i = 0; i < items.length; i++) {
-      actionsHtml += '<a href="' + base + '/profile/' + items[i].id + '" style="font:inherit;font-family:var(--font-sans);font-size:13px;font-weight:600;padding:8px 16px;border:1px solid var(--border);border-radius:var(--r-md);background:transparent;color:var(--ink);cursor:pointer;text-decoration:none;display:inline-block">Open ' + items[i].name.split(" — ")[0] + ' →</a>';
+      actionsHtml += '<a href="' + profilePath(items[i].id) + '" style="font:inherit;font-family:var(--font-sans);font-size:13px;font-weight:600;padding:8px 16px;border:1px solid var(--border);border-radius:var(--r-md);background:transparent;color:var(--ink);cursor:pointer;text-decoration:none;display:inline-block">Open ' + items[i].name.split(" — ")[0] + ' →</a>';
     }
     overlayActions.innerHTML = actionsHtml;
 
@@ -436,7 +446,7 @@ const base = import.meta.env.BASE_URL;
     var verifiedBadge = p.verified ? '<span style="font-family:var(--font-mono);font-size:11px;color:var(--success);flex:0 0 auto;white-space:nowrap">✓</span>' : '';
     return '<div class="result-row" data-index="' + idx + '" data-backend="' + p.backend + '" data-hardware="' + p.hardware + '" data-os="' + p.os + '" data-usecase="' + p.useCase + '" data-tags="' + (p.tags || []).join(",") + '" data-model-org="' + p.modelOrg + '" data-profile-org="' + p.profileOrg + '" data-verified="' + String(p.verified) + '" data-name="' + p.name + '" style="border-bottom:1px solid var(--border);padding:14px 0;display:grid;grid-template-columns:20px 1fr 120px 130px 100px 100px 110px;gap:16px;align-items:center">' +
       '<input type="checkbox" class="compare-check" data-id="' + p.id + '" style="accent-color:var(--primary);width:16px;height:16px" />' +
-      '<a href="' + base + '/profile/' + p.id + '" style="font:inherit;background:transparent;border:0;text-align:left;cursor:pointer;padding:0;min-width:0;text-decoration:none;color:inherit">' +
+      '<a href="' + profilePath(p.id) + '" style="font:inherit;background:transparent;border:0;text-align:left;cursor:pointer;padding:0;min-width:0;text-decoration:none;color:inherit">' +
         '<div style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap">' +
           '<strong style="font-family:var(--font-sans);font-size:15px;flex:1 1 auto;min-width:0">' + p.name + '</strong>' +
           verifiedBadge +
@@ -445,7 +455,7 @@ const base = import.meta.env.BASE_URL;
       '</a>' +
       '<span class="meta-line" style="font-family:var(--font-mono);font-size:12px;color:var(--muted)">' + p.backend + ' · ' + p.hardware + ' · ' + p.os + '</span>' +
       '<span class="updated-span" style="font-family:var(--font-mono);font-size:12px;color:var(--muted)">' + p.updated + '</span>' +
-      '<a href="' + base + '/profile/' + p.id + '" class="import-btn" style="font:inherit;font-family:var(--font-sans);font-size:13px;font-weight:600;padding:6px 12px;border:0;border-radius:var(--r-md);background:var(--primary);color:#fff;cursor:pointer;text-decoration:none;text-align:center;display:inline-block">Import</a>' +
+      '<a href="' + profilePath(p.id) + '" class="import-btn" style="font:inherit;font-family:var(--font-sans);font-size:13px;font-weight:600;padding:6px 12px;border:0;border-radius:var(--r-md);background:var(--primary);color:#fff;cursor:pointer;text-decoration:none;text-align:center;display:inline-block">Import</a>' +
     '</div>';
   }
 

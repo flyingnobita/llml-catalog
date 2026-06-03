@@ -27,6 +27,23 @@ test.describe("Contribute page TOC anchors", () => {
       expect(page.url()).toContain(`#${id}`);
     });
   }
+
+  test("clicking Validation makes its TOC link and section active", async ({ page }) => {
+    await page.goto("./contribute");
+    const link = page.locator('a[href="#validation"]');
+    await link.click();
+
+    await expect(link).toHaveAttribute("aria-current", "location");
+    await expect(page.locator("#validation")).toHaveClass(/is-active/);
+    await expect(page.locator('a[href="#what-belongs-in-the-catalog"]')).not.toHaveAttribute("aria-current", "location");
+  });
+
+  test("direct hash URL highlights the matching section", async ({ page }) => {
+    await page.goto("./contribute/#validation");
+
+    await expect(page.locator('a[href="#validation"]')).toHaveAttribute("aria-current", "location");
+    await expect(page.locator("#validation")).toHaveClass(/is-active/);
+  });
 });
 
 test.describe("Contribute page PR flow content", () => {

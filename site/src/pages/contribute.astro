@@ -46,7 +46,12 @@ const base = import.meta.env.BASE_URL;
             { label: "PR flow", id: "pr-flow" },
           ].map(({ label, id }, i) => (
             <li>
-              <a href={`#${id}`} style={`color:${i === 0 ? "var(--ink)" : "var(--muted)"};border-bottom:${i === 0 ? "1px solid var(--ink)" : "none"};text-decoration:none`}>
+              <a
+                href={`#${id}`}
+                data-toc-link={id}
+                aria-current={i === 0 ? "location" : undefined}
+                style={`color:${i === 0 ? "var(--ink)" : "var(--muted)"};border-bottom:${i === 0 ? "1px solid var(--ink)" : "none"};text-decoration:none`}
+              >
                 {String(i + 1).padStart(2, "0")} · {label}
               </a>
             </li>
@@ -54,7 +59,7 @@ const base = import.meta.env.BASE_URL;
         </ol>
       </aside>
       <article style="display:flex;flex-direction:column;gap:32px">
-        <div id="what-belongs-in-the-catalog">
+        <div id="what-belongs-in-the-catalog" class="contribute-section is-active">
           <h2 style="font-size:30px;margin:0 0 12px">What belongs in the catalog</h2>
           <p style="font-size:16px;line-height:1.6;max-width:62ch;margin:0">
             Profiles for <code class="mono">llama.cpp</code>, <code class="mono">vLLM</code>, <code class="mono">Ollama</code>, and{" "}
@@ -63,7 +68,7 @@ const base = import.meta.env.BASE_URL;
             excluded — <code class="mono">llml</code> supplies them at launch.
           </p>
         </div>
-        <div id="what-a-strong-profile-includes">
+        <div id="what-a-strong-profile-includes" class="contribute-section">
           <h2 style="font-size:30px;margin:0 0 12px">What a strong profile includes</h2>
           <ul style="margin:0;padding-left:18px;font-size:16px;line-height:1.7;max-width:62ch">
             <li>A <strong>name</strong> that reads as a setup, not a brand: <code class="mono">balanced-q4</code> beats <code class="mono">my-best-config</code>.</li>
@@ -72,7 +77,7 @@ const base = import.meta.env.BASE_URL;
             <li>Args as panel-row strings: <code class="mono">"--ctx-size 4096"</code>, not pre-split tokens.</li>
           </ul>
         </div>
-        <div id="validation">
+        <div id="validation" class="contribute-section">
           <h2 style="font-size:30px;margin:0 0 12px">Validation</h2>
           <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden;font-family:var(--font-mono);font-size:13px">
             {[
@@ -89,7 +94,7 @@ const base = import.meta.env.BASE_URL;
             ))}
           </div>
         </div>
-        <div id="pr-flow">
+        <div id="pr-flow" class="contribute-section">
           <h2 style="font-size:30px;margin:0 0 12px">PR flow</h2>
           <ol style="margin:0;padding-left:18px;font-size:16px;line-height:1.7;max-width:62ch">
             <li>Fork <code class="mono">flyingnobita/llml-catalog</code></li>
@@ -103,7 +108,60 @@ const base = import.meta.env.BASE_URL;
   </section>
 </BaseLayout>
 
+<script>
+  var tocLinks = Array.from(document.querySelectorAll("[data-toc-link]"));
+
+  function setActiveSection(id) {
+    tocLinks.forEach(function(link) {
+      var isActive = link.getAttribute("data-toc-link") === id;
+      link.style.color = isActive ? "var(--ink)" : "var(--muted)";
+      link.style.borderBottom = isActive ? "1px solid var(--ink)" : "none";
+      if (isActive) {
+        link.setAttribute("aria-current", "location");
+      } else {
+        link.removeAttribute("aria-current");
+      }
+    });
+
+    document.querySelectorAll(".contribute-section").forEach(function(section) {
+      section.classList.toggle("is-active", section.id === id);
+    });
+  }
+
+  function activeIdFromHash() {
+    var hashId = decodeURIComponent(window.location.hash.replace(/^#/, ""));
+    if (hashId && document.getElementById(hashId)) return hashId;
+    return tocLinks[0] ? tocLinks[0].getAttribute("data-toc-link") : "";
+  }
+
+  tocLinks.forEach(function(link) {
+    link.addEventListener("click", function() {
+      var id = link.getAttribute("data-toc-link");
+      if (id) setActiveSection(id);
+    });
+  });
+  window.addEventListener("hashchange", function() {
+    setActiveSection(activeIdFromHash());
+  });
+  setActiveSection(activeIdFromHash());
+</script>
+
 <style is:global>
+  .contribute-section {
+    border-radius: var(--r-md);
+    box-shadow: inset 3px 0 0 transparent;
+    margin: -12px -16px;
+    padding: 12px 16px;
+    transition:
+      background-color var(--d-short) var(--ease-move),
+      box-shadow var(--d-short) var(--ease-move);
+  }
+
+  .contribute-section.is-active {
+    background: color-mix(in oklch, var(--primary) 7%, transparent);
+    box-shadow: inset 3px 0 0 var(--primary);
+  }
+
   /* ---- contribute mobile (≤700px) ---- */
   @media (max-width: 700px) {
     /* Hero — stack grid, shrink heading */
