@@ -24,8 +24,8 @@ test.describe("Announcement bar — default visibility", () => {
   test("bar contains the growing-catalog message", async ({ page }) => {
     await page.goto(HOME);
     const bar = page.locator("#announce-bar");
-    await expect(bar).toContainText("actively curated");
     await expect(bar).toContainText("regularly");
+    await expect(bar).toContainText("watch the repo");
   });
 
   test("'Watch the repo' link points to the llml-catalog GitHub repo", async ({ page }) => {
