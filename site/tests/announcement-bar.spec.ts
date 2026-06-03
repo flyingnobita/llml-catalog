@@ -25,20 +25,20 @@ test.describe("Announcement bar — default visibility", () => {
     await page.goto(HOME);
     const bar = page.locator("#announce-bar");
     await expect(bar).toContainText("regularly");
-    await expect(bar).toContainText("watch the repo");
+    await expect(bar).toContainText("watch the llml repo");
   });
 
-  test("'Watch the repo' link points to the llml-catalog GitHub repo", async ({ page }) => {
+  test("'Watch the llml repo' link points to the llml GitHub repo", async ({ page }) => {
     await page.goto(HOME);
-    const link = page.locator('#announce-bar a[href*="llml-catalog"]');
+    const link = page.locator('#announce-bar a[href*="flyingnobita/llml"]');
     await expect(link).toBeVisible();
     const href = await link.getAttribute("href");
-    expect(href).toBe("https://github.com/flyingnobita/llml-catalog");
+    expect(href).toBe("https://github.com/flyingnobita/llml");
   });
 
   test("link opens in a new tab (target=_blank with noopener)", async ({ page }) => {
     await page.goto(HOME);
-    const link = page.locator('#announce-bar a[href*="llml-catalog"]');
+    const link = page.locator('#announce-bar a[href*="flyingnobita/llml"]');
     await expect(link).toHaveAttribute("target", "_blank");
     const rel = await link.getAttribute("rel");
     expect(rel).toContain("noopener");

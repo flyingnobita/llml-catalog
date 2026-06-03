@@ -21,7 +21,7 @@
   aria-label="Site announcement"
   style="background:var(--paper-2);border-bottom:1px solid var(--border);padding:10px 32px"
 >
-  <div style="max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:10px">
+  <div style="max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:10px;position:relative">
     <!-- Lucide 'info' icon, 16px, 1.5px stroke, primary-colored as a signal glyph -->
     <svg
       width="16" height="16" viewBox="0 0 24 24"
@@ -34,21 +34,21 @@
       <line x1="12" y1="8" x2="12.01" y2="8"/>
     </svg>
 
-    <p style="margin:0;font-family:var(--font-sans);font-size:13px;color:var(--ink);flex:1;min-width:0;line-height:1.5">
+    <p style="margin:0;font-family:var(--font-sans);font-size:13px;color:var(--ink);line-height:1.5;text-align:center">
       New profiles added regularly &mdash;
       <a
-        href="https://github.com/flyingnobita/llml-catalog"
+        href="https://github.com/flyingnobita/llml"
         style="color:var(--ink);text-decoration:underline"
         target="_blank"
         rel="noopener noreferrer"
-      >watch the repo &#x2197;</a>
+      >watch the llml repo &#x2197;</a>
       to get notified.
     </p>
 
     <button
       id="announce-dismiss"
       aria-label="Dismiss announcement"
-      style="font:inherit;background:transparent;border:0;cursor:pointer;padding:4px 8px;color:var(--muted);font-size:18px;line-height:1;flex-shrink:0"
+      style="font:inherit;background:transparent;border:0;cursor:pointer;padding:4px 8px;color:var(--muted);font-size:18px;line-height:1;position:absolute;right:0"
     >&#x00D7;</button>
   </div>
 </div>
