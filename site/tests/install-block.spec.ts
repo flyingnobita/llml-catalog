@@ -68,6 +68,13 @@ test.describe("InstallBlock tab switching", () => {
 // Test 42: Run tab copy button
 // ---------------------------------------------------------------------------
 test.describe("Run tab copy", () => {
+  test("profile detail exposes the import anchor", async ({ page }) => {
+    await page.goto(`${PROFILE_URL}#import`);
+    const importSection = page.locator("#import");
+    await expect(importSection).toBeVisible();
+    await expect(installBlock(page)).toBeVisible();
+  });
+
   test("copy button present on Run tab", async ({ page }) => {
     await page.goto(PROFILE_URL);
     const runPanel = page.locator(".ib-panel[data-panel='run']");

@@ -38,7 +38,7 @@ const base = import.meta.env.BASE_URL;
           <Badge tone="info">Updated {p.updated}</Badge>
         </div>
       </div>
-      <aside style="display:flex;flex-direction:column;gap:14px;padding-top:32px">
+      <aside id="import" style="display:flex;flex-direction:column;gap:14px;padding-top:32px;scroll-margin-top:120px">
         <span class="eyebrow">Import</span>
         <InstallBlock profile={p} />
         <p style="font-size:13px;color:var(--muted);line-height:1.5;margin:0">
