@@ -165,10 +165,12 @@ test.describe("Section anchors", () => {
     const section = page.locator("#how-you-know-it-matches-your-machine");
     await expect(section).toBeVisible();
 
+    // Partial-visibility check: section top is above the bottom of the viewport
+    // and section bottom is below the top (handles sticky-nav offset pushing r.top < 0).
     await expect.poll(async () => {
       return section.evaluate((el: HTMLElement) => {
         const r = el.getBoundingClientRect();
-        return r.top >= 0 && r.top < window.innerHeight;
+        return r.top < window.innerHeight && r.bottom > 0;
       });
     }).toBe(true);
   });
