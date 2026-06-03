@@ -165,11 +165,12 @@ test.describe("Section anchors", () => {
     const section = page.locator("#how-you-know-it-matches-your-machine");
     await expect(section).toBeVisible();
 
-    const inView = await section.evaluate((el: HTMLElement) => {
-      const r = el.getBoundingClientRect();
-      return r.top >= 0 && r.top < window.innerHeight;
-    });
-    expect(inView).toBe(true);
+    await expect.poll(async () => {
+      return section.evaluate((el: HTMLElement) => {
+        const r = el.getBoundingClientRect();
+        return r.top >= 0 && r.top < window.innerHeight;
+      });
+    }).toBe(true);
   });
 });
 
