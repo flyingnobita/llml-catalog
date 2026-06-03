@@ -457,7 +457,11 @@ const base = import.meta.env.BASE_URL;
         '</div>' +
         '<div style="font-size:13px;color:var(--ink);margin-top:2px">' + p.fit + '</div>' +
       '</a>' +
-      '<span class="meta-line" style="font-family:var(--font-mono);font-size:12px;color:var(--muted)">' + p.backend + ' · ' + p.hardware + ' · ' + p.os + '</span>' +
+      '<span class="meta-group" style="display:contents">' +
+        '<span class="meta-backend" style="font-family:var(--font-mono);font-size:12px;color:var(--muted)">' + p.backend + '</span>' +
+        '<span class="meta-hardware" style="font-family:var(--font-mono);font-size:12px;color:var(--muted)">' + p.hardware + '</span>' +
+        '<span class="meta-os" style="font-family:var(--font-mono);font-size:12px;color:var(--muted)">' + p.os + '</span>' +
+      '</span>' +
       '<span class="updated-span" style="font-family:var(--font-mono);font-size:12px;color:var(--muted)">' + p.updated + '</span>' +
       '<a href="' + profileImportPath(p.id) + '" class="import-btn" style="font:inherit;font-family:var(--font-sans);font-size:13px;font-weight:600;padding:6px 12px;border:0;border-radius:var(--r-md);background:var(--primary);color:#fff;cursor:pointer;text-decoration:none;text-align:center;display:inline-block">Import</a>' +
     '</div>';
@@ -856,11 +860,19 @@ const base = import.meta.env.BASE_URL;
       margin-top: 4px !important;
     }
 
-    /* Meta line -- backend / hardware / os */
-    .result-row > .meta-line {
+    /* Meta group -- backend / hardware / os as one combined line on mobile */
+    .result-row .meta-group {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 0 !important;
       order: 3;
+      font-family: var(--font-mono) !important;
       font-size: 12px !important;
       color: var(--muted) !important;
+    }
+    .result-row .meta-hardware::before,
+    .result-row .meta-os::before {
+      content: " \00B7 ";
     }
 
     /* Updated date */
