@@ -214,7 +214,7 @@ test.describe("Browse page (/browse) — mobile responsive", () => {
     await page.locator(".compare-check").nth(1).check();
     await page.locator("#compare-open").click();
     await expect(page.locator("#compare-overlay")).toBeVisible();
-    await page.locator("#compare-backdrop").click();
+    await page.locator("#compare-backdrop").click({ position: { x: 10, y: 10 } });
     await expect(page.locator("#compare-overlay")).not.toBeVisible();
   });
 

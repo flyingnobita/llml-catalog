@@ -94,7 +94,7 @@ test.describe("Compare tray", () => {
     await page.locator(".compare-check").nth(0).check();
     await page.locator(".compare-check").nth(1).check();
     await page.locator("#compare-open").click();
-    await page.locator("#compare-backdrop").click();
+    await page.locator("#compare-backdrop").click({ position: { x: 10, y: 10 } });
     await page.waitForTimeout(350);
     await expect(page.locator("#compare-overlay")).not.toBeVisible();
   });
