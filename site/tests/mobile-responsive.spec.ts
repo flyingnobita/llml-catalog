@@ -10,7 +10,7 @@ async function expectNoHorizontalOverflow(page: Parameters<typeof test>[1]) {
 }
 
 // Use the first profile (alphabetically) for profile detail tests
-const PROFILE_ID = "gemma-4-26b-a4b-thinking-q4_k_xl";
+const PROFILE_ID = "gemma-4-26b-a4b-31b-thinking";
 
 /* ------------------------------------------------------------------ */
 /*  index.astro                                                        */
