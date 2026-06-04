@@ -14,7 +14,7 @@ const base = import.meta.env.BASE_URL;
 const SITE_URL = "https://llml.dev";
 const DEFAULT_DESCRIPTION = "llml finds your local models, detects your runtimes, and launches them with a saved profile. Browse importable TOML profiles tuned for specific models, hardware, and backends.";
 const metaDescription = description || DEFAULT_DESCRIPTION;
-const ogTitle = `${title} · LLM Launcher`;
+const ogTitle = title.includes("LLM Launcher") ? title : `${title} · LLM Launcher`;
 const ogImage = `${SITE_URL}/llml-screenshot.png`;
 const isBrowse = Astro.url.pathname === base + "browse" || Astro.url.pathname === base + "browse/";
 ---
