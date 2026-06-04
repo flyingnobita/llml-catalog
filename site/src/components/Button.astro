@@ -5,8 +5,9 @@ export interface Props {
   href?: string;
   disabled?: boolean;
   class?: string;
+  [key: string]: any;
 }
-const { variant = "primary", href, disabled, class: className } = Astro.props;
+const { variant = "primary", href, disabled, class: className, ...rest } = Astro.props;
 const v: Record<string, { bg: string; fg: string; bd: string }> = {
   primary: { bg: "var(--primary)", fg: "#fff", bd: "var(--primary)" },
   secondary: { bg: "transparent", fg: "var(--ink)", bd: "var(--border)" },
@@ -20,7 +21,7 @@ const Tag = href ? "a" : "button";
 
 
 {Tag === "a" ? (
-  <a href={href} class={className} style={style}><slot /></a>
+  <a href={href} class={className} style={style} {...rest}><slot /></a>
 ) : (
-  <button disabled={disabled} class={className} style={style}><slot /></button>
+  <button disabled={disabled} class={className} style={style} {...rest}><slot /></button>
 )}

@@ -34,14 +34,14 @@ const sampleImport = "llml import https://llml.dev/profiles/Qwen3.6-enable-think
         <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
           <div style="background:var(--surface-inverse);color:var(--surface-inverse-fg);border-radius:8px;padding:14px 16px;display:flex;align-items:center;gap:12px;font-family:var(--font-mono);font-size:13px">
             <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">$ curl -fsSL https://llml.dev/install.sh | sh</span>
-            <button class="hero-copy-btn no-js-hidden" data-cmd="curl -fsSL https://llml.dev/install.sh | sh" style="font:inherit;font-family:var(--font-sans);font-size:13px;font-weight:600;background:transparent;color:var(--surface-inverse-fg);border:0;border-left:1px solid var(--border);padding:0 0 0 14px;cursor:pointer;white-space:nowrap">Copy</button>
+            <button class="hero-copy-btn no-js-hidden" data-cmd="curl -fsSL https://llml.dev/install.sh | sh" data-umami-event="home-install-copy" style="font:inherit;font-family:var(--font-sans);font-size:13px;font-weight:600;background:transparent;color:var(--surface-inverse-fg);border:0;border-left:1px solid var(--border);padding:0 0 0 14px;cursor:pointer;white-space:nowrap">Copy</button>
           </div>
           <div style="font-size:12px;color:var(--muted);font-family:var(--font-sans);overflow-wrap:break-word;word-break:break-all">
             Alternatives: Homebrew cask (macOS), Scoop/Winget (Windows), or Go. See <a href="https://github.com/flyingnobita/llml#install" style="color:inherit;text-decoration:underline">Install instructions ↗</a>
           </div>
           <div style="display:flex;gap:12px">
-            <Button variant="primary" href="https://github.com/flyingnobita/llml">Install llml ↗</Button>
-            <Button variant="secondary" href={`${base}browse`}>Browse profiles →</Button>
+            <Button variant="primary" href="https://github.com/flyingnobita/llml" data-umami-event="home-install-github">Install llml ↗</Button>
+            <Button variant="secondary" href={`${base}browse`} data-umami-event="home-browse-cta">Browse profiles →</Button>
           </div>
         </div>
       </div>
@@ -130,7 +130,7 @@ const sampleImport = "llml import https://llml.dev/profiles/Qwen3.6-enable-think
           {profileCount >= 3 ? "Recently updated" : "Profiles"}
         </h2>
         {profileCount >= 3 && (
-          <a href={`${base}browse`} style="font:inherit;font-family:var(--font-sans);font-size:14px;cursor:pointer;color:var(--ink);border-bottom:1px solid var(--ink);text-decoration:none">
+          <a href={`${base}browse`} data-umami-event="home-browse-all" style="font:inherit;font-family:var(--font-sans);font-size:14px;cursor:pointer;color:var(--ink);border-bottom:1px solid var(--ink);text-decoration:none">
             Browse all {profileCount} profiles →
           </a>
         )}
@@ -143,7 +143,7 @@ const sampleImport = "llml import https://llml.dev/profiles/Qwen3.6-enable-think
       ) : (
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
           {PROFILES.slice(0, 6).map((p) => (
-            <a href={`${base}profile/${p.id}`} style="font:inherit;text-align:left;background:var(--paper);border:1px solid var(--border);border-radius:8px;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;transition:transform var(--d-micro)">
+            <a href={`${base}profile/${p.id}`} data-umami-event="home-profile-click" data-umami-event-profile={p.id} style="font:inherit;text-align:left;background:var(--paper);border:1px solid var(--border);border-radius:8px;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;transition:transform var(--d-micro)">
               <div style="display:flex;justify-content:space-between;align-items:baseline">
                 <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase">{p.backend}</span>
                 {p.verified ? (
@@ -195,8 +195,8 @@ const sampleImport = "llml import https://llml.dev/profiles/Qwen3.6-enable-think
         <p style="color:var(--muted);font-size:16px;margin:0">Share the args your machine and model converged on. PR-only. No accounts.</p>
       </div>
       <div style="display:flex;gap:12px">
-        <Button variant="primary" href={`${base}contribute`} class="contribute-btn">Read the format</Button>
-        <Button variant="secondary" href="https://github.com/flyingnobita/llml-catalog" class="contribute-btn-ghost">Open a PR ↗</Button>
+        <Button variant="primary" href={`${base}contribute`} class="contribute-btn" data-umami-event="home-contribute-cta">Read the format</Button>
+        <Button variant="secondary" href="https://github.com/flyingnobita/llml-catalog" class="contribute-btn-ghost" data-umami-event="home-open-pr">Open a PR ↗</Button>
       </div>
     </div>
   </section>

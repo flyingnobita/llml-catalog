@@ -28,16 +28,16 @@ const defaultOS = "mac";
 
   <!-- Tab bar -->
   <div class="ib-tabs" role="tablist">
-    <button class="ib-tab active" data-tab="run" role="tab" aria-selected="true">Run</button>
-    <button class="ib-tab" data-tab="install" role="tab" aria-selected="false">Install + run</button>
-    <button class="ib-tab" data-tab="download" role="tab" aria-selected="false">Download</button>
+    <button class="ib-tab active" data-tab="run" role="tab" aria-selected="true" data-umami-event="profile-install-tab" data-umami-event-tab="run">Run</button>
+    <button class="ib-tab" data-tab="install" role="tab" aria-selected="false" data-umami-event="profile-install-tab" data-umami-event-tab="install">Install + run</button>
+    <button class="ib-tab" data-tab="download" role="tab" aria-selected="false" data-umami-event="profile-install-tab" data-umami-event-tab="download">Download</button>
   </div>
 
   <!-- Run tab -->
   <div class="ib-panel active" data-panel="run">
     <div class="ib-cmd">
       <span class="ib-cmd-text"><span class="ib-prompt">$</span> {profile.importCmd}</span>
-      <button class="ib-copy" data-copy={profile.importCmd}>Copy</button>
+      <button class="ib-copy" data-copy={profile.importCmd} data-umami-event="profile-install-copy" data-umami-event-panel="run">Copy</button>
     </div>
   </div>
 
@@ -45,7 +45,7 @@ const defaultOS = "mac";
   <div class="ib-panel" data-panel="install">
     <div class="ib-os-tabs" role="tablist">
       {osTabs.map((os) => (
-        <button class={`ib-os-tab${os.id === defaultOS ? " active" : ""}`} data-os={os.id} role="tab" aria-selected={os.id === defaultOS ? "true" : "false"}>
+        <button class={`ib-os-tab${os.id === defaultOS ? " active" : ""}`} data-os={os.id} role="tab" aria-selected={os.id === defaultOS ? "true" : "false"} data-umami-event="profile-install-os" data-umami-event-os={os.id}>
           {os.label}
         </button>
       ))}
@@ -60,7 +60,7 @@ const defaultOS = "mac";
               <div><span class="ib-prompt">$</span> {installCmd}</div>
               <div><span class="ib-prompt">$</span> {profile.importCmd}</div>
             </div>
-            <button class="ib-copy" data-copy={fullCmd}>Copy</button>
+            <button class="ib-copy" data-copy={fullCmd} data-umami-event="profile-install-copy" data-umami-event-panel={`install-${os.id}`}>Copy</button>
           </div>
         </div>
       );
@@ -70,8 +70,8 @@ const defaultOS = "mac";
   <!-- Download tab -->
   <div class="ib-panel" data-panel="download">
     <div class="ib-download-row">
-      <a href={profile.downloadUrl} download class="ib-download-btn">Download .toml</a>
-      <button class="ib-preview-toggle" data-action="toggle-preview">Show TOML</button>
+      <a href={profile.downloadUrl} download class="ib-download-btn" data-umami-event="profile-toml-download">Download .toml</a>
+      <button class="ib-preview-toggle" data-action="toggle-preview" data-umami-event="profile-toml-preview">Show TOML</button>
     </div>
     <pre class="ib-toml-preview" data-toml-preview hidden></pre>
   </div>
