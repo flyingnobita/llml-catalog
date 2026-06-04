@@ -1,5 +1,6 @@
 # Changelog
 
+- Jun-04, 2026 - 04:37 PM +0800 - Add Open Graph / Twitter Card meta tags and sitemap (via @astrojs/sitemap) + robots.txt for SEO and social sharing
 - Jun-04, 2026 - 07:49 AM UTC - Add Umami Cloud analytics: page-view tracking script in BaseLayout and ~30 custom click events across all pages (install/copy CTAs, profile interactions, filter usage, compare flow, contribution links)
 - Jun-03, 2026 - 05:20 AM UTC - Add dismissible "catalog is growing" announcement bar (paper-2 strip under nav, localStorage persistence, no-flash pre-paint hide) linking to GitHub Watch, plus a README note about ongoing profile curation
 - Jun-03, 2026 - 12:33 PM +0800 - [Browse Import CTA now jumps directly to the profile import block while keeping profile names linked to the full profile page]

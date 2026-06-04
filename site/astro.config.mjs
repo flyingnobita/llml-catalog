@@ -1,4 +1,5 @@
 import { defineConfig } from "astro/config";
+import sitemap from "@astrojs/sitemap";
 import { readFileSync, readdirSync, mkdirSync, copyFileSync, existsSync } from "fs";
 import { resolve, dirname, basename } from "path";
 import { fileURLToPath } from "url";
@@ -65,6 +66,7 @@ export default defineConfig({
   build: {
     assets: "assets",
   },
+  integrations: [sitemap()],
   vite: {
     plugins: [profilesPlugin()],
   },
