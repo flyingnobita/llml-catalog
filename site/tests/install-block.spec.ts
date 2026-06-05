@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-const PROFILE_URL = "./profile/nemotron-3-nano-4b-q8_0/";
+const PROFILE_URL = "./profile/gemma-4-26b-a4b-31b-thinking/";
 
 function installBlock(page: any) {
   return page.locator("[data-component='install-block']");
