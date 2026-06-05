@@ -45,7 +45,7 @@ RULES:
 2. Backend mapping: llama.cpp->llama, vLLM->vllm, Ollama->ollama, KoboldCpp->koboldcpp
 3. model_hint: model name from page heading
 4. EXCLUDE model-location params (--model, -m, --hf-repo, etc.) AND server-binding/identity params (--alias, -a, --port, --host, --served-model-name) — the launcher owns these at runtime.
-5. use_case.primary: chat|completion|tool-calling|embedding|eval|batch
+5. use_case.primary: array using only canonical values general|eval. Put workload details such as tool-calling, coding, image, audio, throughput, or long-context in use_case.tags.
 6. hardware.class: cpu|gpu|mixed
 7. Name profiles as ModelFamily[-Variant][-mode][-quantization]:
    - ModelFamily: from H1 (e.g. "Qwen3.6", "gemma-4", "Kimi-K2.6", "GLM-5.1", "Nemotron-3-Nano-Omni").

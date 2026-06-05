@@ -1,14 +1,35 @@
-"""Pydantic schema for portable LLM parameter profiles (schema_version = 2)."""
+"""Pydantic schema for portable LLM parameter profiles (schema_version = 3)."""
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
+
+CANONICAL_PRIMARY = {"general", "eval"}
+PRIMARY_ALIASES = {
+    "chat": "general",
+    "assistant": "general",
+    "evaluation": "eval",
+}
 
 
 class ProfileUseCase(BaseModel):
-    primary: str = Field(
-        "",
-        description="chat, completion, tool-calling, embedding, eval, or batch",
+    primary: list[str] = Field(
+        default_factory=list,
+        description="Canonical primary use cases: general or eval",
     )
     tags: list[str] = Field(default_factory=list)
+
+    @field_validator("primary", mode="before")
+    @classmethod
+    def normalize_primary(cls, value):
+        if value in (None, ""):
+            return []
+        raw_values = value if isinstance(value, list) else [value]
+        normalized: list[str] = []
+        for raw in raw_values:
+            key = str(raw).strip().lower()
+            primary = PRIMARY_ALIASES.get(key, key)
+            if primary in CANONICAL_PRIMARY and primary not in normalized:
+                normalized.append(primary)
+        return normalized
 
 
 class ProfileHardware(BaseModel):
@@ -46,5 +67,5 @@ class PortableProfile(BaseModel):
 
 
 class ProfileDocument(BaseModel):
-    schema_version: int = 2
+    schema_version: int = 3
     profiles: list[PortableProfile]

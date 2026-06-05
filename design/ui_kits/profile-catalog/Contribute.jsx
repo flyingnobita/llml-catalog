@@ -1,6 +1,6 @@
 // Contribution / docs page.
 function Contribute() {
-  const tomlSample = `schema_version = 2
+  const tomlSample = `schema_version = 3
 
 [[profiles]]
 name = "balanced-q4"
@@ -13,7 +13,7 @@ args = [
   "--flashattention",
 ]
 
-use_case.primary = "completion"
+use_case.primary = ["general"]
 use_case.tags    = ["interactive", "coding"]
 
 hardware.class       = "gpu"
@@ -102,7 +102,7 @@ hardware.notes       = "Tested on RTX 3090, CUDA 12.4, Ubuntu 24.04."`;
               <h2 style={{ fontSize: 30, marginBottom: 12 }}>Validation</h2>
               <div style={{ border: "1px solid var(--border)", borderRadius: 8, overflow: "hidden", fontFamily: "var(--font-mono)", fontSize: 13 }}>
                 {[
-                  ["schema_version == 2", "required"],
+                  ["schema_version == 3", "required"],
                   ["backend ∈ {llama, vllm, ollama, koboldcpp}", "required"],
                   ["use_case.primary ∈ canonical set", "warn"],
                   ["model-location params absent from args", "required"],

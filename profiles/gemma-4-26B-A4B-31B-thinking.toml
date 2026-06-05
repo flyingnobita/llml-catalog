@@ -14,7 +14,7 @@ model_org = "unsloth"
 profile_org = "unsloth"
 
 [profiles.use_case]
-primary = ["chat"]
+primary = ["general"]
 tags = ["thinking", "coding", "tool-calling", "agentic"]
 
 [profiles.hardware]

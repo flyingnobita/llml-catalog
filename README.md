@@ -13,10 +13,10 @@ A **profile** is a TOML file that captures the exact args and env vars someone c
 
 ## Profile format
 
-Profiles use `schema_version = 2`. A minimal profile looks like:
+Profiles use `schema_version = 3`. A minimal profile looks like:
 
 ```toml
-schema_version = 2
+schema_version = 3
 
 [[profiles]]
 name = "llama-3-8b-q4-rtx4090"
@@ -25,8 +25,8 @@ model_hint = "Meta-Llama-3-8B-Instruct.Q4_K_M.gguf"
 args = [ "--n-gpu-layers 99", "--ctx-size 8192" ]
 
 [profiles.use_case]
-primary = "chat"
-tags = [ "general" ]
+primary = [ "general" ]
+tags = [ "interactive" ]
 
 [profiles.hardware]
 class = "gpu"
@@ -46,6 +46,7 @@ That's it. No accounts, no signup — just a TOML file and a pull request.
 
 Before opening a PR, check that:
 - `backend`, `model_hint`, and `hardware.class` are set
+- `use_case.primary`, when set, uses `general` or `eval`
 - `hardware.min_vram_gb` matches what your config actually uses
 - `hardware.notes` names the real machine you tested on
 - The filename is descriptive

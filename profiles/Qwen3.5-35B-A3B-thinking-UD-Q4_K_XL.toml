@@ -9,7 +9,7 @@ model_org = "unsloth"
 profile_org = "unsloth"
 
 [profiles.use_case]
-primary = ["chat"]
+primary = ["general"]
 tags = [ "thinking" ]
 
 [profiles.hardware]

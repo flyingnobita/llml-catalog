@@ -244,12 +244,12 @@ test.describe("Download tab", () => {
 // Test 46: TOML preview toggle
 // ---------------------------------------------------------------------------
 
-const MOCK_TOML = String.raw`schema_version = 2
+const MOCK_TOML = String.raw`schema_version = 3
 
 [[profiles]]
 name = "Test-Profile-Q4_K_M"
 backend = "llama"
-use_case = { primary = "chat" }
+use_case = { primary = ["general"] }
 hardware = { class = "gpu" }
 `;
 

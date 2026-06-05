@@ -75,7 +75,7 @@ test.describe("Contribute page TOML", () => {
     await expect(pre).toBeVisible();
 
     // Core schema
-    await expect(pre).toContainText("schema_version = 2");
+    await expect(pre).toContainText("schema_version = 3");
     await expect(pre).toContainText("[[profiles]]");
 
     // Profile metadata
@@ -88,7 +88,7 @@ test.describe("Contribute page TOML", () => {
     await expect(pre).toContainText("--contextsize 16384");
 
     // Use case
-    await expect(pre).toContainText("completion");
+    await expect(pre).toContainText('use_case.primary = ["general"]');
     await expect(pre).toContainText("interactive");
 
     // Hardware

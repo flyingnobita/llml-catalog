@@ -13,7 +13,7 @@ runs against the right model on the right backend.
 
 The **profile catalog** site documented in this design system is the portable,
 shareable layer on top of that: a browsable registry of TOML-based parameter
-profiles (`schema_version = 2`) that users can import into their local `llml`
+profiles (`schema_version = 3`) that users can import into their local `llml`
 install. Every profile encodes a backend, a model hint, runtime args/env, and
 structured `use_case` + `hardware` metadata so the catalog can answer one
 question fast: **"will this profile run well on my machine?"**

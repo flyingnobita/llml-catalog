@@ -9,8 +9,8 @@ model_org = "unsloth"
 profile_org = "unsloth"
 
 [profiles.use_case]
-primary = ["tool-calling"]
-tags = [ "moe", "reasoning" ]
+primary = ["general"]
+tags = ["tool-calling", "moe", "reasoning" ]
 
 [profiles.hardware]
 class = "mixed"

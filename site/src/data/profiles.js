@@ -19,6 +19,10 @@ export const INSTALL_COMMANDS = {
   windows: "scoop bucket add flyingnobita https://github.com/flyingnobita/scoop-bucket && scoop install flyingnobita/llml",
 };
 
+function shellQuote(s) {
+  return `'${String(s).replace(/'/g, "'\\''")}'`;
+}
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -32,7 +36,7 @@ function slugify(name) {
 }
 
 function titleCase(s) {
-  if (!s) return "Chat";
+  if (!s) return "General";
   return s
     .split(/[-\s]+/)
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
@@ -41,7 +45,7 @@ function titleCase(s) {
 
 function primaryUseCaseLabel(primary) {
   const value = Array.isArray(primary) ? primary[0] : primary;
-  return titleCase(value || "chat");
+  return titleCase(value || "general");
 }
 
 const BACKEND_ALIASES = {
@@ -99,10 +103,35 @@ function buildGitInfo() {
       const parts = restStr.split("|");
       const updated = parts[0] || "unknown";
       const author = parts[1] || "unknown";
+      let resolvedCommit = commit || "?";
+      let resolvedUpdated = updated;
+      let resolvedAuthor = author;
+      if (resolvedCommit && resolvedCommit !== "?") {
+        try {
+          const containingRemotes = execSync(
+            `git branch -r --contains ${shellQuote(resolvedCommit)}`,
+            { cwd: REPO_ROOT, encoding: "utf-8", timeout: 3000 }
+          ).trim();
+          if (!containingRemotes) {
+            const remoteOut = execSync(
+              `git log -1 --format='%H|%cs|%an' origin/main -- ${shellQuote(`profiles/${filename}`)}`,
+              { cwd: REPO_ROOT, encoding: "utf-8", timeout: 3000 }
+            ).trim();
+            if (remoteOut) {
+              const [remoteCommit, remoteUpdated, remoteAuthor] = remoteOut.split("|");
+              resolvedCommit = remoteCommit || resolvedCommit;
+              resolvedUpdated = remoteUpdated || resolvedUpdated;
+              resolvedAuthor = remoteAuthor || resolvedAuthor;
+            }
+          }
+        } catch {
+          // Keep local commit metadata when remote provenance is unavailable.
+        }
+      }
       map[filename] = {
-        commit: commit || "?",
-        updated,
-        maintainer: author === "unknown" ? "@unknown" : `@${author}`,
+        commit: resolvedCommit,
+        updated: resolvedUpdated,
+        maintainer: resolvedAuthor === "unknown" ? "@unknown" : `@${resolvedAuthor}`,
       };
     }
   } catch {

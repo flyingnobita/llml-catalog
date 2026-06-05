@@ -104,7 +104,7 @@ function ImportModal({ profile, onClose }) {
               {step >= 1 && (
                 <div style={{ color: "#9aa1ad", marginTop: 8, paddingLeft: 16, display: "flex", flexDirection: "column", gap: 2 }}>
                   <span>→ resolving {profile.repoPath}</span>
-                  <span>→ verifying schema_version = 2</span>
+                  <span>→ verifying schema_version = 3</span>
                   <span>→ writing to ~/.config/llml/profiles/{profile.id}.toml</span>
                   {step === 2 && <span style={{ color: "#7CB342" }}>✓ attached to {profile.name.split(" — ")[0]}</span>}
                 </div>

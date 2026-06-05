@@ -81,9 +81,9 @@ const base = import.meta.env.BASE_URL;
           <h2 style="font-size:30px;margin:0 0 12px">Validation</h2>
           <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden;font-family:var(--font-mono);font-size:13px">
             {[
-              ["schema_version == 2", "required"],
+              ["schema_version == 3", "required"],
               ["backend ∈ {llama, vllm, ollama, koboldcpp}", "required"],
-              ["use_case.primary ∈ canonical set", "warn"],
+              ["use_case.primary ∈ {general, eval}", "required"],
               ["model-location params absent from args", "required"],
               ["hardware.min_vram_gb ≤ hardware.max_vram_gb", "warn"],
             ].map(([rule, level], i) => (

@@ -1,4 +1,4 @@
-export const tomlSample = `schema_version = 2
+export const tomlSample = `schema_version = 3
 
 [[profiles]]
 name = "balanced-q4"
@@ -11,7 +11,7 @@ args = [
   "--flashattention",
 ]
 
-use_case.primary = "completion"
+use_case.primary = ["general"]
 use_case.tags    = ["interactive", "coding"]
 
 hardware.class       = "gpu"
