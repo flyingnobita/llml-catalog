@@ -1,4 +1,4 @@
-schema_version = 2
+schema_version = 3
 
 [[profiles]]
 name = "Qwen3-Coder-Next-UD-Q4_K_XL-seed"
@@ -9,7 +9,7 @@ model_org = "unsloth"
 profile_org = "unsloth"
 
 [profiles.use_case]
-primary = "tool-calling"
+primary = ["tool-calling"]
 tags = [ "coding", "agentic", "non-thinking", "moe" ]
 
 [profiles.hardware]

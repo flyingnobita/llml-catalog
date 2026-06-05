@@ -1,4 +1,4 @@
-schema_version = 2
+schema_version = 3
 
 [[profiles]]
 name = "gemma-4-26B-A4B-31B"
@@ -14,7 +14,7 @@ model_org = "unsloth"
 profile_org = "unsloth"
 
 [profiles.use_case]
-primary = "chat"
+primary = ["chat"]
 tags = ["coding", "tool-calling", "agentic"]
 
 [profiles.hardware]

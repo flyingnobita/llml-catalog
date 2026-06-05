@@ -1,4 +1,4 @@
-schema_version = 2
+schema_version = 3
 
 [[profiles]]
 name = "Nemotron-3-Nano-30B-A3B-UD-Q4_K_XL-tool-calling"
@@ -9,7 +9,7 @@ model_org = "unsloth"
 profile_org = "unsloth"
 
 [profiles.use_case]
-primary = "tool-calling"
+primary = ["tool-calling"]
 tags = [ "moe", "reasoning" ]
 
 [profiles.hardware]

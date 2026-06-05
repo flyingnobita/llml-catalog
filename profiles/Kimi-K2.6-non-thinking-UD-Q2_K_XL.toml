@@ -1,4 +1,4 @@
-schema_version = 2
+schema_version = 3
 
 [[profiles]]
 name = "Kimi-K2.6-non-thinking-UD-Q2_K_XL"
@@ -9,7 +9,7 @@ model_org = "unsloth"
 profile_org = "unsloth"
 
 [profiles.use_case]
-primary = "chat"
+primary = ["chat"]
 tags = [ "non-thinking" ]
 
 [profiles.hardware]

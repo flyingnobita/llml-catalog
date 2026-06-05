@@ -1,4 +1,4 @@
-schema_version = 2
+schema_version = 3
 
 [[profiles]]
 name = "GPT-OSS-120B-F16"
@@ -9,7 +9,7 @@ model_org = "unsloth"
 profile_org = "unsloth"
 
 [profiles.use_case]
-primary = "tool-calling"
+primary = ["tool-calling"]
 tags = [ "reasoning", "thinking", "agentic", "moe", "cpu-offload" ]
 
 [profiles.hardware]

@@ -1,4 +1,4 @@
-schema_version = 2
+schema_version = 3
 
 [[profiles]]
 name = "Qwen3.6-enable-thinking-Windows"
@@ -9,5 +9,5 @@ model_org = "unsloth"
 profile_org = "unsloth"
 
 [profiles.use_case]
-primary = "chat"
+primary = ["chat"]
 tags = [ "thinking" ]

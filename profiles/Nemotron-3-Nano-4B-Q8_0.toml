@@ -1,4 +1,4 @@
-schema_version = 2
+schema_version = 3
 
 [[profiles]]
 name = "Nemotron-3-Nano-4B-Q8_0"
@@ -9,7 +9,7 @@ model_org = "unsloth"
 profile_org = "unsloth"
 
 [profiles.use_case]
-primary = "chat"
+primary = ["chat"]
 tags = [ "moe", "reasoning" ]
 
 [profiles.hardware]
