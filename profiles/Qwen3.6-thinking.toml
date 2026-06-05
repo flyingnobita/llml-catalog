@@ -1,16 +1,25 @@
 schema_version = 3
 
 [[profiles]]
-name = "Qwen3.6-35B-A3B-thinking-UD-Q4_K_XL"
+name = "Qwen3.6-thinking"
 backend = "llama"
 model_hint = "Qwen3.6-35B-A3B"
-args = [ "--temp 1.0", "--top-p 0.95", "--top-k 20", "--presence-penalty 1.5", "--min-p 0.00" ]
+args = [
+  "--temp 1.0",
+  "--top-p 0.95",
+  "--ctx-size 16384",
+  "--top-k 20",
+  "--min-p 0.00",
+  "--presence-penalty 1.5",
+  "--repeat-penalty 1.0",
+  "--chat-template-kwargs {\"enable_thinking\":true}",
+]
 model_org = "unsloth"
 profile_org = "unsloth"
 
 [profiles.use_case]
-primary = ["chat"]
-tags = [ "thinking" ]
+primary = ["general"]
+tags = ["thinking"]
 
 [profiles.hardware]
 class = "mixed"

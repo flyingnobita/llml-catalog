@@ -1,0 +1,27 @@
+schema_version = 3
+
+[[profiles]]
+name = "Qwen3.6"
+backend = "llama"
+model_hint = "Qwen3.6-35B-A3B"
+args = [
+  "--temp 0.7",
+  "--top-p 0.8",
+  "--ctx-size 16384",
+  "--top-k 20",
+  "--min-p 0.00",
+  "--presence-penalty 1.5",
+  "--repeat-penalty 1.0",
+  "--chat-template-kwargs {\"enable_thinking\":false}",
+]
+model_org = "unsloth"
+profile_org = "unsloth"
+
+[profiles.use_case]
+primary = ["general"]
+tags = []
+
+[profiles.hardware]
+class = "mixed"
+min_vram_gb = 23
+notes = "4-bit quant requires ~23 GB total memory (VRAM + RAM). Thinking disabled via chat-template-kwargs."
