@@ -39,6 +39,11 @@ function titleCase(s) {
     .join(" ");
 }
 
+function primaryUseCaseLabel(primary) {
+  const value = Array.isArray(primary) ? primary[0] : primary;
+  return titleCase(value || "chat");
+}
+
 const BACKEND_ALIASES = {
   llama: "llama.cpp",
   vllm: "vllm",
@@ -147,7 +152,7 @@ function loadProfiles() {
       const hw = p.hardware || {};
       const uc = p.use_case || {};
       const hwClass = hardwareClass(hw);
-      const useCase = titleCase(uc.primary || "chat");
+      const useCase = primaryUseCaseLabel(uc.primary);
       const notes = hw.notes || "";
       const tags = (uc.tags || []).map((t) => t.toLowerCase());
 
