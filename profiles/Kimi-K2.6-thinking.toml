@@ -1,0 +1,23 @@
+schema_version = 3
+
+[[profiles]]
+name = "Kimi-K2.6-thinking"
+backend = "llama"
+model_hint = "Kimi K2.6"
+args = [
+  "--temp 1.0",
+  "--top-p 0.95",
+  "--context-size 98304",
+  "--chat-template-kwargs {\"enable_thinking\":true}",
+]
+model_org = "unsloth"
+profile_org = "unsloth"
+
+[profiles.use_case]
+primary = ["general"]
+tags = ["thinking", "vision", "coding", "agentic"]
+
+[profiles.hardware]
+class = "mixed"
+min_vram_gb = 350
+notes = "Dynamic 2-bit quant; 350GB+ total memory (RAM+VRAM); vision-capable via mmproj"
