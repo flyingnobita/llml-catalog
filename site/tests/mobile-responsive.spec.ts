@@ -152,6 +152,15 @@ test.describe("Browse page (/browse) — mobile responsive", () => {
     expect(display).toBe("flex");
   });
 
+  test("updated date is absolute and compact on mobile", async ({ page }) => {
+    const updated = page.locator(".result-row .updated-span").first();
+    await expect(updated).toHaveText(/^\d{4}-\d{2}-\d{2}$/);
+
+    const box = await updated.boundingBox();
+    expect(box).not.toBeNull();
+    expect(box!.width).toBeLessThanOrEqual(96);
+  });
+
   test("Import button is reachable without horizontal scroll", async ({ page }) => {
     const btn = page.locator(".result-row a.import-btn").first();
     const box = await btn.boundingBox();
@@ -347,6 +356,12 @@ test.describe("Profile detail page — mobile responsive", () => {
     await page.goto(`./profile/${PROFILE_ID}`);
     // "llama.cpp" appears many times on the page — check the first badge
     await expect(page.getByText("llama.cpp").first()).toBeVisible();
+  });
+
+  test("updated badge uses an absolute date", async ({ page }) => {
+    await page.setViewportSize(MOBILE);
+    await page.goto(`./profile/${PROFILE_ID}`);
+    await expect(page.getByText(/Updated\s+\d{4}-\d{2}-\d{2}/)).toBeVisible();
   });
 
   test("content sections visible", async ({ page }) => {

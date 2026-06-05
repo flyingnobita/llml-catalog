@@ -83,7 +83,7 @@ function buildGitInfo() {
   const map = {};
   try {
     const out = execSync(
-      `for f in profiles/*.toml; do echo "$(basename "$f")|$(git log -1 --format='%H|%ar|%an' -- "$f" 2>/dev/null || echo '?|unknown|unknown')"; done`,
+      `for f in profiles/*.toml; do echo "$(basename "$f")|$(git log -1 --format='%H|%cs|%an' -- "$f" 2>/dev/null || echo '?|unknown|unknown')"; done`,
       { cwd: REPO_ROOT, encoding: "utf-8", timeout: 5000 }
     );
     for (const line of out.trim().split("\n")) {
