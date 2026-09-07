@@ -50,15 +50,15 @@ test.describe("How It Works page", () => {
     await expect(cmdBlock).toContainText("llml import");
   });
 
-  test("ImportBlock uses Qwen3.6-enable-thinking.toml", async ({ page }) => {
+  test("ImportBlock uses Qwen3.6-thinking.toml", async ({ page }) => {
     await page.goto("./how");
     const cmdBlock = page.locator(".import-block-cmd");
-    await expect(cmdBlock).toContainText("Qwen3.6-enable-thinking.toml");
+    await expect(cmdBlock).toContainText("Qwen3.6-thinking.toml");
   });
 
   test("sample profile URL is reachable", async ({ page }) => {
     const response = await page.request.get(
-      "https://llml.dev/profiles/Qwen3.6-enable-thinking.toml"
+      "https://llml.dev/profiles/Qwen3.6-thinking.toml"
     );
     // Accept 200 (success) or 429 (CDN rate-limit in CI)
     expect([200, 429]).toContain(response.status());

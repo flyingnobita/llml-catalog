@@ -142,15 +142,15 @@ test.describe("Catalog payoff", () => {
     await expect(cmdBlock).toContainText("llml import");
   });
 
-  test("sample import command uses Qwen3.6-enable-thinking.toml", async ({ page }) => {
+  test("sample import command uses Qwen3.6-thinking.toml", async ({ page }) => {
     await page.goto(HOME);
     const cmdBlock = page.locator(".home-catalog-payoff .import-block-cmd");
-    await expect(cmdBlock).toContainText("Qwen3.6-enable-thinking.toml");
+    await expect(cmdBlock).toContainText("Qwen3.6-thinking.toml");
   });
 
   test("sample profile URL is reachable", async ({ page }) => {
     const response = await page.request.get(
-      "https://llml.dev/profiles/Qwen3.6-enable-thinking.toml"
+      "https://llml.dev/profiles/Qwen3.6-thinking.toml"
     );
     // Accept 200 (success) or 429 (CDN rate-limit in CI)
     expect([200, 429]).toContain(response.status());
